@@ -422,4 +422,49 @@
 <!-- ============================================================
      AKHIR BLOK 4 R1 - Lanjut ke Blok 5 R1 (Instal PWA Prompt)
      ============================================================ -->
-  
+  <!-- ============================================================
+     BLOK 5 R1 - APP TOKO ONLINE - INSTAL PWA PROMPT
+     (Revisi: Menambahkan instruksi encoding UTF-8 untuk Notepad.
+      Pastikan file ini disimpan dengan Encoding UTF-8.
+      Jika tidak, karakter khusus dan komentar akan rusak.)
+     ============================================================ -->
+    <script>
+        // Variabel untuk menampung event beforeinstallprompt
+        var deferredPrompt;
+
+        // Tangkap event beforeinstallprompt (muncul saat browser mendeteksi PWA)
+        window.addEventListener('beforeinstallprompt', function(event) {
+            // Cegah prompt otomatis agar kita bisa menampilkan tombol instal kustom
+            event.preventDefault();
+            // Simpan event untuk digunakan nanti
+            deferredPrompt = event;
+            // Tampilkan tombol instal yang ada di halaman
+            var installBtn = document.getElementById('install-btn');
+            if (installBtn) {
+                installBtn.style.display = 'inline-block';
+            }
+            console.log('📲 Prompt instal PWA tersedia');
+        });
+
+        // Tangani klik tombol instal
+        document.getElementById('install-btn').addEventListener('click', function() {
+            if (deferredPrompt) {
+                // Tampilkan prompt instalasi
+                deferredPrompt.prompt();
+                // Tunggu hasil pilihan user
+                deferredPrompt.userChoice.then(function(result) {
+                    console.log('📲 Hasil instal: ' + result.outcome);
+                    // Reset variabel setelah digunakan
+                    deferredPrompt = null;
+                });
+            }
+        });
+
+        console.log('✅ Blok 5 R1 - Instal PWA Prompt berhasil dimuat (Revisi UTF-8)');
+        console.log('📲 Tombol instal muncul jika browser mendukung PWA');
+        console.log('📌 Instruksi: Pastikan file disimpan dengan Encoding UTF-8 di Notepad.');
+    </script>
+<!-- ============================================================
+     AKHIR BLOK 5 R1 - Lanjut ke Blok 6 R1 (Komponen Form)
+     ============================================================ -->
+     
