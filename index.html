@@ -1,1 +1,425 @@
-indexhtml
+<!-- ============================================================
+     BLOK 1 R1 - APP TOKO ONLINE - PEMBUKAAN & METADATA PWA (UTF-8)
+     (Revisi: Menambahkan instruksi encoding UTF-8 untuk Notepad)
+     ============================================================ -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- Penting: Pastikan file ini disimpan dengan encoding UTF-8.
+         Cara di Notepad: File > Save As > Pada bagian Encoding pilih UTF-8.
+         Jika tidak, emoji dan karakter khusus akan berubah menjadi kotak atau kode mentah. -->
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>APP TOKO ONLINE - Belanja, COD, Antar Jemput</title>
+
+    <!-- Meta PWA -->
+    <meta name="theme-color" content="#e65100">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22APP%20TOKO%20ONLINE%22%2C%22short_name%22%3A%22TokoOnline%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22theme_color%22%3A%22%23e65100%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Crect%20width%3D'100'%20height%3D'100'%20rx%3D'20'%20fill%3D'%23e65100'%2F%3E%3Ctext%20x%3D'50'%20y%3D'55'%20font-size%3D'28'%20text-anchor%3D'middle'%20fill%3D'white'%20font-weight%3D'bold'%3ETO%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22100x100%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+
+    <!-- Script log status -->
+    <script>
+        console.log('✅ Blok 1 R1 - Pembukaan & Metadata PWA (Encoding UTF-8) berhasil dimuat');
+        console.log('📱 Judul: APP TOKO ONLINE');
+        console.log('🎨 Theme Color: #e65100 (Orange)');
+        console.log('📦 PWA Manifest: Inline SVG Icon "TO"');
+        console.log('📝 Instruksi: Pastikan file disimpan dengan Encoding UTF-8 di Notepad.');
+    </script>
+<!-- ============================================================
+     AKHIR BLOK 1 R1 - Lanjut ke Blok 2 R2 (Style Global)
+     ============================================================ -->
+  <!-- ============================================================
+     BLOK 2 R1 - APP TOKO ONLINE - STYLE GLOBAL & FUNGSI GLOBAL
+     (Revisi: Menambahkan instruksi encoding UTF-8 untuk Notepad.
+      Pastikan file ini disimpan dengan Encoding UTF-8.
+      Jika tidak, semua emoji dan karakter khusus akan rusak.)
+     ============================================================ -->
+    <style>
+        /* ============================================================
+           CSS RESET & VARIABEL
+           ============================================================ */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --primary: #e65100;
+            --primary-dark: #bf360c;
+            --primary-light: #ff9800;
+            --primary-pale: #fff3e0;
+            --success: #4caf50;
+            --success-pale: #e8f5e9;
+            --danger: #f44336;
+            --danger-pale: #ffebee;
+            --warning: #ff9800;
+            --warning-pale: #fff3e0;
+            --info: #2196f3;
+            --info-pale: #e3f2fd;
+            --dark: #1a1a2e;
+            --dark-secondary: #16213e;
+            --white: #ffffff;
+            --gray-50: #fafafa;
+            --gray-100: #f5f5f5;
+            --gray-200: #eeeeee;
+            --gray-300: #e0e0e0;
+            --gray-400: #bdbdbd;
+            --gray-500: #9e9e9e;
+            --gray-600: #757575;
+            --gray-700: #616161;
+            --gray-800: #424242;
+            --gray-900: #212121;
+            --border: #e0e0e0;
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow: 0 2px 10px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.16);
+            --transition: all 0.25s ease;
+        }
+        
+        /* ============================================================
+           TIPOGRAFI
+           ============================================================ */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.5;
+        }
+        h1, h2, h3, h4, h5, h6 { color: var(--dark); font-weight: 700; line-height: 1.3; }
+        h1 { font-size: 1.8em; } h2 { font-size: 1.5em; }
+        h3 { font-size: 1.3em; } h4 { font-size: 1.1em; }
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { color: var(--primary-dark); text-decoration: underline; }
+        small { font-size: 0.8em; color: var(--gray-600); }
+        code {
+            background: var(--gray-100); padding: 2px 6px;
+            border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.9em;
+        }
+        
+        /* ============================================================
+           SCROLLBAR CUSTOM
+           ============================================================ */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--gray-100); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+        
+        /* ============================================================
+           UTILITAS
+           ============================================================ */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .text-primary { color: var(--primary); }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-warning { color: var(--warning); }
+        .text-info { color: var(--info); }
+        .mt-1 { margin-top: 10px; } .mt-2 { margin-top: 20px; } .mt-3 { margin-top: 30px; }
+        .mb-1 { margin-bottom: 10px; } .mb-2 { margin-bottom: 20px; } .mb-3 { margin-bottom: 30px; }
+        .p-1 { padding: 10px; } .p-2 { padding: 20px; } .p-3 { padding: 30px; }
+        .flex { display: flex; } .flex-wrap { flex-wrap: wrap; } .gap-1 { gap: 10px; } .gap-2 { gap: 20px; }
+        .w-full { width: 100%; }
+    </style>
+
+    <script>
+        // ============================================================
+        // FUNGSI GLOBAL - DATA PRODUK TOKO
+        // ============================================================
+        function ambilDataProdukToko(username) {
+            var key = 'tokoonline_produk_' + (username || (typeof penggunaAktif !== 'undefined' && penggunaAktif ? penggunaAktif.username : ''));
+            var data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function simpanDataProdukToko(username, data) {
+            var key = 'tokoonline_produk_' + (username || (typeof penggunaAktif !== 'undefined' && penggunaAktif ? penggunaAktif.username : ''));
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        // ============================================================
+        // FUNGSI GLOBAL - FORMAT MATA UANG
+        // ============================================================
+        function formatJuta(nilai) {
+            if (typeof nilai !== 'number' || isNaN(nilai)) return '0';
+            if (Math.abs(nilai) >= 1000000) return (nilai / 1000000).toFixed(1) + 'M';
+            if (Math.abs(nilai) >= 1000) return (nilai / 1000).toFixed(1) + 'K';
+            return nilai.toString();
+        }
+
+        // ============================================================
+        // FUNGSI GLOBAL - ESTIMASI UKURAN STORAGE
+        // ============================================================
+        function estimasiUkuranStorage() {
+            var total = 0;
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                var value = localStorage.getItem(key) || '';
+                total += key.length + value.length;
+            }
+            return Math.round(total / 1024);
+        }
+
+        // ============================================================
+        // FUNGSI GLOBAL - DATA KERANJANG PELANGGAN
+        // ============================================================
+        function ambilKeranjangPelanggan(username) {
+            var key = 'tokoonline_keranjang_' + (username || (typeof penggunaAktif !== 'undefined' && penggunaAktif ? penggunaAktif.username : ''));
+            var data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function simpanKeranjangPelanggan(username, keranjang) {
+            var key = 'tokoonline_keranjang_' + (username || (typeof penggunaAktif !== 'undefined' && penggunaAktif ? penggunaAktif.username : ''));
+            localStorage.setItem(key, JSON.stringify(keranjang));
+        }
+
+        console.log('✅ Blok 2 R1 - Style Global + Fungsi Global berhasil dimuat (Revisi UTF-8)');
+        console.log('🔄 Perbaikan: Tambah instruksi encoding UTF-8 untuk Notepad.');
+    </script>
+<!-- ============================================================
+     AKHIR BLOK 2 R1 - Lanjut ke Blok 3 R1 (Service Worker)
+     ============================================================ -->
+  <!-- ============================================================
+     BLOK 3 R1 - APP TOKO ONLINE - SERVICE WORKER
+     (Revisi: Menambahkan instruksi encoding UTF-8 untuk Notepad.
+      Mengganti registrasi blob URL dengan file sw.js eksternal.
+      Pastikan file ini disimpan dengan Encoding UTF-8 agar komentar dan
+      karakter khusus tidak rusak.)
+     ============================================================ -->
+<script>
+    // Periksa apakah browser mendukung Service Worker
+    if ('serviceWorker' in navigator) {
+        // Saat halaman selesai dimuat, daftarkan Service Worker
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                    console.log('✅ Service Worker berhasil didaftarkan. Scope:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('❌ Gagal mendaftarkan Service Worker:', error);
+                });
+        });
+    } else {
+        console.log('ℹ️ Browser ini tidak mendukung Service Worker.');
+    }
+</script>
+
+<!-- Instruksi untuk membuat file sw.js -->
+<!--
+     Anda harus membuat file baru bernama sw.js di folder yang sama dengan
+     index.html. Isi file sw.js adalah sebagai berikut:
+
+     const CACHE_NAME = 'tokoonline-v1';
+     const urlsToCache = ['./', 'index.html'];
+
+     self.addEventListener('install', function(event) {
+         event.waitUntil(
+             caches.open(CACHE_NAME)
+                 .then(function(cache) {
+                     console.log('✅ Cache dibuka dan aset ditambahkan');
+                     return cache.addAll(urlsToCache);
+                 })
+         );
+     });
+
+     self.addEventListener('fetch', function(event) {
+         event.respondWith(
+             caches.match(event.request)
+                 .then(function(response) {
+                     if (response) {
+                         return response;
+                     }
+                     return fetch(event.request);
+                 })
+         );
+     });
+-->
+<!-- ============================================================
+     AKHIR BLOK 3 R1 - LANJUT KE BLOK 4 R3 (PWA MANIFEST)
+     ============================================================ -->
+  <!-- ============================================================
+     BLOK 4 R1 - APP TOKO ONLINE - DETEKSI ONLINE/OFFLINE
+     (Revisi: Menambahkan instruksi encoding UTF-8 untuk Notepad.
+      Pastikan file ini disimpan dengan Encoding UTF-8.
+      Jika tidak, karakter khusus dan komentar akan rusak.)
+     ============================================================ -->
+    <style>
+        /* ============================================================
+           INDIKATOR KONEKSI - STATUS BAR
+           ============================================================ */
+        #connection-status {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            padding: 4px 15px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            font-size: 0.78em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            height: 26px;
+            transition: all 0.3s;
+        }
+        
+        /* ============================================================
+           INDIKATOR DOT ONLINE/OFFLINE
+           ============================================================ */
+        .online-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4caf50;
+            animation: pulse-dot 2s infinite;
+        }
+        .offline .online-indicator {
+            background: #f44336;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        /* ============================================================
+           TOMBOL INSTAL PWA
+           ============================================================ */
+        #install-btn {
+            display: none;
+            padding: 3px 10px;
+            background: #e65100;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.75em;
+            transition: all 0.2s;
+        }
+        #install-btn:hover {
+            background: #bf360c;
+        }
+        
+        /* ============================================================
+           KONTAINER UTAMA APLIKASI
+           ============================================================ */
+        #app {
+            min-height: 100vh;
+        }
+        
+        /* ============================================================
+           PENYESUAIAN SIDEBAR DENGAN STATUS BAR
+           ============================================================ */
+        .sidebar {
+            top: 26px;
+        }
+        .sidebar-toggle {
+            top: 30px;
+        }
+        .main-content {
+            padding-top: 6px;
+        }
+        
+        /* ============================================================
+           TOAST NOTIFIKASI MENYESUAIKAN
+           ============================================================ */
+        .toast-container {
+            top: 30px;
+        }
+        
+        /* ============================================================
+           RESPONSIF MOBILE
+           ============================================================ */
+        @media (max-width: 768px) {
+            #connection-status {
+                font-size: 0.7em;
+                padding: 3px 10px;
+                height: 24px;
+            }
+            .sidebar {
+                top: 24px;
+            }
+            .sidebar-toggle {
+                top: 28px;
+            }
+        }
+    </style>
+
+    <!-- ============================================================
+         INDIKATOR STATUS KONEKSI
+         ============================================================ -->
+    <div id="connection-status">
+        <span>🌐 <span id="status-text">Online</span><span class="online-indicator"></span></span>
+        <button id="install-btn">📲 Instal Aplikasi</button>
+    </div>
+
+    <!-- ============================================================
+         KONTAINER APLIKASI UTAMA
+         ============================================================ -->
+    <div id="app"></div>
+
+    <script>
+        // ============================================================
+        // FUNGSI UPDATE STATUS ONLINE/OFFLINE
+        // ============================================================
+        function updateOnlineStatus() {
+            var statusText = document.getElementById('status-text');
+            if (!statusText) return;
+            
+            if (navigator.onLine) {
+                statusText.textContent = 'Online';
+                document.body.classList.remove('offline');
+            } else {
+                statusText.textContent = 'Offline';
+                document.body.classList.add('offline');
+            }
+        }
+        
+        // ============================================================
+        // EVENT LISTENER ONLINE/OFFLINE
+        // ============================================================
+        window.addEventListener('online', function() {
+            updateOnlineStatus();
+            if (typeof tampilkanNotifikasi === 'function') {
+                tampilkanNotifikasi('🌐 Koneksi kembali online!', 'sukses');
+            }
+            console.log('🌐 Status: Online');
+        });
+        
+        window.addEventListener('offline', function() {
+            updateOnlineStatus();
+            if (typeof tampilkanNotifikasi === 'function') {
+                tampilkanNotifikasi('⚠️ Koneksi terputus! Aplikasi tetap berfungsi.', 'peringatan');
+            }
+            console.log('⚠️ Status: Offline');
+        });
+        
+        // ============================================================
+        // INISIALISASI STATUS AWAL
+        // ============================================================
+        updateOnlineStatus();
+        
+        // ============================================================
+        // DEBUG INFO
+        // ============================================================
+        console.log('✅ Blok 4 R1 - Deteksi Online/Offline berhasil dimuat (Revisi UTF-8)');
+        console.log('🔄 Perbaikan: Tambah instruksi encoding UTF-8 untuk Notepad.');
+        console.log('📱 Sidebar menyesuaikan top: 26px');
+        console.log('🌐 Status awal: ' + (navigator.onLine ? 'Online' : 'Offline'));
+        
+        // ============================================================
+        // EKSPOR FUNGSI GLOBAL
+        // ============================================================
+        window.updateOnlineStatus = updateOnlineStatus;
+    </script>
+<!-- ============================================================
+     AKHIR BLOK 4 R1 - Lanjut ke Blok 5 R1 (Instal PWA Prompt)
+     ============================================================ -->
+  
