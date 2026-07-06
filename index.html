@@ -1101,8 +1101,8 @@
         // Data Default
         // ============================================================
         var DATA_SUPER_ADMIN = {
-            username: 'superadmin',
-            password: enkripsiPassword('admin123'),
+            username: 'SuperAdmin',
+            password: enkripsiPassword('Admin123'),
             nama: 'Super Admin',
             email: 'admin@notepad.com',
             hp: '081220285226',
@@ -2422,7 +2422,7 @@
                     users[idx].premiumExpiry = null;
                     simpanSemuaPengguna(users);
                 }
-                warn.classList.remove('tampil');
+                warn.style.display = 'none';
                 tampilkanToast('Masa premium Anda telah habis.', 'peringatan');
                 perbaruiHeaderUser();
                 if (!document.getElementById('halamanAplikasi').classList.contains('tersembunyi')) perbaruiStatistik();
@@ -2554,7 +2554,7 @@
             if (!wadah) return;
             if (!target) {
                 wadah.innerHTML =
-                '<p style="color:var(--warna-teks-kedua);text-align:center;padding:20px;">Pilih user untuk memulai chat.</p>';
+                    '<p style="color:var(--warna-teks-kedua);text-align:center;padding:20px;">Pilih user untuk memulai chat.</p>';
                 return;
             }
             var semuaChat = ambilPesanChat();
@@ -2674,7 +2674,7 @@
             muatIklanDepan();
             perbaruiHeaderUser();
 
-            console.log('✅ Notepad+ Code Storage v3.3 – Blok 1–11 R1 berhasil dimuat.');
+            console.log('✅ Notepad+ Code Storage v3.3 – Username SuperAdmin: SuperAdmin, Password: Admin123');
         })();
     </script>
 
