@@ -1,146 +1,77 @@
 <!-- ==========================================
-BLOK NP-01 - LOGIN MULTI NOTEPAD PENYIMPANAN BLOK
+BLOK NP-01 - HALAMAN UTAMA NOTEPAD (LOGIN & KERANGKA)
 ===========================================
 PENJELASAN FUNGSI PERINTAH BLOK NP-01:
-1. Otentikasi Masuk Notepad: Halaman login khusus untuk mengakses aplikasi Notepad Penyimpanan Blok. Pengguna wajib memasukkan kombinasi username dan password yang telah ditentukan.
-2. Kredensial Multi Login: Sistem menggunakan satu set kredensial bersama (Username: AppNotePadPro, Password: MyHand0286) yang dapat digunakan oleh beberapa orang secara bersamaan tanpa perlu pendaftaran akun individual.
-3. Penyimpanan Sesi Lokal: Setelah login berhasil, browser akan menyimpan status sesi ke dalam localStorage. Pengguna tidak perlu login ulang selama sesi belum berakhir atau dihapus secara manual.
-4. Tema Konsisten Platform: Desain antarmuka menggunakan palet warna oranye-putih yang selaras dengan keseluruhan platform 2R, menciptakan pengalaman visual yang seragam.
+1. Halaman Login Notepad: Merupakan gerbang masuk ke aplikasi Notepad Penyimpanan Blok. Pengguna harus memasukkan kredensial bersama untuk dapat mengakses seluruh fitur manajemen blok.
+2. Kerangka Utama Aplikasi: Selain form login, halaman ini menyediakan tempat (placeholder) untuk Dashboard Manajemen Blok, Editor Blok, dan Modal Penggabungan yang akan diisi oleh blok-blok berikutnya (NP-02.1, NP-02.2, NP-03).
+3. Kredensial Multi Login: Menggunakan satu set kredensial bersama (Username: AppNotePadPro, Password: MyHand0286) sehingga tidak diperlukan pendaftaran akun individual.
+4. Tema Biru-Putih Profesional: Seluruh tampilan menggunakan palet warna biru (primary) dan putih bersih, memberikan kesan profesional dan fokus pada produktivitas pengelolaan kode.
 =========================================== -->
-<div class="container mt-5" id="halaman-login-notepad">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-5">
-            <!-- Kartu Login Notepad -->
-            <div class="card-custom border-top-orange">
-                <div class="text-center mb-4">
-                    <h2 class="text-orange-custom fw-bold mb-1"><i class="bi bi-journal-code me-2"></i>Notepad Blok</h2>
-                    <p class="text-muted small">Masuk untuk mengelola dan menyusun blok kode aplikasi.</p>
-                </div>
-                
-                <form id="form-login-notepad" onsubmit="event.preventDefault(); prosesLoginNotepad();">
-                    <!-- Input Username -->
-                    <div class="mb-3">
-                        <label for="notepad-username" class="form-label fw-bold">Username</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light text-orange-custom border-end-0">
-                                <i class="bi bi-person-fill"></i>
-                            </span>
-                            <input type="text" id="notepad-username" class="form-control border-start-0 ps-0" placeholder="Masukkan Username" required autocomplete="off">
-                        </div>
-                    </div>
-                    
-                    <!-- Input Password -->
-                    <div class="mb-3">
-                        <label for="notepad-password" class="form-label fw-bold">Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light text-orange-custom border-end-0">
-                                <i class="bi bi-lock-fill"></i>
-                            </span>
-                            <input type="password" id="notepad-password" class="form-control border-start-0 ps-0" placeholder="Masukkan Password" required autocomplete="off">
-                        </div>
-                    </div>
-                    
-                    <!-- Tombol Masuk -->
-                    <button type="submit" class="btn btn-orange w-100 py-2 mb-3 fs-5">
-                        <i class="bi bi-box-arrow-in-right me-2"></i> MASUK KE NOTEPAD
-                    </button>
-                </form>
-                
-                <!-- Pesan Kesalahan -->
-                <div id="notepad-login-error" class="alert alert-danger border-0 shadow-sm d-none" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    <span id="notepad-error-text">Username atau Password salah. Silakan coba lagi.</span>
-                </div>
-            </div>
-            
-            <!-- Catatan Kredensial -->
-            <div class="text-center mt-3">
-                <small class="text-muted">
-                    <i class="bi bi-info-circle-fill me-1"></i> Kredensial bersama: <strong>AppNotePadPro</strong> / <strong>MyHand0286</strong>
-                </small>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Fungsi untuk memproses login notepad
-    function prosesLoginNotepad() {
-        const username = document.getElementById('notepad-username').value.trim();
-        const password = document.getElementById('notepad-password').value.trim();
-        const errorDiv = document.getElementById('notepad-login-error');
-        const errorText = document.getElementById('notepad-error-text');
-        
-        // Kredensial yang valid (multi login)
-        const validUsername = 'AppNotePadPro';
-        const validPassword = 'MyHand0286';
-        
-        if (username === validUsername && password === validPassword) {
-            // Simpan sesi login ke localStorage dengan timestamp
-            const sessionData = {
-                loggedIn: true,
-                username: username,
-                loginTime: new Date().toISOString(),
-                sessionExpiry: Date.now() + (24 * 60 * 60 * 1000) // 24 jam
-            };
-            localStorage.setItem('notepad_session', JSON.stringify(sessionData));
-            
-            // Sembunyikan halaman login
-            document.getElementById('halaman-login-notepad').classList.add('d-none-custom');
-            
-            // Tampilkan halaman dashboard notepad (NP-02)
-            const dashboard = document.getElementById('halaman-dashboard-notepad');
-            if (dashboard) {
-                dashboard.classList.remove('d-none-custom');
-            } else {
-                // Jika dashboard belum ada (belum dibuat), beri pesan
-                alert('Login berhasil! Dashboard Notepad akan segera tersedia.');
-                // Untuk sementara, tampilkan placeholder
-                const placeholder = document.createElement('div');
-                placeholder.className = 'container mt-4';
-                placeholder.innerHTML = '<div class="alert alert-success">Login berhasil. Dashboard Notepad sedang dalam pengembangan (Blok NP-02).</div>';
-                document.body.appendChild(placeholder);
-            }
-            
-            // Kosongkan form
-            document.getElementById('form-login-notepad').reset();
-            errorDiv.classList.add('d-none');
-        } else {
-            // Tampilkan pesan kesalahan
-            errorText.textContent = 'Username atau Password salah. Silakan coba lagi.';
-            errorDiv.classList.remove('d-none');
-            
-            // Goyangkan kartu untuk efek visual
-            const card = document.querySelector('.card-custom');
-            card.style.animation = 'none';
-            card.offsetHeight; // Trigger reflow
-            card.style.animation = 'goyang 0.5s ease';
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notepad Blok - Platform 2R</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Gaya Dasar */
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-    }
-    
-    // Cek sesi saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', function() {
-        const sessionData = localStorage.getItem('notepad_session');
-        if (sessionData) {
-            const session = JSON.parse(sessionData);
-            // Periksa apakah sesi masih berlaku
-            if (session.loggedIn && session.sessionExpiry && Date.now() < session.sessionExpiry) {
-                // Sesi valid, langsung tampilkan dashboard
-                document.getElementById('halaman-login-notepad').classList.add('d-none-custom');
-                const dashboard = document.getElementById('halaman-dashboard-notepad');
-                if (dashboard) {
-                    dashboard.classList.remove('d-none-custom');
-                }
-            } else {
-                // Sesi kadaluarsa, hapus
-                localStorage.removeItem('notepad_session');
-            }
+        
+        /* Kartu Kustom */
+        .card-custom {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(13, 110, 253, 0.08);
+            background: #ffffff;
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-    });
-    
-    // Animasi goyang untuk kartu
-    const styleSheet = document.createElement("style");
-    styleSheet.textContent = `
+        .card-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(13, 110, 253, 0.15);
+        }
+        
+        /* Border Atas Biru */
+        .border-top-primary {
+            border-top: 4px solid #0d6efd !important;
+        }
+        
+        /* Tombol Biru */
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+            font-weight: 700;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+        .btn-outline-primary {
+            border: 2px solid #0d6efd;
+            color: #0d6efd;
+            font-weight: 700;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            background-color: transparent;
+        }
+        .btn-outline-primary:hover {
+            background-color: #0d6efd;
+            color: #ffffff;
+        }
+        
+        /* Animasi Goyang */
         @keyframes goyang {
             0%, 100% { transform: translateX(0); }
             20% { transform: translateX(-10px); }
@@ -148,29 +79,232 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-01:
             60% { transform: translateX(-5px); }
             80% { transform: translateX(5px); }
         }
-    `;
-    document.head.appendChild(styleSheet);
-</script>
+        
+        /* Placeholder Halaman Tersembunyi */
+        .d-none-custom {
+            display: none !important;
+        }
+        
+        /* Tabel dan Form */
+        .table thead th {
+            border-bottom: 2px solid #0d6efd;
+        }
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+    AREA LOGIN (HALAMAN UTAMA)
+    ========================================== -->
+    <div class="container mt-5" id="halaman-login-notepad">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-5">
+                <div class="card-custom border-top-primary">
+                    <div class="text-center mb-4">
+                        <h2 class="text-primary fw-bold mb-1"><i class="bi bi-journal-code me-2"></i>Notepad Blok</h2>
+                        <p class="text-muted small">Masuk untuk mengelola dan menyusun blok kode aplikasi.</p>
+                    </div>
+                    
+                    <div id="notepad-form-wrapper">
+                        <form id="form-login-notepad" onsubmit="event.preventDefault(); prosesLoginNotepad();">
+                            <div class="mb-3">
+                                <label for="notepad-username" class="form-label fw-bold">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-primary border-end-0">
+                                        <i class="bi bi-person-fill"></i>
+                                    </span>
+                                    <input type="text" id="notepad-username" class="form-control border-start-0 ps-0" placeholder="Masukkan Username" required autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="notepad-password" class="form-label fw-bold">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-primary border-end-0">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input type="password" id="notepad-password" class="form-control border-start-0 ps-0" placeholder="Masukkan Password" required autocomplete="off">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-2 mb-3 fs-5 fw-bold">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> MASUK
+                            </button>
+                        </form>
+                        
+                        <div id="notepad-login-error" class="alert alert-danger border-0 shadow-sm d-none" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <span id="notepad-error-text">Username atau Password salah. Silakan coba lagi.</span>
+                        </div>
+                    </div>
+                    
+                    <div id="notepad-login-sukses" class="d-none text-center">
+                        <div class="alert alert-success border-0 shadow-sm">
+                            <i class="bi bi-check-circle-fill me-2"></i> Login berhasil!
+                        </div>
+                        <button type="button" class="btn btn-primary fw-bold w-100 py-2" onclick="langsungKeDashboard()">
+                            <i class="bi bi-window-stack me-2"></i> BUKA DASHBOARD NOTEPAD
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary fw-bold w-100 mt-2 py-2" onclick="resetLoginNotepad()">
+                            <i class="bi bi-arrow-repeat me-2"></i> MASUK LAGI
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle-fill me-1"></i> Kredensial bersama: <strong>AppNotePadPro</strong> / <strong>MyHand0286</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+    PLACEHOLDER DASHBOARD (AKAN DIISI NP-02.1)
+    ========================================== -->
+    <div class="container mt-4 d-none-custom" id="halaman-dashboard-notepad">
+        <!-- Konten dashboard akan dimuat dari blok NP-02.1 -->
+        <div class="alert alert-info">Dashboard Notepad sedang dimuat...</div>
+    </div>
+
+    <!-- ==========================================
+    PLACEHOLDER EDITOR (AKAN DIISI NP-03)
+    ========================================== -->
+    <div class="container-fluid mt-4 d-none-custom" id="halaman-editor-blok">
+        <!-- Konten editor akan dimuat dari blok NP-03 -->
+    </div>
+
+    <!-- ==========================================
+    PLACEHOLDER MODAL PENGGABUNGAN (AKAN DIISI NP-02.2)
+    ========================================== -->
+    <div id="modal-penggabungan-container">
+        <!-- Modal penggabungan akan dimuat dari blok NP-02.2 -->
+    </div>
+
+    <script>
+        // ==========================================
+        // FUNGSI LOGIN
+        // ==========================================
+        function prosesLoginNotepad() {
+            const username = document.getElementById('notepad-username').value.trim();
+            const password = document.getElementById('notepad-password').value.trim();
+            const errorDiv = document.getElementById('notepad-login-error');
+            const errorText = document.getElementById('notepad-error-text');
+            const suksesDiv = document.getElementById('notepad-login-sukses');
+            const formWrapper = document.getElementById('notepad-form-wrapper');
+            
+            const validUsername = 'AppNotePadPro';
+            const validPassword = 'MyHand0286';
+            
+            if (username === validUsername && password === validPassword) {
+                // Simpan sesi login
+                const sessionData = {
+                    loggedIn: true,
+                    username: username,
+                    loginTime: new Date().toISOString(),
+                    sessionExpiry: Date.now() + (24 * 60 * 60 * 1000) // 24 jam
+                };
+                localStorage.setItem('notepad_session', JSON.stringify(sessionData));
+                
+                // Tampilkan pesan sukses
+                formWrapper.classList.add('d-none');
+                suksesDiv.classList.remove('d-none');
+                errorDiv.classList.add('d-none');
+                
+                // Bersihkan form
+                document.getElementById('notepad-username').value = '';
+                document.getElementById('notepad-password').value = '';
+            } else {
+                errorText.textContent = 'Username atau Password salah. Silakan coba lagi.';
+                errorDiv.classList.remove('d-none');
+                suksesDiv.classList.add('d-none');
+                
+                // Animasi goyang
+                const card = document.querySelector('.card-custom');
+                card.style.animation = 'none';
+                card.offsetHeight; // trigger reflow
+                card.style.animation = 'goyang 0.5s ease';
+            }
+        }
+        
+        function langsungKeDashboard() {
+            document.getElementById('halaman-login-notepad').classList.add('d-none-custom');
+            document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
+            
+            // Panggil fungsi refresh jika sudah ada di NP-02.1
+            if (typeof refreshDaftarBlok === 'function') {
+                refreshDaftarBlok();
+            }
+        }
+        
+        function resetLoginNotepad() {
+            document.getElementById('notepad-form-wrapper').classList.remove('d-none');
+            document.getElementById('notepad-login-sukses').classList.add('d-none');
+            document.getElementById('notepad-login-error').classList.add('d-none');
+        }
+        
+        // ==========================================
+        // FUNGSI LOGOUT (DARI DASHBOARD)
+        // ==========================================
+        function logoutNotepad() {
+            localStorage.removeItem('notepad_session');
+            document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
+            document.getElementById('halaman-editor-blok').classList.add('d-none-custom');
+            document.getElementById('halaman-login-notepad').classList.remove('d-none-custom');
+            resetLoginNotepad();
+        }
+        
+        // ==========================================
+        // CEK SESI SAAT HALAMAN DIMUAT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessionData = localStorage.getItem('notepad_session');
+            if (sessionData) {
+                try {
+                    const session = JSON.parse(sessionData);
+                    if (session.loggedIn && session.sessionExpiry && Date.now() < session.sessionExpiry) {
+                        // Sesi masih valid, langsung tampilkan dashboard
+                        document.getElementById('halaman-login-notepad').classList.add('d-none-custom');
+                        document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
+                    } else {
+                        // Sesi kadaluwarsa
+                        localStorage.removeItem('notepad_session');
+                    }
+                } catch (e) {
+                    localStorage.removeItem('notepad_session');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
 <!-- AKHIR BLOK NP-01 -->
 <!-- ==========================================
-BLOK NP-02 - DASHBOARD MANAJEMEN BLOK NOTEPAD
+BLOK NP-02.1 - DASHBOARD MANAJEMEN BLOK (BIRU-PUTIH)
 ===========================================
-PENJELASAN FUNGSI PERINTAH BLOK NP-02:
+PENJELASAN FUNGSI PERINTAH BLOK NP-02.1:
 1. Pusat Penyimpanan Blok: Menampilkan seluruh blok yang telah disimpan ke dalam penyimpanan lokal browser (localStorage) dalam bentuk tabel yang rapi dan mudah dikelola.
 2. Pengurutan Otomatis: Setiap blok yang disimpan akan diurutkan secara otomatis berdasarkan nomor blok (misal TG-01, TG-02, NP-01) tanpa perlu campur tangan manual.
 3. Formulir Penambahan Blok: Menyediakan formulir untuk menambahkan blok baru dengan mengisi Nomor Blok, Judul Blok, dan Kode HTML Blok secara lengkap.
-4. Fitur Penggabungan Otomatis: Tombol "Gabung Semua Blok" akan menggabungkan seluruh kode HTML dari semua blok yang tersimpan menjadi satu file HTML utuh dan mengunduhnya langsung ke perangkat.
+4. Fitur Penggabungan Otomatis: Tombol "Gabung Semua Blok" akan membuka modal untuk menampilkan hasil gabungan kode dan menyediakan tombol salin (copy) serta unduh (download).
 =========================================== -->
-<div class="container mt-4 d-none-custom" id="halaman-dashboard-notepad">
+<div class="container mt-4" id="halaman-dashboard-notepad">
     
     <!-- Header Halaman -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="text-orange-custom fw-bold mb-0"><i class="bi bi-journal-code me-2"></i> Notepad Manajemen Blok</h3>
+            <h3 class="text-primary fw-bold mb-0"><i class="bi bi-journal-code me-2"></i> Notepad Manajemen Blok</h3>
             <p class="text-muted small mb-0">Simpan, urutkan, edit, dan gabungkan semua blok kode aplikasi Anda.</p>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-success fw-bold shadow-sm" onclick="gabungSemuaBlok()">
+            <button class="btn btn-outline-primary fw-bold shadow-sm" onclick="bukaEditorBaru()">
+                <i class="bi bi-plus-square me-2"></i> Editor Baru
+            </button>
+            <button class="btn btn-primary fw-bold shadow-sm" onclick="bukaModalPenggabungan()">
                 <i class="bi bi-file-earmark-arrow-down-fill me-2"></i> Gabung Semua Blok
             </button>
             <button class="btn btn-outline-danger fw-bold shadow-sm" onclick="logoutNotepad()">
@@ -182,39 +316,39 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
     <!-- Statistik Blok -->
     <div class="row g-3 mb-4">
         <div class="col-md-4">
-            <div class="card bg-orange-custom text-white shadow-sm border-0 p-3 rounded-4 h-100">
+            <div class="card bg-primary text-white shadow-sm border-0 p-3 rounded-4 h-100">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h6 class="opacity-75 mb-1">Total Blok Tersimpan</h6>
                         <h3 class="fw-bold mb-0" id="total-blok-notepad">0 Blok</h3>
                     </div>
-                    <div class="bg-white text-orange-custom rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
+                    <div class="bg-white text-primary rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
                         <i class="bi bi-collection-fill fs-4"></i>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-primary text-white shadow-sm border-0 p-3 rounded-4 h-100">
+            <div class="card bg-info text-white shadow-sm border-0 p-3 rounded-4 h-100">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h6 class="opacity-75 mb-1">Total Baris Kode</h6>
                         <h3 class="fw-bold mb-0" id="total-baris-notepad">0 Baris</h3>
                     </div>
-                    <div class="bg-white text-primary rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
+                    <div class="bg-white text-info rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
                         <i class="bi bi-code-slash fs-4"></i>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card bg-success text-white shadow-sm border-0 p-3 rounded-4 h-100">
+            <div class="card bg-secondary text-white shadow-sm border-0 p-3 rounded-4 h-100">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
                         <h6 class="opacity-75 mb-1">Penyimpanan Tersedia</h6>
                         <h3 class="fw-bold mb-0" id="kapasitas-notepad">5 MB</h3>
                     </div>
-                    <div class="bg-white text-success rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
+                    <div class="bg-white text-secondary rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
                         <i class="bi bi-hdd-stack-fill fs-4"></i>
                     </div>
                 </div>
@@ -224,34 +358,30 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
 
     <div class="row g-4">
         
-        <!-- BAGIAN 1: FORM TAMBAH BLOK BARU (KIRI) -->
+        <!-- BAGIAN 1: FORM TAMBAH BLOK BARU & CATATAN (KIRI) -->
         <div class="col-lg-5">
-            <div class="card-custom border-top-orange shadow-sm border-0 h-100">
-                <h5 class="text-dark fw-bold border-bottom pb-2 mb-3"><i class="bi bi-plus-square-fill me-2 text-orange-custom"></i> Tambah Blok Baru</h5>
+            <div class="card-custom border-top-primary shadow-sm border-0 mb-4">
+                <h5 class="text-dark fw-bold border-bottom pb-2 mb-3"><i class="bi bi-plus-square-fill me-2 text-primary"></i> Tambah Blok Baru</h5>
                 
                 <form id="form-tambah-blok" onsubmit="event.preventDefault(); simpanBlokBaru();">
-                    <!-- Nomor Blok -->
                     <div class="mb-3">
                         <label class="form-label fw-bold small">Nomor Blok <span class="text-danger">*</span></label>
-                        <input type="text" id="input-nomor-blok" class="form-control" placeholder="Contoh: TG-31 atau NP-03" required>
+                        <input type="text" id="input-nomor-blok" class="form-control" placeholder="Contoh: TG-31 atau NP-04" required>
                         <small class="text-muted" style="font-size: 0.75rem;">Gunakan format unik. Nomor blok akan diurutkan otomatis.</small>
                     </div>
 
-                    <!-- Judul Blok -->
                     <div class="mb-3">
                         <label class="form-label fw-bold small">Judul Blok <span class="text-danger">*</span></label>
                         <input type="text" id="input-judul-blok" class="form-control" placeholder="Contoh: Mesin Kasir (Point of Sales)" required>
                     </div>
 
-                    <!-- Kode HTML Blok -->
                     <div class="mb-3">
                         <label class="form-label fw-bold small">Kode HTML Blok <span class="text-danger">*</span></label>
                         <textarea id="input-kode-blok" class="form-control" rows="8" placeholder="Tempelkan kode HTML lengkap blok di sini..." required style="font-family: 'Courier New', monospace; font-size: 0.85rem;"></textarea>
                         <small class="text-muted" style="font-size: 0.75rem;">Tempelkan seluruh kode termasuk komentar pembuka dan penutup blok.</small>
                     </div>
 
-                    <!-- Tombol Simpan -->
-                    <button type="submit" class="btn btn-orange w-100 fw-bold py-2 shadow-sm">
+                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
                         <i class="bi bi-save-fill me-2"></i> SIMPAN BLOK
                     </button>
                     <button type="button" id="btn-batal-edit" class="btn btn-outline-secondary w-100 fw-bold py-2 mt-2 d-none" onclick="batalEditBlok()">
@@ -259,13 +389,20 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
                     </button>
                 </form>
             </div>
+
+            <!-- Catatan -->
+            <div class="card-custom border-top-primary shadow-sm border-0">
+                <h5 class="text-dark fw-bold border-bottom pb-2 mb-3"><i class="bi bi-sticky-fill me-2 text-primary"></i> Catatan</h5>
+                <textarea id="notepad-catatan" class="form-control" rows="6" placeholder="Tulis catatan atau keterangan tambahan di sini... Catatan akan tersimpan otomatis." style="font-family: 'Segoe UI', sans-serif;"></textarea>
+                <small class="text-muted mt-2 d-block" style="font-size: 0.75rem;"><i class="bi bi-info-circle-fill me-1"></i> Catatan tersimpan otomatis di browser ini.</small>
+            </div>
         </div>
 
         <!-- BAGIAN 2: DAFTAR BLOK TERSIMPAN (KANAN) -->
         <div class="col-lg-7">
-            <div class="card-custom h-100 border-top-orange shadow-sm border-0">
+            <div class="card-custom h-100 border-top-primary shadow-sm border-0">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                    <h5 class="text-dark fw-bold mb-0"><i class="bi bi-list-check me-2 text-orange-custom"></i> Daftar Blok Tersimpan</h5>
+                    <h5 class="text-dark fw-bold mb-0"><i class="bi bi-list-check me-2 text-primary"></i> Daftar Blok Tersimpan</h5>
                     <div class="d-flex gap-2">
                         <button class="btn btn-sm btn-outline-secondary" onclick="refreshDaftarBlok()" title="Segarkan Daftar">
                             <i class="bi bi-arrow-clockwise"></i>
@@ -292,7 +429,6 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
                     </table>
                 </div>
                 
-                <!-- Tempat kosong jika belum ada blok -->
                 <div id="blok-kosong-placeholder" class="text-center py-5 text-muted">
                     <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                     <p class="mb-0">Belum ada blok yang tersimpan. Gunakan formulir di sebelah kiri untuk menambahkan blok pertama Anda.</p>
@@ -304,8 +440,9 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
 </div>
 
 <script>
-    // Kunci localStorage untuk menyimpan daftar blok
+    // Kunci localStorage untuk menyimpan daftar blok dan catatan
     const STORAGE_KEY = 'notepad_blok_data';
+    const CATATAN_KEY = 'notepad_catatan';
     
     // Variabel untuk menandai mode edit
     let sedangEdit = false;
@@ -322,15 +459,12 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
             return;
         }
         
-        // Ambil data yang sudah ada
         let daftarBlok = ambilDaftarBlok();
         
-        // Jika sedang edit dan nomor blok berubah, hapus data lama
         if (sedangEdit && nomorBlokEdit !== nomorBlok) {
             daftarBlok = daftarBlok.filter(blok => blok.nomor !== nomorBlokEdit);
         }
         
-        // Cek apakah nomor blok sudah ada (kecuali sedang edit nomor yang sama)
         const indexExist = daftarBlok.findIndex(blok => blok.nomor === nomorBlok);
         if (indexExist >= 0 && (!sedangEdit || nomorBlokEdit !== nomorBlok)) {
             if (!confirm('Nomor blok "' + nomorBlok + '" sudah ada. Apakah Anda ingin menimpanya?')) {
@@ -339,10 +473,8 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
             daftarBlok.splice(indexExist, 1);
         }
         
-        // Hitung jumlah baris
         const jumlahBaris = kodeBlok.split('\n').length;
         
-        // Buat objek blok baru
         const blokBaru = {
             nomor: nomorBlok,
             judul: judulBlok,
@@ -351,27 +483,18 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
             tanggal: new Date().toISOString()
         };
         
-        // Jika sedang edit dan nomor sama, hapus yang lama dulu
         if (sedangEdit && nomorBlokEdit === nomorBlok) {
             daftarBlok = daftarBlok.filter(blok => blok.nomor !== nomorBlokEdit);
         }
         
-        // Tambahkan blok baru
         daftarBlok.push(blokBaru);
-        
-        // Simpan ke localStorage
         simpanDaftarBlok(daftarBlok);
-        
-        // Reset form
         resetFormBlok();
-        
-        // Refresh tampilan
         refreshDaftarBlok();
         
         alert('Blok "' + nomorBlok + '" berhasil disimpan!');
     }
     
-    // Fungsi untuk mengambil daftar blok dari localStorage
     function ambilDaftarBlok() {
         const data = localStorage.getItem(STORAGE_KEY);
         if (data) {
@@ -385,28 +508,22 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
         return [];
     }
     
-    // Fungsi untuk menyimpan daftar blok ke localStorage
     function simpanDaftarBlok(daftarBlok) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(daftarBlok));
     }
     
-    // Fungsi untuk mengurutkan blok berdasarkan nomor (natural sort)
     function urutkanBlok(daftarBlok) {
         return daftarBlok.sort((a, b) => {
             return a.nomor.localeCompare(b.nomor, undefined, { numeric: true, sensitivity: 'base' });
         });
     }
     
-    // Fungsi untuk menampilkan daftar blok di tabel
     function refreshDaftarBlok() {
         const tbody = document.getElementById('daftar-blok-tbody');
         const placeholder = document.getElementById('blok-kosong-placeholder');
         let daftarBlok = ambilDaftarBlok();
-        
-        // Urutkan
         daftarBlok = urutkanBlok(daftarBlok);
         
-        // Kosongkan tabel
         tbody.innerHTML = '';
         
         if (daftarBlok.length === 0) {
@@ -439,11 +556,9 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
             });
         }
         
-        // Update statistik
         updateStatistik(daftarBlok);
     }
     
-    // Fungsi untuk update statistik
     function updateStatistik(daftarBlok) {
         document.getElementById('total-blok-notepad').textContent = daftarBlok.length + ' Blok';
         
@@ -454,7 +569,6 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
         document.getElementById('total-baris-notepad').textContent = totalBaris + ' Baris';
     }
     
-    // Fungsi untuk melihat kode blok
     function lihatKodeBlok(nomor) {
         const daftarBlok = ambilDaftarBlok();
         const blok = daftarBlok.find(b => b.nomor === nomor);
@@ -465,7 +579,6 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
         }
     }
     
-    // Fungsi untuk mengedit blok
     function editBlok(nomor) {
         const daftarBlok = ambilDaftarBlok();
         const blok = daftarBlok.find(b => b.nomor === nomor);
@@ -480,17 +593,14 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
             document.getElementById('btn-batal-edit').classList.remove('d-none');
             document.querySelector('#form-tambah-blok button[type="submit"]').innerHTML = '<i class="bi bi-pencil-square me-2"></i> PERBARUI BLOK';
             
-            // Scroll ke form
             document.getElementById('input-nomor-blok').scrollIntoView({ behavior: 'smooth' });
         }
     }
     
-    // Fungsi untuk membatalkan edit
     function batalEditBlok() {
         resetFormBlok();
     }
     
-    // Fungsi untuk mereset form
     function resetFormBlok() {
         document.getElementById('input-nomor-blok').value = '';
         document.getElementById('input-judul-blok').value = '';
@@ -503,9 +613,8 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
         document.querySelector('#form-tambah-blok button[type="submit"]').innerHTML = '<i class="bi bi-save-fill me-2"></i> SIMPAN BLOK';
     }
     
-    // Fungsi untuk menghapus satu blok
     function hapusBlok(nomor) {
-        if (confirm('Apakah Anda yakin ingin menghapus blok "' + nomor + '" secara permanen? Tindakan ini tidak dapat dibatalkan.')) {
+        if (confirm('Apakah Anda yakin ingin menghapus blok "' + nomor + '" secara permanen?')) {
             let daftarBlok = ambilDaftarBlok();
             daftarBlok = daftarBlok.filter(blok => blok.nomor !== nomor);
             simpanDaftarBlok(daftarBlok);
@@ -514,10 +623,9 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
         }
     }
     
-    // Fungsi untuk menghapus semua blok
     function hapusSemuaBlok() {
-        if (confirm('PERINGATAN: Apakah Anda yakin ingin menghapus SEMUA blok yang tersimpan? Tindakan ini tidak dapat dibatalkan!')) {
-            if (confirm('KONFIRMASI TERAKHIR: Semua data blok akan hilang permanen. Lanjutkan?')) {
+        if (confirm('PERINGATAN: Hapus SEMUA blok?')) {
+            if (confirm('KONFIRMASI TERAKHIR: Lanjutkan?')) {
                 localStorage.removeItem(STORAGE_KEY);
                 refreshDaftarBlok();
                 alert('Semua blok telah dihapus.');
@@ -525,29 +633,188 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
         }
     }
     
-    // Fungsi untuk menggabungkan semua blok menjadi satu file HTML
-    function gabungSemuaBlok() {
-        let daftarBlok = ambilDaftarBlok();
-        daftarBlok = urutkanBlok(daftarBlok);
+    function escapeHTML(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    function formatTanggal(isoString) {
+        if (!isoString) return '-';
+        const tanggal = new Date(isoString);
+        const bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        return tanggal.getDate() + ' ' + bulan[tanggal.getMonth()] + ' ' + tanggal.getFullYear() + ', ' +
+            String(tanggal.getHours()).padStart(2, '0') + ':' + String(tanggal.getMinutes()).padStart(2, '0');
+    }
+    
+    function bukaEditorBaru() {
+        document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
+        document.getElementById('halaman-editor-blok').classList.remove('d-none-custom');
+        // Reset editor untuk blok baru
+        if (typeof resetEditorBaru === 'function') {
+            resetEditorBaru();
+        }
+    }
+    
+    function bukaModalPenggabungan() {
+        // Akan memanggil fungsi dari NP-02.2
+        if (typeof tampilkanModalGabung === 'function') {
+            tampilkanModalGabung();
+        } else {
+            alert('Fitur penggabungan akan segera tersedia.');
+        }
+    }
+    
+    function updateKapasitas() {
+        let total = 0;
+        for (let key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+                total += (localStorage[key].length + key.length) * 2;
+            }
+        }
+        const totalKB = (total / 1024).toFixed(1);
+        document.getElementById('kapasitas-notepad').textContent = totalKB + ' KB';
+    }
+    
+    // Catatan
+    const catatanTextarea = document.getElementById('notepad-catatan');
+    if (catatanTextarea) {
+        // Muat catatan tersimpan
+        const catatanTersimpan = localStorage.getItem(CATATAN_KEY);
+        if (catatanTersimpan) {
+            catatanTextarea.value = catatanTersimpan;
+        }
+        // Simpan otomatis saat mengetik
+        catatanTextarea.addEventListener('input', function() {
+            localStorage.setItem(CATATAN_KEY, catatanTextarea.value);
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        refreshDaftarBlok();
+        updateKapasitas();
+    });
+</script>
+<!-- AKHIR BLOK NP-02.1 -->
+<!-- ==========================================
+BLOK NP-02.2 - MODAL PENGGABUNGAN BLOK (COPY & DOWNLOAD)
+===========================================
+PENJELASAN FUNGSI PERINTAH BLOK NP-02.2:
+1. Penggabungan Kode Otomatis: Mengambil seluruh blok yang tersimpan di localStorage, mengurutkannya berdasarkan nomor, dan menggabungkan semua kode menjadi satu kesatuan yang siap disalin atau diunduh.
+2. Tombol Salin (Copy): Menyediakan tombol untuk menyalin seluruh kode gabungan ke clipboard perangkat dengan satu klik, memudahkan pemindahan kode ke aplikasi lain.
+3. Tombol Unduh (Download): Menyediakan tombol untuk mengunduh kode gabungan sebagai file HTML (.html) dengan nama yang mengandung tanggal dan waktu unduhan.
+4. Tampilan Modal Interaktif: Hasil penggabungan ditampilkan dalam kotak dialog (modal) yang nyaman, lengkap dengan informasi jumlah blok dan total baris kode.
+=========================================== -->
+<!-- Modal Penggabungan Blok -->
+<div class="modal fade" id="modalGabungBlok" tabindex="-1" aria-labelledby="modalGabungBlokLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="modalGabungBlokLabel">
+                    <i class="bi bi-file-earmark-code me-2"></i> Hasil Penggabungan Semua Blok
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-primary me-2" id="modal-jumlah-blok">0 Blok</span>
+                        <span class="badge bg-secondary" id="modal-jumlah-baris">0 Baris</span>
+                    </div>
+                    <small class="text-muted">Kode di bawah adalah gabungan semua blok yang tersimpan.</small>
+                </div>
+                <textarea id="textarea-gabungan" class="form-control" rows="20" readonly style="font-family: 'Courier New', monospace; font-size: 0.85rem; background-color: #f8f9fa;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary fw-bold" onclick="salinKodeGabungan()">
+                    <i class="bi bi-clipboard me-2"></i> SALIN KE CLIPBOARD
+                </button>
+                <button type="button" class="btn btn-primary fw-bold" onclick="unduhKodeGabungan()">
+                    <i class="bi bi-download me-2"></i> UNDUH FILE HTML
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Kunci localStorage
+    const STORAGE_KEY_MODAL = 'notepad_blok_data';
+    
+    // Fungsi untuk menampilkan modal penggabungan
+    function tampilkanModalGabung() {
+        let daftarBlok = ambilDaftarBlokModal();
         
         if (daftarBlok.length === 0) {
-            alert('Tidak ada blok yang bisa digabungkan. Silakan tambahkan blok terlebih dahulu.');
+            alert('Tidak ada blok yang tersimpan. Silakan tambahkan blok terlebih dahulu.');
             return;
         }
         
-        // Kumpulkan semua kode blok
+        // Urutkan blok
+        daftarBlok.sort((a, b) => {
+            return a.nomor.localeCompare(b.nomor, undefined, { numeric: true, sensitivity: 'base' });
+        });
+        
+        // Gabungkan semua kode
         let kodeGabungan = '';
         daftarBlok.forEach(blok => {
             kodeGabungan += blok.kode + '\n\n';
         });
         
-        // Buat file dan unduh
-        const blob = new Blob([kodeGabungan], { type: 'text/html; charset=UTF-8' });
+        // Hitung total baris
+        const totalBaris = kodeGabungan.split('\n').length;
+        
+        // Tampilkan di textarea
+        document.getElementById('textarea-gabungan').value = kodeGabungan;
+        document.getElementById('modal-jumlah-blok').textContent = daftarBlok.length + ' Blok';
+        document.getElementById('modal-jumlah-baris').textContent = totalBaris + ' Baris';
+        
+        // Tampilkan modal
+        const modal = new bootstrap.Modal(document.getElementById('modalGabungBlok'));
+        modal.show();
+    }
+    
+    // Fungsi untuk mengambil daftar blok
+    function ambilDaftarBlokModal() {
+        const data = localStorage.getItem(STORAGE_KEY_MODAL);
+        if (data) {
+            try {
+                return JSON.parse(data);
+            } catch (error) {
+                return [];
+            }
+        }
+        return [];
+    }
+    
+    // Fungsi untuk menyalin kode ke clipboard
+    function salinKodeGabungan() {
+        const textarea = document.getElementById('textarea-gabungan');
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); // Untuk mobile
+        
+        try {
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                alert('Kode berhasil disalin ke clipboard!');
+            }).catch(() => {
+                // Fallback untuk browser lama
+                document.execCommand('copy');
+                alert('Kode berhasil disalin ke clipboard!');
+            });
+        } catch (err) {
+            alert('Gagal menyalin. Silakan pilih teks secara manual.');
+        }
+    }
+    
+    // Fungsi untuk mengunduh kode sebagai file HTML
+    function unduhKodeGabungan() {
+        const kode = document.getElementById('textarea-gabungan').value;
+        const blob = new Blob([kode], { type: 'text/html; charset=UTF-8' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
         
-        // Nama file berdasarkan tanggal
         const tanggal = new Date();
         const namaFile = 'gabungan_blok_' + 
             tanggal.getFullYear() + 
@@ -564,75 +831,33 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-02:
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
         
-        alert('File gabungan "' + namaFile + '" berhasil diunduh. Total ' + daftarBlok.length + ' blok digabungkan.');
-    }
-    
-    // Fungsi untuk logout
-    function logoutNotepad() {
-        localStorage.removeItem('notepad_session');
-        document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
-        document.getElementById('halaman-login-notepad').classList.remove('d-none-custom');
-        alert('Anda telah keluar dari Notepad.');
-    }
-    
-    // Fungsi bantuan untuk escape HTML
-    function escapeHTML(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
-    // Fungsi untuk format tanggal
-    function formatTanggal(isoString) {
-        if (!isoString) return '-';
-        const tanggal = new Date(isoString);
-        const bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        return tanggal.getDate() + ' ' + bulan[tanggal.getMonth()] + ' ' + tanggal.getFullYear() + ', ' +
-            String(tanggal.getHours()).padStart(2, '0') + ':' + String(tanggal.getMinutes()).padStart(2, '0');
-    }
-    
-    // Inisialisasi saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', function() {
-        refreshDaftarBlok();
-        updateKapasitas();
-    });
-    
-    // Fungsi untuk update informasi kapasitas
-    function updateKapasitas() {
-        let total = 0;
-        for (let key in localStorage) {
-            if (localStorage.hasOwnProperty(key)) {
-                total += (localStorage[key].length + key.length) * 2; // Perkiraan byte (UTF-16)
-            }
-        }
-        const totalKB = (total / 1024).toFixed(1);
-        document.getElementById('kapasitas-notepad').textContent = totalKB + ' KB';
+        alert('File "' + namaFile + '" berhasil diunduh.');
     }
 </script>
-<!-- AKHIR BLOK NP-02 -->
+<!-- AKHIR BLOK NP-02.2 -->
 <!-- ==========================================
-BLOK NP-03 - EDITOR BLOK DENGAN PRATINJAU LANGSUNG
+BLOK NP-03 - EDITOR BLOK DENGAN PRATINJAU LANGSUNG (BIRU-PUTIH)
 ===========================================
 PENJELASAN FUNGSI PERINTAH BLOK NP-03:
-1. Pengeditan Kode Blok: Menyediakan halaman khusus untuk mengedit kode HTML dari blok yang telah disimpan sebelumnya, dengan tampilan editor yang luas dan nyaman digunakan.
-2. Pratinjau Langsung (Live Preview): Menampilkan hasil render kode HTML secara langsung di panel sebelah kanan, sehingga setiap perubahan yang diketik dapat segera dilihat hasilnya tanpa perlu menyimpan terlebih dahulu.
-3. Penyimpanan Perubahan: Setelah selesai mengedit, perubahan dapat disimpan kembali ke penyimpanan lokal (localStorage) dengan satu klik tombol, memperbarui data blok yang lama.
-4. Navigasi Kembali: Tersedia tombol untuk kembali ke halaman Dashboard Manajemen Blok (NP-02) tanpa kehilangan data yang sudah tersimpan sebelumnya.
+1. Pengeditan Kode Blok: Menyediakan halaman editor dengan area penulisan kode HTML yang luas, nyaman digunakan untuk menulis atau mengedit kode blok secara langsung.
+2. Pratinjau Langsung (Live Preview): Panel pratinjau di sebelah kanan akan menampilkan hasil render kode HTML secara otomatis setiap kali pengguna selesai mengetik, sehingga memudahkan pengecekan tampilan.
+3. Mode Editor Baru dan Edit Blok: Dapat digunakan untuk membuat blok baru dari awal (Editor Baru) maupun mengedit blok yang sudah tersimpan dengan memanggil fungsi dari dashboard.
+4. Navigasi dan Penyimpanan: Tombol simpan akan menyimpan perubahan ke localStorage, dan tombol kembali akan mengarahkan pengguna ke Dashboard tanpa kehilangan data yang belum tersimpan (dengan konfirmasi).
 =========================================== -->
-<div class="container-fluid mt-4 d-none-custom" id="halaman-editor-blok">
+<div class="container-fluid mt-4" id="halaman-editor-blok">
     
     <!-- Header Halaman -->
     <div class="d-flex justify-content-between align-items-center mb-3 px-2">
         <div>
-            <h4 class="text-orange-custom fw-bold mb-0"><i class="bi bi-pencil-square me-2"></i> Editor Blok</h4>
-            <small class="text-muted" id="editor-nomor-blok-display">Nomor Blok: -</small>
+            <h4 class="text-primary fw-bold mb-0"><i class="bi bi-pencil-square me-2"></i> Editor Blok</h4>
+            <small class="text-muted" id="editor-nomor-blok-display">Mode: Editor Baru</small>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-success fw-bold shadow-sm" onclick="simpanPerubahanBlok()">
+            <button class="btn btn-primary fw-bold shadow-sm" onclick="simpanDariEditor()">
                 <i class="bi bi-check-circle-fill me-2"></i> Simpan Perubahan
             </button>
-            <button class="btn btn-outline-secondary fw-bold shadow-sm" onclick="kembaliKeDashboardNotepad()">
-                <i class="bi bi-arrow-left me-2"></i> Kembali ke Daftar
+            <button class="btn btn-outline-secondary fw-bold shadow-sm" onclick="kembaliKeDashboardDariEditor()">
+                <i class="bi bi-arrow-left me-2"></i> Kembali ke Dashboard
             </button>
         </div>
     </div>
@@ -640,18 +865,18 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-03:
     <!-- Informasi Judul Blok -->
     <div class="px-2 mb-3">
         <div class="bg-light rounded-3 p-3 border">
-            <h5 class="fw-bold text-dark mb-1" id="editor-judul-blok-display">Judul Blok</h5>
-            <small class="text-muted" id="editor-tanggal-blok-display">Terakhir disimpan: -</small>
+            <h5 class="fw-bold text-dark mb-1" id="editor-judul-blok-display">Blok Baru</h5>
+            <small class="text-muted" id="editor-tanggal-blok-display">Belum disimpan</small>
         </div>
     </div>
 
-    <div class="row g-3 px-2" style="height: calc(100vh - 200px);">
+    <div class="row g-3 px-2" style="height: calc(100vh - 220px);">
         
         <!-- BAGIAN KIRI: TEXTAREA EDITOR -->
         <div class="col-md-6" style="height: 100%;">
-            <div class="card-custom border-top-orange shadow-sm border-0 h-100 d-flex flex-column">
+            <div class="card-custom border-top-primary shadow-sm border-0 h-100 d-flex flex-column">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                    <h6 class="text-dark fw-bold mb-0"><i class="bi bi-code-slash me-2 text-orange-custom"></i> Kode HTML Blok</h6>
+                    <h6 class="text-dark fw-bold mb-0"><i class="bi bi-code-slash me-2 text-primary"></i> Kode HTML Blok</h6>
                     <small class="text-muted" id="editor-jumlah-baris">0 baris</small>
                 </div>
                 <textarea id="editor-textarea" class="form-control flex-grow-1" style="font-family: 'Courier New', monospace; font-size: 0.85rem; resize: none; min-height: 400px;" placeholder="Ketik atau tempel kode HTML di sini..."></textarea>
@@ -660,7 +885,7 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-03:
 
         <!-- BAGIAN KANAN: PRATINJAU LANGSUNG -->
         <div class="col-md-6" style="height: 100%;">
-            <div class="card-custom border-top-orange shadow-sm border-0 h-100 d-flex flex-column">
+            <div class="card-custom border-top-primary shadow-sm border-0 h-100 d-flex flex-column">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                     <h6 class="text-dark fw-bold mb-0"><i class="bi bi-eye-fill me-2 text-success"></i> Pratinjau Langsung</h6>
                     <button class="btn btn-sm btn-outline-secondary" onclick="refreshPratinjau()" title="Segarkan Pratinjau">
@@ -677,15 +902,31 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-03:
 </div>
 
 <script>
-    // Kunci localStorage untuk menyimpan daftar blok
-    const STORAGE_KEY_NP03 = 'notepad_blok_data';
+    // Kunci localStorage
+    const STORAGE_KEY_EDITOR = 'notepad_blok_data';
     
-    // Variabel untuk menyimpan nomor blok yang sedang diedit
-    let nomorBlokAktif = '';
+    // Variabel status editor
+    let editorMode = 'baru'; // 'baru' atau 'edit'
+    let editorNomorBlok = '';
     
-    // Fungsi untuk membuka editor dengan blok tertentu
+    // Debounce timer
+    let debounceTimer;
+    
+    // Fungsi untuk mereset editor ke mode baru
+    function resetEditorBaru() {
+        editorMode = 'baru';
+        editorNomorBlok = '';
+        document.getElementById('editor-nomor-blok-display').textContent = 'Mode: Editor Baru';
+        document.getElementById('editor-judul-blok-display').textContent = 'Blok Baru';
+        document.getElementById('editor-tanggal-blok-display').textContent = 'Belum disimpan';
+        document.getElementById('editor-textarea').value = '';
+        document.getElementById('editor-jumlah-baris').textContent = '0 baris';
+        refreshPratinjau();
+    }
+    
+    // Fungsi untuk membuka editor dengan blok yang sudah ada
     function bukaEditorBlok(nomor) {
-        const daftarBlok = ambilDaftarBlokNP03();
+        const daftarBlok = ambilDaftarBlokEditor();
         const blok = daftarBlok.find(b => b.nomor === nomor);
         
         if (!blok) {
@@ -693,101 +934,134 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-03:
             return;
         }
         
-        // Set variabel aktif
-        nomorBlokAktif = nomor;
+        editorMode = 'edit';
+        editorNomorBlok = nomor;
         
-        // Update tampilan header
-        document.getElementById('editor-nomor-blok-display').textContent = 'Nomor Blok: ' + blok.nomor;
+        document.getElementById('editor-nomor-blok-display').textContent = 'Mengedit: ' + blok.nomor;
         document.getElementById('editor-judul-blok-display').textContent = blok.judul;
-        document.getElementById('editor-tanggal-blok-display').textContent = 'Terakhir disimpan: ' + formatTanggalNP03(blok.tanggal);
-        
-        // Isi textarea dengan kode blok
-        const textarea = document.getElementById('editor-textarea');
-        textarea.value = blok.kode;
-        
-        // Update jumlah baris
-        updateJumlahBarisNP03();
-        
-        // Tampilkan pratinjau
+        document.getElementById('editor-tanggal-blok-display').textContent = 'Terakhir disimpan: ' + formatTanggalEditor(blok.tanggal);
+        document.getElementById('editor-textarea').value = blok.kode;
+        updateJumlahBarisEditor();
         refreshPratinjau();
         
-        // Tampilkan halaman editor
+        // Tampilkan editor
         document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
         document.getElementById('halaman-editor-blok').classList.remove('d-none-custom');
         
-        // Fokus ke textarea
-        textarea.focus();
-        
-        // Event listener untuk update real-time
-        textarea.addEventListener('input', function() {
-            updateJumlahBarisNP03();
-            // Debounce pratinjau agar tidak terlalu sering update
-            clearTimeout(window.debounceTimer);
-            window.debounceTimer = setTimeout(refreshPratinjau, 500);
-        });
+        document.getElementById('editor-textarea').focus();
     }
     
-    // Fungsi untuk mengambil daftar blok dari localStorage
-    function ambilDaftarBlokNP03() {
-        const data = localStorage.getItem(STORAGE_KEY_NP03);
+    // Fungsi untuk mengambil daftar blok
+    function ambilDaftarBlokEditor() {
+        const data = localStorage.getItem(STORAGE_KEY_EDITOR);
         if (data) {
             try {
                 return JSON.parse(data);
-            } catch (error) {
-                console.error('Gagal membaca data blok:', error);
+            } catch (e) {
                 return [];
             }
         }
         return [];
     }
     
-    // Fungsi untuk menyimpan daftar blok ke localStorage
-    function simpanDaftarBlokNP03(daftarBlok) {
-        localStorage.setItem(STORAGE_KEY_NP03, JSON.stringify(daftarBlok));
+    // Fungsi untuk menyimpan daftar blok
+    function simpanDaftarBlokEditor(daftarBlok) {
+        localStorage.setItem(STORAGE_KEY_EDITOR, JSON.stringify(daftarBlok));
     }
     
-    // Fungsi untuk menyimpan perubahan yang diedit
-    function simpanPerubahanBlok() {
-        if (!nomorBlokAktif) {
-            alert('Tidak ada blok yang sedang diedit.');
-            return;
-        }
+    // Fungsi untuk menyimpan dari editor
+    function simpanDariEditor() {
+        const kode = document.getElementById('editor-textarea').value.trim();
         
-        const kodeBaru = document.getElementById('editor-textarea').value.trim();
-        
-        if (!kodeBaru) {
+        if (!kode) {
             alert('Kode blok tidak boleh kosong.');
             return;
         }
         
-        let daftarBlok = ambilDaftarBlokNP03();
-        const index = daftarBlok.findIndex(b => b.nomor === nomorBlokAktif);
-        
-        if (index >= 0) {
-            // Update data blok
-            daftarBlok[index].kode = kodeBaru;
-            daftarBlok[index].baris = kodeBaru.split('\n').length;
-            daftarBlok[index].tanggal = new Date().toISOString();
+        if (editorMode === 'baru') {
+            // Minta nomor dan judul blok
+            const nomor = prompt('Masukkan Nomor Blok (contoh: TG-31):', '');
+            if (!nomor || !nomor.trim()) {
+                alert('Nomor blok wajib diisi.');
+                return;
+            }
+            const judul = prompt('Masukkan Judul Blok:', '');
+            if (!judul || !judul.trim()) {
+                alert('Judul blok wajib diisi.');
+                return;
+            }
             
-            // Simpan
-            simpanDaftarBlokNP03(daftarBlok);
+            let daftarBlok = ambilDaftarBlokEditor();
+            const jumlahBaris = kode.split('\n').length;
             
-            // Update tampilan
-            document.getElementById('editor-tanggal-blok-display').textContent = 'Terakhir disimpan: ' + formatTanggalNP03(daftarBlok[index].tanggal);
-            updateJumlahBarisNP03();
+            const blokBaru = {
+                nomor: nomor.trim(),
+                judul: judul.trim(),
+                kode: kode,
+                baris: jumlahBaris,
+                tanggal: new Date().toISOString()
+            };
             
-            alert('Perubahan pada blok "' + nomorBlokAktif + '" berhasil disimpan!');
+            // Cek duplikat
+            const indexExist = daftarBlok.findIndex(b => b.nomor === blokBaru.nomor);
+            if (indexExist >= 0) {
+                if (!confirm('Nomor blok sudah ada. Timpa?')) return;
+                daftarBlok.splice(indexExist, 1);
+            }
+            
+            daftarBlok.push(blokBaru);
+            simpanDaftarBlokEditor(daftarBlok);
+            
+            // Update status editor
+            editorMode = 'edit';
+            editorNomorBlok = blokBaru.nomor;
+            document.getElementById('editor-nomor-blok-display').textContent = 'Mengedit: ' + blokBaru.nomor;
+            document.getElementById('editor-judul-blok-display').textContent = blokBaru.judul;
+            document.getElementById('editor-tanggal-blok-display').textContent = 'Terakhir disimpan: ' + formatTanggalEditor(blokBaru.tanggal);
+            
+            alert('Blok "' + blokBaru.nomor + '" berhasil disimpan!');
         } else {
-            alert('Blok tidak ditemukan. Mungkin telah dihapus.');
+            // Mode edit
+            let daftarBlok = ambilDaftarBlokEditor();
+            const index = daftarBlok.findIndex(b => b.nomor === editorNomorBlok);
+            
+            if (index >= 0) {
+                daftarBlok[index].kode = kode;
+                daftarBlok[index].baris = kode.split('\n').length;
+                daftarBlok[index].tanggal = new Date().toISOString();
+                simpanDaftarBlokEditor(daftarBlok);
+                
+                document.getElementById('editor-tanggal-blok-display').textContent = 'Terakhir disimpan: ' + formatTanggalEditor(daftarBlok[index].tanggal);
+                updateJumlahBarisEditor();
+                
+                alert('Perubahan pada blok "' + editorNomorBlok + '" berhasil disimpan!');
+            } else {
+                alert('Blok tidak ditemukan. Mungkin sudah dihapus.');
+            }
         }
     }
     
-    // Fungsi untuk refresh pratinjau langsung
+    // Fungsi untuk kembali ke dashboard
+    function kembaliKeDashboardDariEditor() {
+        const kodeSekarang = document.getElementById('editor-textarea').value.trim();
+        if (kodeSekarang) {
+            if (!confirm('Anda memiliki kode yang belum disimpan. Yakin ingin kembali? Perubahan akan hilang.')) {
+                return;
+            }
+        }
+        document.getElementById('halaman-editor-blok').classList.add('d-none-custom');
+        document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
+        if (typeof refreshDaftarBlok === 'function') {
+            refreshDaftarBlok();
+        }
+        resetEditorBaru();
+    }
+    
+    // Fungsi untuk refresh pratinjau
     function refreshPratinjau() {
         const iframe = document.getElementById('pratinjau-iframe');
         const kode = document.getElementById('editor-textarea').value;
         
-        // Buat konten untuk iframe
         const kontenIframe = `
             <!DOCTYPE html>
             <html lang="id">
@@ -798,61 +1072,35 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-03:
                 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
                 <style>
                     body {
-                        background-color: #fdfcfb;
-                        color: #2b2b2b;
+                        background-color: #f8f9fa;
+                        color: #212529;
                         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        margin: 0;
                         padding: 20px;
                     }
-                    .bg-orange-custom {
-                        background: linear-gradient(135deg, #ff6600, #ff8833) !important;
-                    }
-                    .text-orange-custom {
-                        color: #ff6600 !important;
-                    }
+                    .bg-primary { background-color: #0d6efd !important; }
+                    .text-primary { color: #0d6efd !important; }
                     .card-custom {
                         border: none;
                         border-radius: 16px;
-                        box-shadow: 0 8px 24px rgba(255, 102, 0, 0.08);
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.05);
                         background: #ffffff;
                         padding: 30px;
-                        transition: transform 0.3s ease, box-shadow 0.3s ease;
                     }
-                    .card-custom:hover {
-                        transform: translateY(-5px);
-                        box-shadow: 0 12px 32px rgba(255, 102, 0, 0.15);
-                    }
-                    .btn-orange {
-                        background-color: #ff6600;
-                        color: #ffffff;
-                        font-weight: 700;
+                    .border-top-primary { border-top: 4px solid #0d6efd !important; }
+                    .btn-primary {
+                        background-color: #0d6efd;
                         border: none;
-                        border-radius: 8px;
-                        transition: all 0.2s ease;
-                    }
-                    .btn-orange:hover {
-                        background-color: #e55500;
-                        color: #ffffff;
-                        box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
-                    }
-                    .btn-outline-orange {
-                        border: 2px solid #ff6600;
-                        color: #ff6600;
                         font-weight: 700;
-                        background-color: transparent;
                         border-radius: 8px;
-                        transition: all 0.2s ease;
-                    }
-                    .btn-outline-orange:hover {
-                        background-color: #ff6600;
                         color: #ffffff;
                     }
-                    .border-top-orange {
-                        border-top: 4px solid #ff6600 !important;
+                    .btn-outline-primary {
+                        border: 2px solid #0d6efd;
+                        color: #0d6efd;
+                        font-weight: 700;
+                        border-radius: 8px;
                     }
-                    .d-none-custom {
-                        display: block !important;
-                    }
+                    .d-none-custom { display: block !important; }
                 </style>
             </head>
             <body>
@@ -861,54 +1109,260 @@ PENJELASAN FUNGSI PERINTAH BLOK NP-03:
             </html>
         `;
         
-        // Tulis ke iframe
         iframe.srcdoc = kontenIframe;
     }
     
-    // Fungsi untuk update jumlah baris
-    function updateJumlahBarisNP03() {
+    // Fungsi update jumlah baris
+    function updateJumlahBarisEditor() {
         const kode = document.getElementById('editor-textarea').value;
-        const jumlahBaris = kode.split('\n').length;
-        document.getElementById('editor-jumlah-baris').textContent = jumlahBaris + ' baris';
+        const baris = kode.split('\n').length;
+        document.getElementById('editor-jumlah-baris').textContent = baris + ' baris';
     }
     
-    // Fungsi untuk kembali ke dashboard
-    function kembaliKeDashboardNotepad() {
-        document.getElementById('halaman-editor-blok').classList.add('d-none-custom');
-        document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
-        
-        // Refresh daftar blok
-        if (typeof refreshDaftarBlok === 'function') {
-            refreshDaftarBlok();
+    // Format tanggal
+    function formatTanggalEditor(isoString) {
+        if (!isoString) return '-';
+        const tgl = new Date(isoString);
+        const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+        return tgl.getDate() + ' ' + bulan[tgl.getMonth()] + ' ' + tgl.getFullYear() + ', ' +
+            String(tgl.getHours()).padStart(2,'0') + ':' + String(tgl.getMinutes()).padStart(2,'0');
+    }
+    
+    // Event listener untuk textarea
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('editor-textarea');
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                updateJumlahBarisEditor();
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(refreshPratinjau, 500);
+            });
         }
         
-        // Reset
-        nomorBlokAktif = '';
-        document.getElementById('editor-textarea').value = '';
-    }
-    
-    // Fungsi bantuan untuk format tanggal
-    function formatTanggalNP03(isoString) {
-        if (!isoString) return '-';
-        const tanggal = new Date(isoString);
-        const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-        return tanggal.getDate() + ' ' + bulan[tanggal.getMonth()] + ' ' + tanggal.getFullYear() + ', Pukul ' +
-            String(tanggal.getHours()).padStart(2, '0') + ':' + String(tanggal.getMinutes()).padStart(2, '0') + ' WIB';
-    }
-    
-    // Event listener untuk keyboard shortcut
-    document.addEventListener('DOMContentLoaded', function() {
-        document.addEventListener('keydown', function(event) {
-            // Ctrl+S untuk menyimpan
-            if (event.ctrlKey && event.key === 's') {
-                event.preventDefault();
+        // Keyboard shortcut Ctrl+S
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
                 if (!document.getElementById('halaman-editor-blok').classList.contains('d-none-custom')) {
-                    simpanPerubahanBlok();
+                    simpanDariEditor();
                 }
             }
         });
     });
 </script>
 <!-- AKHIR BLOK NP-03 -->
+<!-- ==========================================
+BLOK NP-04 - PRATINJAU GABUNGAN BLOK (UJI COBA)
+===========================================
+PENJELASAN FUNGSI PERINTAH BLOK NP-04:
+1. Pratinjau Gabungan Penuh: Menampilkan seluruh blok yang tersimpan di localStorage dalam satu halaman pratinjau yang dirender secara langsung di dalam iframe, sehingga pengguna dapat melihat hasil akhir sebelum diunduh.
+2. Panel Daftar Blok Interaktif: Menyediakan daftar semua blok yang sedang digabungkan, lengkap dengan tombol Edit (membuka editor NP-03) dan Hapus (menghapus blok dari penyimpanan) untuk uji coba dan perbaikan cepat.
+3. Sinkronisasi Data Real-Time: Setiap perubahan (edit atau hapus) yang dilakukan melalui panel daftar blok akan langsung memperbarui pratinjau gabungan secara otomatis tanpa perlu memuat ulang halaman.
+4. Navigasi dan Kontrol: Tersedia tombol untuk menyegarkan pratinjau secara manual serta tombol kembali ke Dashboard Manajemen Blok untuk melanjutkan pengelolaan.
+=========================================== -->
+<div id="halaman-pratinjau-gabungan" class="container-fluid mt-4 d-none-custom">
+    
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+        <div>
+            <h4 class="text-primary fw-bold mb-0"><i class="bi bi-eye-fill me-2"></i> Pratinjau Gabungan Semua Blok</h4>
+            <small class="text-muted">Uji coba tampilan akhir sebelum mengunduh.</small>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-primary fw-bold shadow-sm" onclick="refreshPratinjauGabungan()">
+                <i class="bi bi-arrow-clockwise me-2"></i> Segarkan Pratinjau
+            </button>
+            <button class="btn btn-outline-secondary fw-bold shadow-sm" onclick="kembaliKeDashboardDariPratinjau()">
+                <i class="bi bi-arrow-left me-2"></i> Kembali ke Dashboard
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-3 px-2" style="height: calc(100vh - 120px);">
+        
+        <!-- KIRI: IFRAME PRATINJAU -->
+        <div class="col-md-8" style="height: 100%;">
+            <div class="card-custom border-top-primary shadow-sm border-0 h-100 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                    <h6 class="text-dark fw-bold mb-0"><i class="bi bi-window-stack me-2 text-primary"></i> Tampilan Gabungan</h6>
+                    <span class="badge bg-primary" id="pratinjau-jumlah-blok-badge">0 Blok</span>
+                </div>
+                <div class="flex-grow-1 border rounded bg-white" style="overflow: auto;">
+                    <iframe id="pratinjau-gabungan-iframe" style="width: 100%; height: 100%; border: none;" sandbox="allow-scripts allow-same-origin"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- KANAN: DAFTAR BLOK + AKSI -->
+        <div class="col-md-4" style="height: 100%;">
+            <div class="card-custom border-top-primary shadow-sm border-0 h-100 d-flex flex-column">
+                <h6 class="text-dark fw-bold border-bottom pb-2 mb-3"><i class="bi bi-list-check me-2 text-primary"></i> Daftar Blok</h6>
+                <div class="flex-grow-1" style="overflow-y: auto; max-height: calc(100% - 50px);">
+                    <div class="list-group list-group-flush" id="pratinjau-daftar-blok">
+                        <!-- Diisi oleh JavaScript -->
+                    </div>
+                </div>
+                <small class="text-muted mt-2"><i class="bi bi-info-circle-fill me-1"></i> Klik Edit atau Hapus untuk mengelola blok.</small>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Asumsikan fungsi-fungsi berikut sudah tersedia dari NP-02.1 atau NP-03:
+    // ambilDaftarBlok(), simpanDaftarBlok(), hapusBlok(nomor), bukaEditorBlok(nomor)
+    // Jika belum, kita definisikan ulang di sini dengan namespace berbeda? 
+    // Karena Notepad adalah satu aplikasi, fungsi-fungsi tersebut akan digabung.
+    // Untuk kemandirian, kita gunakan langsung localStorage key yang sama.
+
+    const STORAGE_KEY_NP04 = 'notepad_blok_data';
+
+    function ambilDaftarBlokNP04() {
+        const data = localStorage.getItem(STORAGE_KEY_NP04);
+        return data ? JSON.parse(data) : [];
+    }
+
+    function simpanDaftarBlokNP04(daftar) {
+        localStorage.setItem(STORAGE_KEY_NP04, JSON.stringify(daftar));
+    }
+
+    function hapusBlokDariPratinjau(nomor) {
+        if (confirm('Hapus blok "' + nomor + '" secara permanen?')) {
+            let daftar = ambilDaftarBlokNP04();
+            daftar = daftar.filter(b => b.nomor !== nomor);
+            simpanDaftarBlokNP04(daftar);
+            muatPanelDaftarBlok();
+            refreshPratinjauGabungan();
+        }
+    }
+
+    function editBlokDariPratinjau(nomor) {
+        // Tandai untuk membuka editor
+        // Kita perlu memastikan fungsi bukaEditorBlok dari NP-03 tersedia
+        if (typeof bukaEditorBlok === 'function') {
+            // Sembunyikan pratinjau, tampilkan editor
+            document.getElementById('halaman-pratinjau-gabungan').classList.add('d-none-custom');
+            document.getElementById('halaman-editor-blok').classList.remove('d-none-custom');
+            bukaEditorBlok(nomor);
+        } else {
+            alert('Editor tidak tersedia. Pastikan Blok NP-03 sudah digabungkan.');
+        }
+    }
+
+    function muatPanelDaftarBlok() {
+        const container = document.getElementById('pratinjau-daftar-blok');
+        const daftar = ambilDaftarBlokNP04();
+        // Urutkan
+        daftar.sort((a, b) => a.nomor.localeCompare(b.nomor, undefined, { numeric: true, sensitivity: 'base' }));
+        
+        container.innerHTML = '';
+        if (daftar.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted py-3">Tidak ada blok tersimpan.</div>';
+            document.getElementById('pratinjau-jumlah-blok-badge').textContent = '0 Blok';
+            return;
+        }
+
+        document.getElementById('pratinjau-jumlah-blok-badge').textContent = daftar.length + ' Blok';
+        
+        daftar.forEach(blok => {
+            const item = document.createElement('div');
+            item.className = 'list-group-item d-flex justify-content-between align-items-center py-2 px-2';
+            item.innerHTML = `
+                <div style="flex: 1; min-width: 0;">
+                    <strong class="d-block small text-dark text-truncate">${escapeHTML(blok.nomor)}</strong>
+                    <small class="text-muted text-truncate d-block" style="font-size:0.7rem;">${escapeHTML(blok.judul)}</small>
+                </div>
+                <div class="d-flex gap-1 ms-2">
+                    <button class="btn btn-sm btn-outline-warning py-0 px-1" title="Edit Blok" onclick="editBlokDariPratinjau('${escapeHTML(blok.nomor)}')">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Hapus Blok" onclick="hapusBlokDariPratinjau('${escapeHTML(blok.nomor)}')">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function refreshPratinjauGabungan() {
+        const iframe = document.getElementById('pratinjau-gabungan-iframe');
+        const daftar = ambilDaftarBlokNP04();
+        daftar.sort((a, b) => a.nomor.localeCompare(b.nomor, undefined, { numeric: true, sensitivity: 'base' }));
+        
+        let kodeGabungan = '';
+        daftar.forEach(blok => {
+            kodeGabungan += blok.kode + '\n\n';
+        });
+
+        const kontenIframe = `
+            <!DOCTYPE html>
+            <html lang="id">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+                <style>
+                    body {
+                        background-color: #f8f9fa;
+                        color: #212529;
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        padding: 20px;
+                    }
+                    .bg-primary { background-color: #0d6efd !important; }
+                    .text-primary { color: #0d6efd !important; }
+                    .card-custom {
+                        border: none; border-radius: 16px;
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+                        background: #ffffff; padding: 30px;
+                    }
+                    .border-top-primary { border-top: 4px solid #0d6efd !important; }
+                    .btn-primary {
+                        background-color: #0d6efd; border: none; font-weight: 700; border-radius: 8px; color: #ffffff;
+                    }
+                    .btn-outline-primary {
+                        border: 2px solid #0d6efd; color: #0d6efd; font-weight: 700; border-radius: 8px;
+                    }
+                    .d-none-custom { display: block !important; }
+                </style>
+            </head>
+            <body>
+                ${kodeGabungan}
+            </body>
+            </html>
+        `;
+        iframe.srcdoc = kontenIframe;
+    }
+
+    function kembaliKeDashboardDariPratinjau() {
+        document.getElementById('halaman-pratinjau-gabungan').classList.add('d-none-custom');
+        document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
+        // Refresh daftar di dashboard jika fungsi tersedia
+        if (typeof refreshDaftarBlok === 'function') {
+            refreshDaftarBlok();
+        }
+    }
+
+    // Bantuan escape HTML
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // Inisialisasi saat halaman pratinjau ditampilkan (bisa dipanggil dari dashboard)
+    function tampilkanPratinjauGabungan() {
+        document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
+        document.getElementById('halaman-pratinjau-gabungan').classList.remove('d-none-custom');
+        muatPanelDaftarBlok();
+        refreshPratinjauGabungan();
+    }
+
+    // Tambahkan tombol di dashboard untuk memanggil fungsi ini (akan ditambahkan di NP-02.1 nanti)
+    // Untuk sekarang, kita buat agar fungsi ini bisa dipanggil dari konsol atau tombol yang sudah ada.
+</script>
+<!-- AKHIR BLOK NP-04 -->
 </body>
 </html>
