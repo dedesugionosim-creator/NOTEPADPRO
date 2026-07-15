@@ -1,311 +1,377 @@
+<--=== BLOK 1: FONDASI HTML, CSS, & HALAMAN LOGIN === -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#1E1E1E">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>NotepadPro++</title>
-  <link rel="manifest" href="data:application/json,{}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-primary: #1E1E1E; --bg-secondary: #252526; --bg-tertiary: #2D2D2D; --bg-hover: #3E3E3E;
-      --text-primary: #CCCCCC; --text-secondary: #9CA3AF; --accent-green: #4CAF50;
-      --accent-green-hover: #66BB6A; --accent-green-bg: rgba(76, 175, 80, 0.15);
-      --border-color: #3E3E3E; --danger: #EF4444; --warning: #F59E0B; --info: #3B82F6;
-      --white: #FFFFFF; --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
-      --sidebar-width: 260px;
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    html, body { height:100%; font-family:'Inter',sans-serif; background:var(--bg-primary); color:var(--text-primary); line-height:1.6; overflow:hidden; }
-    body { display:flex; flex-direction:column; }
-    ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:var(--bg-secondary); } ::-webkit-scrollbar-thumb { background:var(--border-color); border-radius:3px; }
-    .navbar { background:var(--bg-secondary); border-bottom:1px solid var(--border-color); padding:0 20px; display:flex; align-items:center; gap:15px; height:50px; flex-shrink:0; }
-    .app-container { display:flex; flex:1; overflow:hidden; }
-    .sidebar { width:var(--sidebar-width); background:var(--bg-secondary); border-right:1px solid var(--border-color); display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto; transition:width 0.3s; }
-    .sidebar.closed { width:0; overflow:hidden; border:none; }
-    .main-content { flex:1; overflow-y:auto; padding:20px; background:var(--bg-primary); }
-    .sidebar-header { padding:20px; border-bottom:1px solid var(--border-color); text-align:center; white-space:nowrap; }
-    .sidebar-menu { flex:1; padding:10px; }
-    .sidebar-item { display:flex; align-items:center; gap:10px; padding:12px 15px; border-radius:var(--radius-md); cursor:pointer; margin-bottom:4px; color:var(--text-secondary); font-weight:500; transition:all 0.2s; white-space:nowrap; }
-    .sidebar-item i { width:20px; text-align:center; }
-    .sidebar-item:hover { background:var(--bg-hover); color:var(--text-primary); }
-    .sidebar-item.active { background:var(--accent-green-bg); color:var(--accent-green); }
-    .user-footer { padding:15px; border-top:1px solid var(--border-color); }
-    .card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:20px; margin-bottom:20px; }
-    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; font-size:18px; font-weight:600; }
-    .grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
-    .grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; }
-    table { width:100%; border-collapse:collapse; } th { text-align:left; padding:12px; background:var(--bg-tertiary); color:var(--text-secondary); font-size:12px; text-transform:uppercase; letter-spacing:0.5px; }
-    td { padding:12px; border-bottom:1px solid var(--border-color); font-size:14px; } tr:hover td { background:var(--bg-hover); }
-    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 20px; border-radius:var(--radius-md); font-weight:600; cursor:pointer; border:none; font-size:14px; transition:all 0.2s; }
-    .btn-primary { background:var(--accent-green); color:var(--white); } .btn-primary:hover { background:var(--accent-green-hover); }
-    .btn-outline { background:transparent; border:1px solid var(--border-color); color:var(--text-primary); } .btn-outline:hover { background:var(--bg-hover); }
-    .btn-danger { background:var(--danger); color:var(--white); } .btn-sm { padding:6px 12px; font-size:12px; } .btn-block { width:100%; }
-    input, textarea, select { background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-primary); padding:12px 15px; border-radius:var(--radius-md); width:100%; font-family:'Inter',sans-serif; outline:none; }
-    input:focus, textarea:focus, select:focus { border-color:var(--accent-green); }
-    .code-editor { font-family:'JetBrains Mono',monospace; background:var(--bg-secondary); color:var(--accent-green); border:1px solid var(--border-color); padding:15px; border-radius:var(--radius-md); width:100%; resize:vertical; line-height:1.7; tab-size:4; }
-    .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000; display:flex; justify-content:center; align-items:center; }
-    .modal-box { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius-lg); width:90%; max-width:500px; max-height:85vh; overflow-y:auto; }
-    .modal-header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid var(--border-color); }
-    .modal-body { padding:20px; } .modal-footer { padding:15px 20px; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end; gap:10px; }
-    .chat-container { display:flex; flex-direction:column; height:70vh; }
-    .chat-messages { flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:10px; }
-    .chat-bubble { max-width:75%; padding:10px 15px; border-radius:16px; font-size:14px; }
-    .chat-sent { background:var(--accent-green-bg); color:var(--accent-green); align-self:flex-end; }
-    .chat-received { background:var(--bg-tertiary); align-self:flex-start; }
-    .badge { padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600; }
-    .badge-success { background:var(--accent-green-bg); color:var(--accent-green); } .badge-error { background:rgba(239,68,68,0.2); color:var(--danger); }
-    .badge-pro { background:var(--accent-green-bg); color:var(--accent-green); } .badge-free { background:var(--bg-tertiary); color:var(--text-secondary); }
-    .text-green { color:var(--accent-green); } .text-muted { color:var(--text-secondary); font-size:13px; } .hidden { display:none !important; }
-    .toast { position:fixed; bottom:20px; right:20px; padding:12px 20px; border-radius:var(--radius-md); color:var(--white); z-index:9999; animation:slideIn 0.3s; }
-    .toast.success { background:var(--accent-green); } .toast.error { background:var(--danger); }
-    @keyframes slideIn { from{transform:translateX(100%);opacity:0;} to{transform:translateX(0);opacity:1;} }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1E1E1E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="NotepadPro++ - Catatan Kode SuperAdmin">
+    <title>NotepadPro++</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json,{}">
+
+    <!-- Font Awesome 6.5.1 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Fonts: Inter untuk UI, JetBrains Mono untuk Editor Kode -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================ */
+        /* CSS VARIABLES (TEMA HITAM-PUTIH-HIJAU)       */
+        /* ============================================ */
+        :root {
+            --bg-primary: #1E1E1E;
+            --bg-secondary: #252526;
+            --bg-tertiary: #2D2D2D;
+            --bg-hover: #3E3E3E;
+            --text-primary: #CCCCCC;
+            --text-secondary: #9CA3AF;
+            --accent-green: #4CAF50;
+            --accent-green-hover: #66BB6A;
+            --accent-green-bg: rgba(76, 175, 80, 0.15);
+            --border-color: #3E3E3E;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --white: #FFFFFF;
+            --black: #000000;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.3);
+            --sidebar-width: 260px;
+        }
+
+        /* ============================================ */
+        /* RESET GLOBAL                                 */
+        /* ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+
+        /* ============================================ */
+        /* TIPOGRAFI & EDITOR KODE                      */
+        /* ============================================ */
+        .code-editor {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            background-color: var(--bg-secondary);
+            color: var(--accent-green);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            width: 100%;
+            resize: vertical;
+            line-height: 1.8;
+            tab-size: 4;
+            font-size: 14px;
+            outline: none;
+        }
+
+        /* ============================================ */
+        /* KOMPONEN UMUM                                */
+        /* ============================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .btn-primary { background: var(--accent-green); color: var(--white); }
+        .btn-primary:hover { background: var(--accent-green-hover); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-outline:hover { background: var(--bg-hover); border-color: var(--accent-green); }
+        .btn-danger { background: var(--danger); color: var(--white); }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-block { width: 100%; }
+
+        /* Form */
+        input, textarea, select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus, select:focus { border-color: var(--accent-green); }
+        textarea { resize: vertical; min-height: 80px; }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-success { background: var(--accent-green-bg); color: var(--accent-green); }
+        .badge-error { background: rgba(239,68,68,0.2); color: var(--danger); }
+        .badge-pro { background: var(--accent-green-bg); color: var(--accent-green); }
+        .badge-free { background: var(--bg-tertiary); color: var(--text-secondary); }
+
+        /* ============================================ */
+        /* LAYOUT UTAMA (SIDEBAR & MAIN CONTENT)        */
+        /* ============================================ */
+        .app-container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--bg-primary);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .sidebar-menu { flex: 1; padding: 10px; }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .sidebar-item i { width: 20px; text-align: center; font-size: 16px; }
+        .sidebar-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+        .sidebar-item.active { background: var(--accent-green-bg); color: var(--accent-green); font-weight: 600; }
+
+        .user-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ============================================ */
+        /* CARDS & TABLES                               */
+        /* ============================================ */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+        tr:hover td { background: var(--bg-hover); }
+
+        /* ============================================ */
+        /* MODAL                                        */
+        /* ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+        .modal-body { padding: 20px; }
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* ============================================ */
+        /* CHAT                                          */
+        /* ============================================ */
+        .chat-container { display: flex; flex-direction: column; height: 70vh; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-bubble { max-width: 75%; padding: 10px 15px; border-radius: 16px; font-size: 14px; }
+        .chat-sent { background: var(--accent-green-bg); color: var(--accent-green); align-self: flex-end; }
+        .chat-received { background: var(--bg-tertiary); align-self: flex-start; }
+
+        /* ============================================ */
+        /* UTILITY                                      */
+        /* ============================================ */
+        .text-green { color: var(--accent-green); }
+        .text-muted { color: var(--text-secondary); font-size: 13px; }
+        .hidden { display: none !important; }
+
+        .toast {
+            position: fixed;
+            bottom: 20px; right: 20px;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            color: var(--white);
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+            font-weight: 500;
+            box-shadow: var(--shadow);
+        }
+        .toast.success { background: var(--accent-green); }
+        .toast.error { background: var(--danger); }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-  <div id="offlineIndicator" class="hidden" style="background:var(--danger); color:white; text-align:center; padding:6px; font-size:12px;">Offline</div>
-  <div id="pwaInstallPrompt" class="hidden" style="position:fixed; bottom:20px; left:20px; z-index:9998; background:var(--bg-secondary); border:1px solid var(--border-color); padding:15px; border-radius:var(--radius-lg);"><p style="margin-bottom:10px;">Install Aplikasi?</p><button id="installBtn" class="btn btn-primary btn-sm">Install</button> <button onclick="document.getElementById('pwaInstallPrompt').classList.add('hidden')" class="btn btn-outline btn-sm">Nanti</button></div>
 
-  <!-- LOGIN PAGE -->
-  <div id="pageLogin" style="display:flex; justify-content:center; align-items:center; height:100%;">
-    <div class="card" style="width:380px; text-align:center;">
-      <i class="fas fa-book" style="color:var(--accent-green); font-size:48px;"></i>
-      <h2>NotepadPro++</h2>
-      <p class="text-muted">Login ke Akun Anda</p>
-      <div id="loginError" class="hidden" style="background:var(--danger); padding:10px; border-radius:8px; margin:15px 0; color:white; font-size:13px;"></div>
-      <form onsubmit="prosesLogin(event)">
-        <input type="text" id="loginUsername" placeholder="Username" required style="margin-bottom:12px;">
-        <input type="password" id="loginPassword" placeholder="Password" required style="margin-bottom:15px;">
-        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
-      </form>
-      <p class="text-muted" style="margin-top:15px; cursor:pointer;" onclick="alert('Hubungi Admin Dede')">Lupa Password?</p>
+    <!-- Offline Indicator -->
+    <div id="offlineIndicator" class="hidden" style="background:var(--danger); color:white; text-align:center; padding:6px; font-size:12px; font-weight:600;">
+        Anda sedang Offline. Data disimpan lokal.
     </div>
-  </div>
 
-  <!-- APP CONTAINER -->
-  <div id="appContainer" class="hidden" style="display:flex; flex-direction:column; height:100%;">
-    <!-- NAVBAR DENGAN TOGGLE -->
-    <div class="navbar">
-      <button class="btn btn-outline btn-sm" onclick="toggleSidebar()" title="Tutup/Buka Menu"><i class="fas fa-bars"></i></button>
-      <span style="font-weight:600;">NotepadPro++</span>
+    <!-- PWA Install Prompt -->
+    <div id="pwaInstallPrompt" class="hidden" style="position:fixed; bottom:20px; left:20px; z-index:9998; background:var(--bg-secondary); border:1px solid var(--border-color); padding:15px 20px; border-radius:var(--radius-lg); box-shadow:var(--shadow); max-width:300px;">
+        <p style="margin-bottom:10px; font-weight:600;">Install NotepadPro++?</p>
+        <div style="display:flex; gap:10px;">
+            <button id="installBtn" class="btn btn-primary btn-sm">Install</button>
+            <button onclick="document.getElementById('pwaInstallPrompt').classList.add('hidden')" class="btn btn-outline btn-sm">Nanti</button>
+        </div>
     </div>
-    <div class="app-container">
-      <div class="sidebar" id="sidebar">
-        <div class="sidebar-header"><i class="fas fa-book" style="color:var(--accent-green); font-size:24px;"></i><span style="font-weight:700;">NotepadPro++</span></div>
-        <div class="sidebar-menu">
-          <div id="menuAdmin" class="hidden">
-            <div class="sidebar-item active" onclick="navigasi('dashboard')"><i class="fas fa-th-large"></i>Dashboard</div>
-            <div class="sidebar-item" onclick="navigasi('panelAdmin')"><i class="fas fa-users-cog"></i>Panel Admin</div>
-            <div class="sidebar-item" onclick="navigasi('aktivasi')"><i class="fas fa-key"></i>Aktivasi Pro</div>
-            <div class="sidebar-item" onclick="navigasi('harga')"><i class="fas fa-tags"></i>Menu Harga</div>
-            <div class="sidebar-item" onclick="navigasi('blokManager')"><i class="fas fa-code"></i>Catatan Kode</div>
-            <div class="sidebar-item" onclick="navigasi('gabungBlok')"><i class="fas fa-layer-group"></i>Gabung Blok</div>
-            <div class="sidebar-item" onclick="navigasi('backupRestore')"><i class="fas fa-database"></i>Backup/Restore</div>
-            <div class="sidebar-item" onclick="navigasi('chat')"><i class="fas fa-comments"></i>Chat</div>
-          </div>
-          <div id="menuUser" class="hidden">
-            <div class="sidebar-item active" onclick="navigasi('dashboardUser')"><i class="fas fa-th-large"></i>Dashboard</div>
-            <div class="sidebar-item" onclick="navigasi('blokManager')"><i class="fas fa-code"></i>Catatan Kode</div>
-            <div class="sidebar-item" onclick="navigasi('gabungBlok')"><i class="fas fa-layer-group"></i>Gabung Blok</div>
-            <div class="sidebar-item" onclick="navigasi('chat')"><i class="fas fa-comments"></i>Chat</div>
-          </div>
+
+    <!-- ============================================ -->
+    <!-- HALAMAN LOGIN                                -->
+    <!-- ============================================ -->
+    <div id="pageLogin" style="display:flex; justify-content:center; align-items:center; height:100%; width:100%; background:var(--bg-primary);">
+        <div class="card" style="width:380px; max-width:90%; text-align:center;">
+            <i class="fas fa-book" style="color:var(--accent-green); font-size:48px; margin-bottom:10px;"></i>
+            <h2 style="margin-bottom:5px;">NotepadPro++</h2>
+            <p class="text-muted" style="margin-bottom:20px;">Login ke Akun Anda</p>
+            <div id="loginError" class="hidden" style="background:var(--danger); padding:10px; border-radius:var(--radius-md); margin-bottom:15px; color:white; font-size:13px;"></div>
+            <form onsubmit="prosesLogin(event)">
+                <div style="margin-bottom:12px;">
+                    <input type="text" id="loginUsername" placeholder="Username" required>
+                </div>
+                <div style="margin-bottom:15px;">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+            </form>
+            <p class="text-muted" style="margin-top:15px; cursor:pointer;" onclick="alert('Hubungi Admin Dede')">Lupa Password?</p>
         </div>
-        <div class="user-footer">
-          <p id="sidebarUserName" style="font-weight:600;"></p>
-          <p id="sidebarUserRole" class="text-muted"></p>
-          <button class="btn btn-outline btn-block btn-sm" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Logout</button>
-        </div>
-      </div>
-      <div class="main-content" id="mainContent">
-        <!-- DASHBOARD SUPERADMIN -->
-        <div id="pageDashboard" class="hidden">
-          <div class="card-header"><h2>📊 Dashboard SuperAdmin</h2><p class="text-muted">Selamat datang, <strong>Dede</strong></p></div>
-          <div class="grid-4">
-            <div class="card" style="text-align:center;"><div class="text-muted">👥 Total User</div><div class="text-green" style="font-size:32px;font-weight:700;" id="statTotalUser">0</div></div>
-            <div class="card" style="text-align:center;"><div class="text-muted">⭐ User Pro</div><div class="text-green" style="font-size:32px;font-weight:700;" id="statProUser">0</div></div>
-            <div class="card" style="text-align:center;"><div class="text-muted">📝 Total Blok</div><div class="text-green" style="font-size:32px;font-weight:700;" id="statTotalBlok">0</div></div>
-            <div class="card" style="text-align:center;"><div class="text-muted">🔑 Kode Aktif</div><div class="text-green" style="font-size:32px;font-weight:700;" id="statKodeAktif">0</div></div>
-          </div>
-          <div class="card"><h3>⚡ Menu Cepat</h3><div class="grid-2"><button class="btn btn-outline btn-block" onclick="navigasi('panelAdmin')">👥 Kelola User</button><button class="btn btn-outline btn-block" onclick="navigasi('aktivasi')">🔑 Aktivasi</button><button class="btn btn-outline btn-block" onclick="navigasi('harga')">🏷️ Harga</button><button class="btn btn-outline btn-block" onclick="navigasi('blokManager')">📝 Catatan</button><button class="btn btn-outline btn-block" onclick="navigasi('gabungBlok')">🧩 Gabung Blok</button><button class="btn btn-outline btn-block" onclick="navigasi('backupRestore')">🗄️ Backup</button></div></div>
-        </div>
-        <!-- DASHBOARD USER -->
-        <div id="pageDashboardUser" class="hidden">
-          <div class="card-header"><h2>👤 Dashboard Saya</h2></div>
-          <div class="card"><div class="grid-2"><div><p class="text-muted">Nama</p><p id="userNama">-</p></div><div><p class="text-muted">Username</p><p id="userUsername">-</p></div><div><p class="text-muted">Email</p><p id="userEmail">-</p></div><div><p class="text-muted">HP</p><p id="userHp">-</p></div><div><p class="text-muted">Status</p><span id="userStatusPro" class="badge badge-free">Free</span></div></div></div>
-          <div id="upgradePanel" class="card" style="border:1px solid var(--accent-green);"><h3 style="color:var(--accent-green);">🚀 Upgrade Pro</h3><p class="text-muted">Fitur Gabung Blok & Editor Advanced</p><div style="display:flex; gap:10px;"><input type="text" id="inputKodeUpgrade" placeholder="Kode Aktivasi"><button class="btn btn-primary" onclick="upgradePro()">Upgrade</button></div></div>
-        </div>
-        <!-- PANEL ADMIN -->
-        <div id="pagePanelAdmin" class="hidden">
-          <div class="card-header"><h2>👥 Panel Admin</h2><button class="btn btn-primary" onclick="tambahUserModal()">+ Tambah User</button></div>
-          <div class="card"><table><thead><tr><th>Username</th><th>Nama</th><th>HP</th><th>Email</th><th>Status</th><th>Pro</th><th>Aksi</th></tr></thead><tbody id="tabelUserAdmin"></tbody></table></div>
-        </div>
-        <!-- AKTIVASI -->
-        <div id="pageAktivasi" class="hidden">
-          <div class="card-header"><h2>🔑 Generate Kode Aktivasi</h2></div>
-          <div class="card"><div class="grid-2"><select id="selectPaketAktivasi"></select><button class="btn btn-primary" onclick="generateKode()">Generate</button></div></div>
-          <div class="card"><h3>📋 Daftar Kode</h3><div id="listKodeAktivasi"></div></div>
-        </div>
-        <!-- HARGA -->
-        <div id="pageHarga" class="hidden">
-          <div class="card-header"><h2>🏷️ Menu Harga</h2><button class="btn btn-primary" onclick="tambahHargaModal()">+ Tambah</button></div>
-          <div class="card"><table><thead><tr><th>Durasi</th><th>Harga</th><th>Aksi</th></tr></thead><tbody id="tabelHarga"></tbody></table></div>
-        </div>
-        <!-- MANAJER BLOK -->
-        <div id="pageBlokManager" class="hidden">
-          <div class="card-header"><h2>📝 Catatan Kode</h2><button class="btn btn-primary" onclick="tambahBlokModal()">+ Tambah Blok</button></div>
-          <div class="card" style="background:var(--accent-green-bg);"><p><i class="fas fa-info-circle"></i> UTF-8 | Urut Otomatis</p></div>
-          <div id="listBlok"></div><div id="blokKosong" class="hidden" style="text-align:center;padding:40px;"><i class="fas fa-code" style="font-size:48px;opacity:0.3;"></i><p class="text-muted">Belum ada blok</p></div>
-        </div>
-        <!-- EDITOR MODAL -->
-        <div id="modalEditor" class="modal-overlay hidden">
-          <div class="modal-box" style="width:95%; height:90%; display:flex; flex-direction:column;">
-            <div class="modal-header"><span id="editorTitle">Editor</span><div><button class="btn btn-outline btn-sm" onclick="copyBlokAktif()"><i class="fas fa-copy"></i> Copy</button><button class="btn btn-primary btn-sm" onclick="simpanEditBlok()"><i class="fas fa-save"></i> Simpan</button><button class="btn btn-outline btn-sm" onclick="tutupEditor()"><i class="fas fa-times"></i></button></div></div>
-            <textarea id="editorTextarea" class="code-editor" style="flex:1; border-radius:0; border:none; resize:none;"></textarea>
-            <div style="padding:8px 20px; font-size:12px; border-top:1px solid var(--border-color);">Baris: <span id="editorLineCount">0</span></div>
-          </div>
-        </div>
-        <!-- GABUNG BLOK -->
-        <div id="pageGabungBlok" class="hidden">
-          <div class="card-header"><h2>🧩 Gabung Blok</h2><div><button class="btn btn-primary" onclick="copyGabungan()"><i class="fas fa-copy"></i> Copy HTML</button><button class="btn btn-outline" onclick="downloadGabungan()"><i class="fas fa-download"></i> Download</button></div></div>
-          <pre id="previewGabungan" style="background:var(--bg-tertiary); padding:15px; border-radius:8px; max-height:60vh; overflow:auto; font-family:'JetBrains Mono'; white-space:pre-wrap; color:var(--accent-green);"></pre>
-        </div>
-        <!-- CHAT -->
-        <div id="pageChat" class="hidden">
-          <div class="chat-container"><div class="card-header">💬 Chat</div><div class="chat-messages" id="chatMessages"></div><div style="display:flex; gap:10px; padding:15px; border-top:1px solid var(--border-color);"><input type="text" id="chatInput" placeholder="Ketik pesan..." onkeydown="if(event.key==='Enter')kirimChat()"><button class="btn btn-primary" onclick="kirimChat()">Kirim</button></div></div>
-        </div>
-        <!-- BACKUP RESTORE -->
-        <div id="pageBackupRestore" class="hidden">
-          <div class="card-header"><h2>🗄️ Backup & Restore</h2><span class="badge badge-pro">SuperAdmin</span></div>
-          <div class="grid-2">
-            <div class="card"><h3>📥 Backup</h3><button class="btn btn-primary btn-block" onclick="backupData()">Download Backup JSON</button><button class="btn btn-outline btn-block" onclick="downloadIndexHtml()" style="margin-top:10px;">Download index.html</button></div>
-            <div class="card"><h3>📤 Restore</h3><input type="file" id="restoreFile" accept=".json"><button class="btn btn-warning btn-block" onclick="restoreData()" style="margin-top:10px;">Restore</button></div>
-          </div>
-          <div class="card"><h3>📁 Ekspor/Impor Blok</h3><div class="grid-2"><div><button class="btn btn-outline btn-block" onclick="eksporBlok()">Ekspor Blok (JSON)</button></div><div><input type="file" id="imporBlokFile" accept=".json"><button class="btn btn-outline btn-block" onclick="imporBlok()">Impor Blok</button></div></div></div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- MODALS -->
-  <div id="modalTambahUser" class="modal-overlay hidden"><div class="modal-box"><div class="modal-header"><h3>Tambah User</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahUser')"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="text" id="newUsername" placeholder="Username" style="margin-bottom:10px;"><input type="password" id="newPassword" placeholder="Password" style="margin-bottom:10px;"><input type="text" id="newNama" placeholder="Nama" style="margin-bottom:10px;"><input type="text" id="newAlamat" placeholder="Alamat" style="margin-bottom:10px;"><input type="text" id="newHp" placeholder="HP"><input type="email" id="newEmail" placeholder="Email" style="margin-top:10px;"></div><div class="modal-footer"><button class="btn btn-outline" onclick="tutupModal('modalTambahUser')">Batal</button><button class="btn btn-primary" onclick="simpanUserBaru()">Simpan</button></div></div></div>
-  <div id="modalTambahHarga" class="modal-overlay hidden"><div class="modal-box"><div class="modal-header"><h3>Tambah Harga</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahHarga')"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="text" id="newDurasi" placeholder="Durasi" style="margin-bottom:10px;"><input type="number" id="newHarga" placeholder="Harga"></div><div class="modal-footer"><button class="btn btn-outline" onclick="tutupModal('modalTambahHarga')">Batal</button><button class="btn btn-primary" onclick="simpanHargaBaru()">Simpan</button></div></div></div>
+    <!-- ============================================ -->
+    <!-- APP CONTAINER (AKAN DIISI OLEH BLOK 2)       -->
+    <!-- ============================================ -->
+    <div id="appContainer" class="hidden" style="height:100%; width:100%; display:flex; flex-direction:column;">
+        <!-- Placeholder: Blok 2 akan mengisi sidebar dan main content -->
+    </div>
 
-<script>
-  const SUPERADMIN = { username:'NotePadePro', password:'MyHand0286', nama:'Dede', role:'superadmin', pro:true, status:'aktif', hp:'', email:'' };
-  let dataUser = JSON.parse(localStorage.getItem('np_users')) || [SUPERADMIN, { username:'demo', password:'demo123', nama:'Demo', role:'user', pro:false, status:'aktif' }, { username:'pro_user', password:'pro123', nama:'Pro', role:'user', pro:true, status:'aktif' }];
-  let dataBlok = JSON.parse(localStorage.getItem('np_blok')) || [{ id:1, judul:'Blok 1', isi:'<!-- Kode -->' }];
-  let dataKode = JSON.parse(localStorage.getItem('np_kode')) || ['PRO-ABCD-1234'];
-  let dataHarga = JSON.parse(localStorage.getItem('np_harga')) || [{ id:1, durasi:'1 Bulan', harga:10000 },{ id:2, durasi:'3 Bulan', harga:20000 },{ id:3, durasi:'6 Bulan', harga:30000 }];
-  let dataChat = JSON.parse(localStorage.getItem('np_chat')) || [];
-  let currentUser = null, editId = null;
-
-  function simpan() { 
-    localStorage.setItem('np_users',JSON.stringify(dataUser)); localStorage.setItem('np_blok',JSON.stringify(dataBlok)); 
-    localStorage.setItem('np_kode',JSON.stringify(dataKode)); localStorage.setItem('np_harga',JSON.stringify(dataHarga)); 
-    localStorage.setItem('np_chat',JSON.stringify(dataChat)); 
-  }
-  function toast(p,t='success') { let el=document.createElement('div'); el.className='toast '+t; el.textContent=p; document.body.appendChild(el); setTimeout(()=>el.remove(),3000); }
-  function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
-  function bukaModal(id) { document.getElementById(id).classList.remove('hidden'); }
-
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('closed');
-  }
-
-  function navigasi(h) {
-    ['dashboard','dashboardUser','panelAdmin','aktivasi','harga','blokManager','gabungBlok','chat','backupRestore'].forEach(p=>{ 
-      let el=document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1)); if(el) el.classList.add('hidden'); 
-    });
-    let target=document.getElementById('page'+h.charAt(0).toUpperCase()+h.slice(1)); if(target) target.classList.remove('hidden');
-    document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
-    let map={ dashboard:'menuDashboard', dashboardUser:'menuDashboardUser', panelAdmin:'menuPanelAdmin', aktivasi:'menuAktivasi', harga:'menuHarga', 
-              blokManager:currentUser?.role==='superadmin'?'menuBlok':'menuBlokUser', 
-              gabungBlok:currentUser?.role==='superadmin'?'menuGabung':'menuGabungUser', 
-              chat:currentUser?.role==='superadmin'?'menuChatAdmin':'menuChatUser', backupRestore:'menuBackup' };
-    let mid=map[h]; if(mid) document.getElementById(mid).classList.add('active');
-    if(h==='dashboard') { 
-      document.getElementById('statTotalUser').textContent=dataUser.length; 
-      document.getElementById('statProUser').textContent=dataUser.filter(u=>u.pro).length; 
-      document.getElementById('statTotalBlok').textContent=dataBlok.length; 
-      document.getElementById('statKodeAktif').textContent=dataKode.length; 
-    } else if(h==='dashboardUser') { 
-      document.getElementById('userNama').textContent=currentUser.nama; 
-      document.getElementById('userUsername').textContent=currentUser.username; 
-      document.getElementById('userEmail').textContent=currentUser.email||'-'; 
-      document.getElementById('userHp').textContent=currentUser.hp||'-'; 
-      let sp=document.getElementById('userStatusPro'); 
-      sp.textContent=currentUser.pro?'Pro':'Free'; 
-      sp.className=currentUser.pro?'badge badge-pro':'badge badge-free'; 
-      document.getElementById('upgradePanel').style.display=currentUser.pro?'none':'block'; 
-    } else if(h==='panelAdmin') { 
-      let tb=document.getElementById('tabelUserAdmin'); 
-      let users=dataUser.filter(u=>u.role!=='superadmin'); 
-      tb.innerHTML=users.map(u=>`<tr><td>${u.username}</td><td>${u.nama}</td><td>${u.hp||'-'}</td><td>${u.email||'-'}</td>
-        <td><span class="badge ${u.status==='aktif'?'badge-success':'badge-error'}">${u.status}</span></td>
-        <td><span class="badge ${u.pro?'badge-pro':'badge-free'}">${u.pro?'Pro':'Free'}</span></td>
-        <td><button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">${u.status==='aktif'?'Nonaktifkan':'Aktifkan'}</button> 
-        <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''); 
-    } else if(h==='aktivasi') { 
-      document.getElementById('selectPaketAktivasi').innerHTML=dataHarga.map(h=>`<option>${h.durasi} - Rp ${h.harga.toLocaleString()}</option>`).join(''); 
-      let list=document.getElementById('listKodeAktivasi'); 
-      list.innerHTML=dataKode.length===0?'<p class="text-muted">Belum ada kode</p>':dataKode.map((k,i)=>`<div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-tertiary);border-radius:8px;"><span style="font-family:monospace;">${k}</span><button class="btn btn-danger btn-sm" onclick="hapusKode(${i})"><i class="fas fa-trash"></i></button></div>`).join(''); 
-    } else if(h==='harga') { 
-      document.getElementById('tabelHarga').innerHTML=dataHarga.map((h,i)=>`<tr><td><input type="text" value="${h.durasi}" onchange="editHarga(${i},'durasi',this.value)"></td><td><input type="number" value="${h.harga}" onchange="editHarga(${i},'harga',this.value)"></td><td><button class="btn btn-danger btn-sm" onclick="hapusHarga(${i})"><i class="fas fa-trash"></i></button></td></tr>`).join(''); 
-    } else if(h==='blokManager') { 
-      let sorted=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); 
-      let container=document.getElementById('listBlok'); 
-      container.innerHTML=sorted.map(b=>`<div class="card" style="display:flex;justify-content:space-between;"><div><strong style="color:var(--accent-green);">${b.judul}</strong><br><span class="text-muted">${b.isi.substring(0,60)}...</span></div><div><button class="btn btn-outline btn-sm" onclick="editBlok(${b.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-outline btn-sm" onclick="copyBlokById(${b.id})"><i class="fas fa-copy"></i></button> <button class="btn btn-danger btn-sm" onclick="hapusBlok(${b.id})"><i class="fas fa-trash"></i></button></div></div>`).join(''); 
-      document.getElementById('blokKosong').classList.toggle('hidden',dataBlok.length>0); 
-    } else if(h==='gabungBlok') { 
-      if(currentUser?.role!=='superadmin'&&!currentUser?.pro){ document.getElementById('previewGabungan').textContent='Fitur Pro'; return; } 
-      let sorted=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); 
-      document.getElementById('previewGabungan').textContent=sorted.map(b=>b.isi).join('\n\n'); 
-    } else if(h==='chat') renderChat(); 
-  }
-
-  function prosesLogin(e){ e.preventDefault(); let u=dataUser.find(u=>u.username===document.getElementById('loginUsername').value.trim()&&u.password===document.getElementById('loginPassword').value); if(u&&u.status==='aktif'){ currentUser=u; document.getElementById('pageLogin').style.display='none'; document.getElementById('appContainer').classList.remove('hidden'); document.getElementById('sidebarUserName').textContent=u.nama; document.getElementById('sidebarUserRole').textContent=u.role==='superadmin'?'SuperAdmin':(u.pro?'Pro User':'Free User'); document.getElementById('menuAdmin').classList.toggle('hidden',u.role!=='superadmin'); document.getElementById('menuUser').classList.toggle('hidden',u.role==='superadmin'); navigasi(u.role==='superadmin'?'dashboard':'dashboardUser'); } else { document.getElementById('loginError').classList.remove('hidden'); document.getElementById('loginError').textContent='Username/Password salah'; } }
-  function logout(){ currentUser=null; document.getElementById('appContainer').classList.add('hidden'); document.getElementById('pageLogin').style.display='flex'; }
-  function tambahUserModal(){ ['newUsername','newPassword','newNama','newAlamat','newHp','newEmail'].forEach(id=>document.getElementById(id).value=''); bukaModal('modalTambahUser'); }
-  function simpanUserBaru(){ let un=document.getElementById('newUsername').value.trim(), pw=document.getElementById('newPassword').value, nm=document.getElementById('newNama').value.trim(); if(!un||!pw||!nm) return toast('Data wajib diisi','error'); if(dataUser.find(u=>u.username===un)) return toast('Username sudah ada','error'); dataUser.push({username:un,password:pw,nama:nm,role:'user',pro:false,status:'aktif',hp:document.getElementById('newHp').value,email:document.getElementById('newEmail').value,alamat:document.getElementById('newAlamat').value}); simpan(); tutupModal('modalTambahUser'); navigasi('panelAdmin'); toast('User ditambahkan'); }
-  function toggleStatus(un){ let u=dataUser.find(x=>x.username===un); u.status=u.status==='aktif'?'nonaktif':'aktif'; simpan(); navigasi('panelAdmin'); }
-  function hapusUser(un){ if(confirm('Hapus?')){ dataUser=dataUser.filter(x=>x.username!==un); simpan(); navigasi('panelAdmin'); } }
-  function generateKode(){ let k='PRO-'; for(let i=0;i<8;i++) k+='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*36)]; dataKode.push(k); simpan(); navigasi('aktivasi'); toast('Kode: '+k); }
-  function hapusKode(i){ dataKode.splice(i,1); simpan(); navigasi('aktivasi'); }
-  function upgradePro(){ let k=document.getElementById('inputKodeUpgrade').value.trim(); if(dataKode.includes(k)){ currentUser.pro=true; let u=dataUser.find(x=>x.username===currentUser.username); if(u) u.pro=true; dataKode=dataKode.filter(x=>x!==k); simpan(); navigasi('dashboardUser'); document.getElementById('menuGabungUser').classList.remove('hidden'); toast('Pro!'); } else toast('Kode salah','error'); }
-  function tambahHargaModal(){ document.getElementById('newDurasi').value=''; document.getElementById('newHarga').value=''; bukaModal('modalTambahHarga'); }
-  function simpanHargaBaru(){ let d=document.getElementById('newDurasi').value.trim(), h=parseInt(document.getElementById('newHarga').value); if(!d||!h) return; dataHarga.push({id:Date.now(),durasi:d,harga:h}); simpan(); tutupModal('modalTambahHarga'); navigasi('harga'); }
-  function editHarga(i,f,v){ dataHarga[i][f]=f==='harga'?parseInt(v):v; simpan(); }
-  function hapusHarga(i){ dataHarga.splice(i,1); simpan(); navigasi('harga'); }
-  function tambahBlokModal(){ let j=prompt('Judul Blok:'); if(!j) return; let id=Date.now(); dataBlok.push({id,judul:j,isi:'<!-- '+j+' -->\n'}); simpan(); navigasi('blokManager'); editBlok(id); }
-  function editBlok(id){ let b=dataBlok.find(x=>x.id===id); editId=id; document.getElementById('editorTitle').textContent=b.judul; document.getElementById('editorTextarea').value=b.isi; bukaModal('modalEditor'); document.getElementById('editorLineCount').textContent=b.isi.split('\n').length; }
-  function simpanEditBlok(){ let b=dataBlok.find(x=>x.id===editId); if(b){ b.isi=document.getElementById('editorTextarea').value; simpan(); tutupEditor(); navigasi('blokManager'); } }
-  function tutupEditor(){ tutupModal('modalEditor'); editId=null; }
-  function copyBlokAktif(){ navigator.clipboard.writeText(document.getElementById('editorTextarea').value); toast('Kode disalin!'); }
-  function copyBlokById(id){ let b=dataBlok.find(x=>x.id===id); if(b) navigator.clipboard.writeText(b.isi); toast('Kode blok disalin!'); }
-  function hapusBlok(id){ if(confirm('Hapus?')){ dataBlok=dataBlok.filter(x=>x.id!==id); simpan(); navigasi('blokManager'); } }
-  document.addEventListener('keydown',e=>{ if(document.getElementById('modalEditor')&&!document.getElementById('modalEditor').classList.contains('hidden')){ if(e.ctrlKey&&e.key==='s'){ e.preventDefault(); simpanEditBlok(); } if(e.key==='Escape') tutupEditor(); } });
-  document.addEventListener('input',e=>{ if(e.target.id==='editorTextarea') document.getElementById('editorLineCount').textContent=e.target.value.split('\n').length; });
-  function copyGabungan(){ let p=document.getElementById('previewGabungan').textContent; if(p.trim()) navigator.clipboard.writeText(p); toast('HTML disalin!'); }
-  function downloadGabungan(){ let b=new Blob([document.getElementById('previewGabungan').textContent],{type:'text/html'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='index.html'; a.click(); }
-  function kirimChat(){ let i=document.getElementById('chatInput'); dataChat.push({user:currentUser.username,nama:currentUser.nama,text:i.value,waktu:new Date().toLocaleTimeString()}); i.value=''; simpan(); renderChat(); }
-  function renderChat(){ let c=document.getElementById('chatMessages'); c.innerHTML=dataChat.map(m=>`<div class="chat-bubble ${m.user===currentUser.username?'chat-sent':'chat-received'}"><strong>${m.user===currentUser.username?'Anda':m.nama}</strong><p>${m.text}</p><span style="font-size:10px;">${m.waktu}</span></div>`).join(''); c.scrollTop=c.scrollHeight; }
-  function backupData(){ let b=new Blob([JSON.stringify({users:dataUser,blok:dataBlok,kode:dataKode,harga:dataHarga,chat:dataChat})],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='backup.json'; a.click(); }
-  function downloadIndexHtml(){ let s=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); let b=new Blob([s.map(x=>x.isi).join('\n\n')],{type:'text/html'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='index.html'; a.click(); }
-  function restoreData(){ let f=document.getElementById('restoreFile').files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ try{ let d=JSON.parse(e.target.result); if(d.users) dataUser=d.users; if(d.blok) dataBlok=d.blok; if(d.kode) dataKode=d.kode; if(d.harga) dataHarga=d.harga; if(d.chat) dataChat=d.chat; simpan(); toast('Direstore!'); setTimeout(()=>location.reload(),1000); }catch(err){ toast('File tidak valid','error'); } }; r.readAsText(f); }
-  function eksporBlok(){ let b=new Blob([JSON.stringify(dataBlok)],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='blok.json'; a.click(); }
-  function imporBlok(){ let f=document.getElementById('imporBlokFile').files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ try{ let d=JSON.parse(e.target.result); if(Array.isArray(d)){ dataBlok=d; simpan(); navigasi('blokManager'); toast('Blok diimpor!'); } }catch(err){ toast('File tidak valid','error'); } }; r.readAsText(f); }
-
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredPrompt=e; document.getElementById('pwaInstallPrompt').classList.remove('hidden'); });
-  document.getElementById('installBtn').addEventListener('click',()=>{ if(deferredPrompt) deferredPrompt.prompt(); });
-  window.addEventListener('online',()=>document.getElementById('offlineIndicator').classList.add('hidden'));
-  window.addEventListener('offline',()=>document.getElementById('offlineIndicator').classList.remove('hidden'));
-
-  simpan();
-</script>
+    <!-- Script Placeholder (Data & Fungsi akan diisi di Blok 13-15) -->
+    <script>
+        // Fungsi login sementara (akan diperbarui di blok JavaScript)
+        function prosesLogin(e) {
+            e.preventDefault();
+            alert('Fungsi login akan tersedia setelah semua blok digabungkan.');
+        }
+        console.log('✅ NotepadPro++ - Blok 1 berhasil dimuat.');
+    </script>
 </body>
 </html>
+<--=== AKHIR BLOK 1 === -->
