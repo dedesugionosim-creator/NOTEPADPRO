@@ -1,1368 +1,966 @@
-<!-- ==========================================
-BLOK NP-01 - HALAMAN UTAMA NOTEPAD (LOGIN & KERANGKA)
-===========================================
-PENJELASAN FUNGSI PERINTAH BLOK NP-01:
-1. Halaman Login Notepad: Merupakan gerbang masuk ke aplikasi Notepad Penyimpanan Blok. Pengguna harus memasukkan kredensial bersama untuk dapat mengakses seluruh fitur manajemen blok.
-2. Kerangka Utama Aplikasi: Selain form login, halaman ini menyediakan tempat (placeholder) untuk Dashboard Manajemen Blok, Editor Blok, dan Modal Penggabungan yang akan diisi oleh blok-blok berikutnya (NP-02.1, NP-02.2, NP-03).
-3. Kredensial Multi Login: Menggunakan satu set kredensial bersama (Username: AppNotePadPro, Password: MyHand0286) sehingga tidak diperlukan pendaftaran akun individual.
-4. Tema Biru-Putih Profesional: Seluruh tampilan menggunakan palet warna biru (primary) dan putih bersih, memberikan kesan profesional dan fokus pada produktivitas pengelolaan kode.
-=========================================== -->
+<--=== BLOK 1: PEMBUKAAN HTML & PWA === -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad Blok - Platform 2R</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1E1E1E">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="NotepadPro - Catatan Kode SuperAdmin">
+    <title>NotepadPro++</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json,{}">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts (JetBrains Mono for Code, Inter for UI) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
-        /* Gaya Dasar */
+        :root {
+            --bg-primary: #1E1E1E;
+            --bg-secondary: #252526;
+            --bg-tertiary: #2D2D2D;
+            --bg-hover: #3E3E3E;
+            --text-primary: #CCCCCC;
+            --text-secondary: #9CA3AF;
+            --accent-green: #4CAF50;
+            --accent-green-hover: #66BB6A;
+            --accent-green-bg: rgba(76, 175, 80, 0.15);
+            --border-color: #3E3E3E;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --white: #FFFFFF;
+            --black: #000000;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            background-color: #f8f9fa;
-            color: #212529;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        
-        /* Kartu Kustom */
-        .card-custom {
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        .code-editor {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-secondary);
+            color: var(--accent-green);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: var(--radius-md);
+            width: 100%;
+            resize: vertical;
+            line-height: 1.7;
+            tab-size: 4;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
             border: none;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(13, 110, 253, 0.08);
-            background: #ffffff;
-            padding: 30px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
         }
-        .card-custom:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 32px rgba(13, 110, 253, 0.15);
+        .btn-primary { background: var(--accent-green); color: white; }
+        .btn-primary:hover { background: var(--accent-green-hover); }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+        .btn-outline:hover { background: var(--bg-hover); }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-block { width: 100%; justify-content: center; }
+
+        input, textarea, select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            width: 100%;
+            font-family: 'Inter', sans-serif;
         }
-        
-        /* Border Atas Biru */
-        .border-top-primary {
-            border-top: 4px solid #0d6efd !important;
-        }
-        
-        /* Tombol Biru */
-        .btn-primary {
-            background-color: #0d6efd;
-            border: none;
-            font-weight: 700;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-        }
-        .btn-outline-primary {
-            border: 2px solid #0d6efd;
-            color: #0d6efd;
-            font-weight: 700;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            background-color: transparent;
-        }
-        .btn-outline-primary:hover {
-            background-color: #0d6efd;
-            color: #ffffff;
-        }
-        
-        /* Animasi Goyang */
-        @keyframes goyang {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-10px); }
-            40% { transform: translateX(10px); }
-            60% { transform: translateX(-5px); }
-            80% { transform: translateX(5px); }
-        }
-        
-        /* Placeholder Halaman Tersembunyi */
-        .d-none-custom {
-            display: none !important;
-        }
-        
-        /* Tabel dan Form */
-        .table thead th {
-            border-bottom: 2px solid #0d6efd;
-        }
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-        }
+        input:focus, textarea:focus { border-color: var(--accent-green); outline: none; }
+
+        .toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; border-radius: var(--radius-md); color: white; z-index: 9999; animation: slideIn 0.3s; }
+        .toast.success { background: var(--accent-green); }
+        .toast.error { background: var(--danger); }
+        .toast.warning { background: var(--warning); color: black; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <!-- ==========================================
-    AREA LOGIN (HALAMAN UTAMA)
-    ========================================== -->
-    <div class="container mt-5" id="halaman-login-notepad">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-5">
-                <div class="card-custom border-top-primary">
-                    <div class="text-center mb-4">
-                        <h2 class="text-primary fw-bold mb-1"><i class="bi bi-journal-code me-2"></i>Notepad Blok</h2>
-                        <p class="text-muted small">Masuk untuk mengelola dan menyusun blok kode aplikasi.</p>
-                    </div>
-                    
-                    <div id="notepad-form-wrapper">
-                        <form id="form-login-notepad" onsubmit="event.preventDefault(); prosesLoginNotepad();">
-                            <div class="mb-3">
-                                <label for="notepad-username" class="form-label fw-bold">Username</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light text-primary border-end-0">
-                                        <i class="bi bi-person-fill"></i>
-                                    </span>
-                                    <input type="text" id="notepad-username" class="form-control border-start-0 ps-0" placeholder="Masukkan Username" required autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="notepad-password" class="form-label fw-bold">Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light text-primary border-end-0">
-                                        <i class="bi bi-lock-fill"></i>
-                                    </span>
-                                    <input type="password" id="notepad-password" class="form-control border-start-0 ps-0" placeholder="Masukkan Password" required autocomplete="off">
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 py-2 mb-3 fs-5 fw-bold">
-                                <i class="bi bi-box-arrow-in-right me-2"></i> MASUK
-                            </button>
-                        </form>
-                        
-                        <div id="notepad-login-error" class="alert alert-danger border-0 shadow-sm d-none" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            <span id="notepad-error-text">Username atau Password salah. Silakan coba lagi.</span>
-                        </div>
-                    </div>
-                    
-                    <div id="notepad-login-sukses" class="d-none text-center">
-                        <div class="alert alert-success border-0 shadow-sm">
-                            <i class="bi bi-check-circle-fill me-2"></i> Login berhasil!
-                        </div>
-                        <button type="button" class="btn btn-primary fw-bold w-100 py-2" onclick="langsungKeDashboard()">
-                            <i class="bi bi-window-stack me-2"></i> BUKA DASHBOARD NOTEPAD
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary fw-bold w-100 mt-2 py-2" onclick="resetLoginNotepad()">
-                            <i class="bi bi-arrow-repeat me-2"></i> MASUK LAGI
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-3">
-                    <small class="text-muted">
-                        <i class="bi bi-info-circle-fill me-1"></i> Kredensial bersama: <strong>AppNotePadPro</strong> / <strong>MyHand0286</strong>
-                    </small>
-                </div>
+<div id="offlineIndicator" style="display:none; background:var(--danger); color:white; text-align:center; padding:5px; font-size:12px;">
+    Anda sedang Offline. Perubahan disimpan lokal.
+</div>
+<div id="pwaInstallPrompt" style="display:none; position:fixed; bottom:20px; left:20px; background:var(--bg-secondary); border:1px solid var(--border-color); padding:15px; border-radius:var(--radius-lg); z-index:9998; box-shadow:var(--shadow);">
+    <p style="margin-bottom:10px; color:var(--text-primary);">Install Aplikasi?</p>
+    <button id="installBtn" class="btn btn-primary btn-sm">Install</button>
+    <button onclick="document.getElementById('pwaInstallPrompt').style.display='none'" class="btn btn-outline btn-sm">Nanti</button>
+</div>
+<--=== AKHIR BLOK 1 === -->
+<--=== BLOK 2: STYLE CSS LENGKAP === -->
+<style>
+    .app-container { display: flex; height: calc(100vh - 25px); }
+    .sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+    .main-content { flex: 1; overflow-y: auto; padding: 20px; }
+    
+    .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border-color); text-align: center; }
+    .sidebar-menu { padding: 10px; flex: 1; }
+    .sidebar-item { padding: 12px 15px; border-radius: var(--radius-md); cursor: pointer; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; transition: 0.2s; color: var(--text-secondary); }
+    .sidebar-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .sidebar-item.active { background: var(--accent-green-bg); color: var(--accent-green); }
+    .sidebar-item i { width: 20px; text-align: center; }
+    
+    .user-footer { padding: 15px; border-top: 1px solid var(--border-color); }
+    
+    .card { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 20px; }
+    .card-header { margin-bottom: 20px; font-weight: 600; font-size: 18px; display: flex; justify-content: space-between; align-items: center; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 12px; background: var(--bg-tertiary); color: var(--text-secondary); font-weight: 500; font-size: 13px; }
+    td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+    tr:hover td { background: var(--bg-hover); }
+    
+    .chat-container { display: flex; flex-direction: column; height: 70vh; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-bubble { max-width: 70%; padding: 12px 16px; border-radius: 18px; word-wrap: break-word; }
+    .chat-sent { background: var(--accent-green-bg); color: var(--accent-green); align-self: flex-end; }
+    .chat-received { background: var(--bg-tertiary); align-self: flex-start; }
+    
+    .text-green { color: var(--accent-green); }
+    .text-muted { color: var(--text-secondary); font-size: 13px; }
+    .hidden { display: none !important; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-pro { background: var(--accent-green-bg); color: var(--accent-green); }
+    .badge-free { background: var(--bg-tertiary); color: var(--text-secondary); }
+    .badge-success { background: var(--accent-green-bg); color: var(--accent-green); }
+    .badge-error { background: rgba(239,68,68,0.2); color: var(--danger); }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; display: flex; justify-content: center; align-items: center; }
+    .modal-box { background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+    .modal-header { padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .modal-body { padding: 20px; }
+    .modal-footer { padding: 15px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
+</style>
+<--=== AKHIR BLOK 2 === -->
+<--=== BLOK 3: HALAMAN LOGIN === -->
+<div id="pageLogin" style="display:flex; justify-content:center; align-items:center; height:100vh;">
+    <div class="card" style="width: 400px; max-width: 90%;">
+        <div style="text-align:center; margin-bottom: 20px;">
+            <i class="fas fa-book" style="color: var(--accent-green); font-size: 50px;"></i>
+            <h2 style="margin-top: 10px;">NotepadPro++</h2>
+            <p class="text-muted">Login ke Akun Anda</p>
+        </div>
+        <div id="loginError" class="hidden" style="background:var(--danger); padding:10px; border-radius:8px; margin-bottom:15px; color:white; font-size:13px;"></div>
+        <form onsubmit="prosesLogin(event)">
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px;">Username</label>
+                <input type="text" id="loginUsername" required autocomplete="username">
             </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block; margin-bottom:5px;">Password</label>
+                <input type="password" id="loginPassword" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" style="width:100%;">Masuk</button>
+        </form>
+        <p class="text-muted" style="margin-top:15px; text-align:center; cursor:pointer;" onclick="alert('Hubungi Admin Dede untuk reset password')">Lupa Password?</p>
+    </div>
+</div>
+<--=== AKHIR BLOK 3 === -->
+<--=== BLOK 4: DASHBOARD SUPERADMIN === -->
+<div id="pageDashboard" class="hidden" style="display:none;">
+    <div class="card-header">
+        <h2>Dashboard SuperAdmin</h2>
+        <p class="text-muted">Selamat datang, Dede (Pemilik & Pengelola)</p>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <div class="text-muted">Total User Terdaftar</div>
+            <div class="text-green" style="font-size: 28px; font-weight: 700;" id="statTotalUser">0</div>
+        </div>
+        <div class="card">
+            <div class="text-muted">User Pro Aktif</div>
+            <div class="text-green" style="font-size: 28px; font-weight: 700;" id="statProUser">0</div>
+        </div>
+        <div class="card">
+            <div class="text-muted">Total Catatan / Blok</div>
+            <div class="text-green" style="font-size: 28px; font-weight: 700;" id="statTotalBlok">0</div>
+        </div>
+        <div class="card">
+            <div class="text-muted">Kode Aktivasi Aktif</div>
+            <div class="text-green" style="font-size: 28px; font-weight: 700;" id="statKodeAktif">0</div>
         </div>
     </div>
-
-    <!-- ==========================================
-    PLACEHOLDER DASHBOARD (AKAN DIISI NP-02.1)
-    ========================================== -->
-    <div class="container mt-4 d-none-custom" id="halaman-dashboard-notepad">
-        <!-- Konten dashboard akan dimuat dari blok NP-02.1 -->
-        <div class="alert alert-info">Dashboard Notepad sedang dimuat...</div>
+    <div class="card" style="margin-top: 20px;">
+        <h3>Menu Cepat SuperAdmin</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+            <button class="btn btn-outline" onclick="navigasi('panelAdmin')"><i class="fas fa-users"></i> Kelola User</button>
+            <button class="btn btn-outline" onclick="navigasi('menuAktivasi')"><i class="fas fa-key"></i> Aktivasi Pro</button>
+            <button class="btn btn-outline" onclick="navigasi('menuHarga')"><i class="fas fa-tags"></i> Menu Harga</button>
+            <button class="btn btn-outline" onclick="navigasi('blokManager')"><i class="fas fa-code"></i> Catatan Kode</button>
+            <button class="btn btn-outline" onclick="navigasi('gabungBlok')"><i class="fas fa-layer-group"></i> Gabung Blok</button>
+            <button class="btn btn-outline" onclick="navigasi('backupRestore')"><i class="fas fa-database"></i> Backup & Restore</button>
+            <button class="btn btn-outline" onclick="navigasi('chat')"><i class="fas fa-comments"></i> Chat</button>
+        </div>
     </div>
-
-    <!-- ==========================================
-    PLACEHOLDER EDITOR (AKAN DIISI NP-03)
-    ========================================== -->
-    <div class="container-fluid mt-4 d-none-custom" id="halaman-editor-blok">
-        <!-- Konten editor akan dimuat dari blok NP-03 -->
+</div>
+<--=== AKHIR BLOK 4 === -->
+<--=== BLOK 5: PANEL ADMIN USER === -->
+<div id="pagePanelAdmin" class="hidden" style="display:none;">
+    <div class="card-header">
+        <h2>Panel Admin User</h2>
+        <button class="btn btn-primary" onclick="tambahUserModal()"><i class="fas fa-plus"></i> Tambah User</button>
     </div>
-
-    <!-- ==========================================
-    PLACEHOLDER MODAL PENGGABUNGAN (AKAN DIISI NP-02.2)
-    ========================================== -->
-    <div id="modal-penggabungan-container">
-        <!-- Modal penggabungan akan dimuat dari blok NP-02.2 -->
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Nama</th>
+                    <th>HP</th>
+                    <th>Status</th>
+                    <th>Pro</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="tabelUserAdmin"></tbody>
+        </table>
     </div>
+</div>
+<--=== AKHIR BLOK 5 === -->
+<--=== BLOK 6: MENU AKTIVASI & HARGA === -->
+<div id="pageMenuAktivasi" class="hidden" style="display:none;">
+    <div class="card-header"><h2>Generate Kode Aktivasi Pro</h2></div>
+    <div class="card">
+        <div style="margin-bottom:15px;">
+            <label>Pilih Paket</label>
+            <select id="selectPaketAktivasi"></select>
+        </div>
+        <button class="btn btn-primary" onclick="generateKode()"><i class="fas fa-key"></i> Generate Kode Unik</button>
+        <div style="margin-top: 20px;">
+            <h4>Daftar Kode Aktif</h4>
+            <div id="listKodeAktivasi" style="display: flex; flex-direction: column; gap: 10px; margin-top:10px;"></div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        // ==========================================
-        // FUNGSI LOGIN
-        // ==========================================
-        function prosesLoginNotepad() {
-            const username = document.getElementById('notepad-username').value.trim();
-            const password = document.getElementById('notepad-password').value.trim();
-            const errorDiv = document.getElementById('notepad-login-error');
-            const errorText = document.getElementById('notepad-error-text');
-            const suksesDiv = document.getElementById('notepad-login-sukses');
-            const formWrapper = document.getElementById('notepad-form-wrapper');
-            
-            const validUsername = 'AppNotePadPro';
-            const validPassword = 'MyHand0286';
-            
-            if (username === validUsername && password === validPassword) {
-                // Simpan sesi login
-                const sessionData = {
-                    loggedIn: true,
-                    username: username,
-                    loginTime: new Date().toISOString(),
-                    sessionExpiry: Date.now() + (24 * 60 * 60 * 1000) // 24 jam
-                };
-                localStorage.setItem('notepad_session', JSON.stringify(sessionData));
-                
-                // Tampilkan pesan sukses
-                formWrapper.classList.add('d-none');
-                suksesDiv.classList.remove('d-none');
-                errorDiv.classList.add('d-none');
-                
-                // Bersihkan form
-                document.getElementById('notepad-username').value = '';
-                document.getElementById('notepad-password').value = '';
-            } else {
-                errorText.textContent = 'Username atau Password salah. Silakan coba lagi.';
-                errorDiv.classList.remove('d-none');
-                suksesDiv.classList.add('d-none');
-                
-                // Animasi goyang
-                const card = document.querySelector('.card-custom');
-                card.style.animation = 'none';
-                card.offsetHeight; // trigger reflow
-                card.style.animation = 'goyang 0.5s ease';
-            }
-        }
-        
-        function langsungKeDashboard() {
-            document.getElementById('halaman-login-notepad').classList.add('d-none-custom');
-            document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
-            
-            // Panggil fungsi refresh jika sudah ada di NP-02.1
-            if (typeof refreshDaftarBlok === 'function') {
-                refreshDaftarBlok();
-            }
-        }
-        
-        function resetLoginNotepad() {
-            document.getElementById('notepad-form-wrapper').classList.remove('d-none');
-            document.getElementById('notepad-login-sukses').classList.add('d-none');
-            document.getElementById('notepad-login-error').classList.add('d-none');
-        }
-        
-        // ==========================================
-        // FUNGSI LOGOUT (DARI DASHBOARD)
-        // ==========================================
-        function logoutNotepad() {
-            localStorage.removeItem('notepad_session');
-            document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
-            document.getElementById('halaman-editor-blok').classList.add('d-none-custom');
-            document.getElementById('halaman-login-notepad').classList.remove('d-none-custom');
-            resetLoginNotepad();
-        }
-        
-        // ==========================================
-        // CEK SESI SAAT HALAMAN DIMUAT
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const sessionData = localStorage.getItem('notepad_session');
-            if (sessionData) {
-                try {
-                    const session = JSON.parse(sessionData);
-                    if (session.loggedIn && session.sessionExpiry && Date.now() < session.sessionExpiry) {
-                        // Sesi masih valid, langsung tampilkan dashboard
-                        document.getElementById('halaman-login-notepad').classList.add('d-none-custom');
-                        document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
-                    } else {
-                        // Sesi kadaluwarsa
-                        localStorage.removeItem('notepad_session');
-                    }
-                } catch (e) {
-                    localStorage.removeItem('notepad_session');
-                }
-            }
-        });
-    </script>
-</body>
-</html>
-<!-- AKHIR BLOK NP-01 -->
-<!-- ==========================================
-BLOK NP-02.1 - DASHBOARD MANAJEMEN BLOK (BIRU-PUTIH)
-===========================================
-PENJELASAN FUNGSI PERINTAH BLOK NP-02.1:
-1. Pusat Penyimpanan Blok: Menampilkan seluruh blok yang telah disimpan ke dalam penyimpanan lokal browser (localStorage) dalam bentuk tabel yang rapi dan mudah dikelola.
-2. Pengurutan Otomatis: Setiap blok yang disimpan akan diurutkan secara otomatis berdasarkan nomor blok (misal TG-01, TG-02, NP-01) tanpa perlu campur tangan manual.
-3. Formulir Penambahan Blok: Menyediakan formulir untuk menambahkan blok baru dengan mengisi Nomor Blok, Judul Blok, dan Kode HTML Blok secara lengkap.
-4. Fitur Penggabungan Otomatis: Tombol "Gabung Semua Blok" akan membuka modal untuk menampilkan hasil gabungan kode dan menyediakan tombol salin (copy) serta unduh (download).
-=========================================== -->
-<div class="container mt-4" id="halaman-dashboard-notepad">
-    
-    <!-- Header Halaman -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div id="pageMenuHarga" class="hidden" style="display:none;">
+    <div class="card-header"><h2>Menu Harga</h2></div>
+    <div class="card">
+        <table>
+            <thead><tr><th>Durasi</th><th>Harga</th><th>Aksi</th></tr></thead>
+            <tbody id="tabelHarga"></tbody>
+        </table>
+        <button class="btn btn-outline" onclick="tambahHargaModal()" style="margin-top:10px;"><i class="fas fa-plus"></i> Tambah Harga</button>
+    </div>
+</div>
+<--=== AKHIR BLOK 6 === -->
+<--=== BLOK 7: DASHBOARD USER === -->
+<div id="pageDashboardUser" class="hidden" style="display:none;">
+    <div class="card-header"><h2>Dashboard User</h2></div>
+    <div class="card">
+        <div class="grid">
+            <div><strong>Nama:</strong> <span id="userNama"></span></div>
+            <div><strong>Username:</strong> <span id="userUsername"></span></div>
+            <div><strong>Email:</strong> <span id="userEmail"></span></div>
+            <div><strong>HP:</strong> <span id="userHp"></span></div>
+            <div><strong>Status Pro:</strong> <span id="userStatusPro" class="badge badge-free">Free</span></div>
+        </div>
+        <div id="upgradePanel" style="margin-top:20px; background:var(--bg-tertiary); padding:15px; border-radius:8px;">
+            <h4>Ingin Akses Penuh?</h4>
+            <p class="text-muted">Upgrade ke Pro untuk fitur Penggabungan Blok dan Editor Advanced.</p>
+            <div style="margin-top:10px;">
+                <input type="text" id="inputKodeUpgrade" placeholder="Masukkan Kode Aktivasi">
+            </div>
+            <button class="btn btn-primary" onclick="upgradePro()" style="margin-top:10px;">Upgrade Sekarang</button>
+        </div>
+    </div>
+</div>
+<--=== AKHIR BLOK 7 === -->
+<--=== BLOK 8: BLOK MANAGER (CATATAN) === -->
+<div id="pageBlokManager" class="hidden" style="display:none;">
+    <div class="card-header">
+        <h2>Catatan Kode (Blok)</h2>
+        <button class="btn btn-primary" onclick="tambahBlokModal()"><i class="fas fa-plus"></i> Tambah Blok</button>
+    </div>
+    <div id="listBlok" style="display: flex; flex-direction: column; gap: 15px;"></div>
+</div>
+<--=== AKHIR BLOK 8 === -->
+<--=== BLOK 9: EDITOR BLOK FULLSCREEN === -->
+<div id="modalEditor" class="hidden modal-overlay" style="display:none;">
+    <div class="modal-box" style="width:95%; height:90%; display:flex; flex-direction:column;">
+        <div class="modal-header">
+            <span>Edit Blok: <strong id="editorTitle"></strong></span>
+            <div>
+                <button class="btn btn-outline btn-sm" onclick="copyBlokAktif()"><i class="fas fa-copy"></i> Copy</button>
+                <button class="btn btn-primary btn-sm" onclick="simpanEditBlok()"><i class="fas fa-save"></i> Simpan</button>
+                <button class="btn btn-outline btn-sm" onclick="tutupEditor()"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <textarea id="editorTextarea" class="code-editor" style="flex:1; height:100%;"></textarea>
+    </div>
+</div>
+<--=== AKHIR BLOK 9 === -->
+<--=== BLOK 10: PENGGABUNGAN BLOK === -->
+<div id="pageGabungBlok" class="hidden" style="display:none;">
+    <div class="card-header">
+        <h2>Gabung Blok</h2>
         <div>
-            <h3 class="text-primary fw-bold mb-0"><i class="bi bi-journal-code me-2"></i> Notepad Manajemen Blok</h3>
-            <p class="text-muted small mb-0">Simpan, urutkan, edit, dan gabungkan semua blok kode aplikasi Anda.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-primary fw-bold shadow-sm" onclick="bukaEditorBaru()">
-                <i class="bi bi-plus-square me-2"></i> Editor Baru
-            </button>
-            <button class="btn btn-primary fw-bold shadow-sm" onclick="bukaModalPenggabungan()">
-                <i class="bi bi-file-earmark-arrow-down-fill me-2"></i> Gabung Semua Blok
-            </button>
-            <button class="btn btn-outline-danger fw-bold shadow-sm" onclick="logoutNotepad()">
-                <i class="bi bi-box-arrow-right me-2"></i> Keluar
-            </button>
+            <button class="btn btn-primary" onclick="copyGabungan()"><i class="fas fa-copy"></i> Copy HTML Gabungan</button>
+            <button class="btn btn-outline" onclick="downloadGabungan()"><i class="fas fa-download"></i> Download</button>
         </div>
     </div>
-
-    <!-- Statistik Blok -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card bg-primary text-white shadow-sm border-0 p-3 rounded-4 h-100">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h6 class="opacity-75 mb-1">Total Blok Tersimpan</h6>
-                        <h3 class="fw-bold mb-0" id="total-blok-notepad">0 Blok</h3>
-                    </div>
-                    <div class="bg-white text-primary rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
-                        <i class="bi bi-collection-fill fs-4"></i>
-                    </div>
-                </div>
-            </div>
+    <div class="card">
+        <pre id="previewGabungan" style="background:var(--bg-tertiary); padding:15px; border-radius:8px; max-height: 60vh; overflow:auto; font-family: 'JetBrains Mono', monospace; white-space: pre-wrap; color: var(--accent-green); font-size:13px;"></pre>
+    </div>
+</div>
+<--=== AKHIR BLOK 10 === -->
+<--=== BLOK 11: CHAT USER === -->
+<div id="pageChat" class="hidden" style="display:none;">
+    <div class="chat-container">
+        <div class="card-header">Chat User</div>
+        <div class="chat-messages" id="chatMessages">
+            <p class="text-muted" style="text-align:center;">Belum ada pesan</p>
         </div>
-        <div class="col-md-4">
-            <div class="card bg-info text-white shadow-sm border-0 p-3 rounded-4 h-100">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h6 class="opacity-75 mb-1">Total Baris Kode</h6>
-                        <h3 class="fw-bold mb-0" id="total-baris-notepad">0 Baris</h3>
-                    </div>
-                    <div class="bg-white text-info rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
-                        <i class="bi bi-code-slash fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card bg-secondary text-white shadow-sm border-0 p-3 rounded-4 h-100">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h6 class="opacity-75 mb-1">Penyimpanan Tersedia</h6>
-                        <h3 class="fw-bold mb-0" id="kapasitas-notepad">5 MB</h3>
-                    </div>
-                    <div class="bg-white text-secondary rounded-circle d-flex justify-content-center align-items-center shadow-sm" style="width: 45px; height: 45px;">
-                        <i class="bi bi-hdd-stack-fill fs-4"></i>
-                    </div>
-                </div>
-            </div>
+        <div style="padding: 15px; border-top: 1px solid var(--border-color); display: flex; gap: 10px;">
+            <input type="text" id="chatInput" placeholder="Ketik pesan...">
+            <button class="btn btn-primary" onclick="kirimChat()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
-
-    <div class="row g-4">
-        
-        <!-- BAGIAN 1: FORM TAMBAH BLOK BARU & CATATAN (KIRI) -->
-        <div class="col-lg-5">
-            <div class="card-custom border-top-primary shadow-sm border-0 mb-4">
-                <h5 class="text-dark fw-bold border-bottom pb-2 mb-3"><i class="bi bi-plus-square-fill me-2 text-primary"></i> Tambah Blok Baru</h5>
-                
-                <form id="form-tambah-blok" onsubmit="event.preventDefault(); simpanBlokBaru();">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small">Nomor Blok <span class="text-danger">*</span></label>
-                        <input type="text" id="input-nomor-blok" class="form-control" placeholder="Contoh: TG-31 atau NP-04" required>
-                        <small class="text-muted" style="font-size: 0.75rem;">Gunakan format unik. Nomor blok akan diurutkan otomatis.</small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small">Judul Blok <span class="text-danger">*</span></label>
-                        <input type="text" id="input-judul-blok" class="form-control" placeholder="Contoh: Mesin Kasir (Point of Sales)" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small">Kode HTML Blok <span class="text-danger">*</span></label>
-                        <textarea id="input-kode-blok" class="form-control" rows="8" placeholder="Tempelkan kode HTML lengkap blok di sini..." required style="font-family: 'Courier New', monospace; font-size: 0.85rem;"></textarea>
-                        <small class="text-muted" style="font-size: 0.75rem;">Tempelkan seluruh kode termasuk komentar pembuka dan penutup blok.</small>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
-                        <i class="bi bi-save-fill me-2"></i> SIMPAN BLOK
-                    </button>
-                    <button type="button" id="btn-batal-edit" class="btn btn-outline-secondary w-100 fw-bold py-2 mt-2 d-none" onclick="batalEditBlok()">
-                        <i class="bi bi-x-circle me-2"></i> BATAL EDIT
-                    </button>
-                </form>
-            </div>
-
-            <!-- Catatan -->
-            <div class="card-custom border-top-primary shadow-sm border-0">
-                <h5 class="text-dark fw-bold border-bottom pb-2 mb-3"><i class="bi bi-sticky-fill me-2 text-primary"></i> Catatan</h5>
-                <textarea id="notepad-catatan" class="form-control" rows="6" placeholder="Tulis catatan atau keterangan tambahan di sini... Catatan akan tersimpan otomatis." style="font-family: 'Segoe UI', sans-serif;"></textarea>
-                <small class="text-muted mt-2 d-block" style="font-size: 0.75rem;"><i class="bi bi-info-circle-fill me-1"></i> Catatan tersimpan otomatis di browser ini.</small>
-            </div>
+</div>
+<--=== AKHIR BLOK 11 === -->
+<--=== BLOK 12: BACKUP RESTORE & EKSPOR IMPOR === -->
+<div id="pageBackupRestore" class="hidden" style="display:none;">
+    <div class="card-header"><h2>Backup & Restore (SuperAdmin)</h2></div>
+    <div class="grid">
+        <div class="card">
+            <h3>Backup</h3>
+            <p class="text-muted">Download semua data dalam format JSON</p>
+            <button class="btn btn-primary btn-block" onclick="backupData()"><i class="fas fa-download"></i> Download Backup JSON</button>
+            <button class="btn btn-outline btn-block" onclick="downloadIndexHtml()" style="margin-top:10px;"><i class="fas fa-file-code"></i> Download index.html Gabungan</button>
         </div>
-
-        <!-- BAGIAN 2: DAFTAR BLOK TERSIMPAN (KANAN) -->
-        <div class="col-lg-7">
-            <div class="card-custom h-100 border-top-primary shadow-sm border-0">
-                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                    <h5 class="text-dark fw-bold mb-0"><i class="bi bi-list-check me-2 text-primary"></i> Daftar Blok Tersimpan</h5>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-sm btn-outline-secondary" onclick="refreshDaftarBlok()" title="Segarkan Daftar">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="hapusSemuaBlok()" title="Hapus Semua Blok">
-                            <i class="bi bi-trash-fill"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
-                    <table class="table table-hover align-middle border">
-                        <thead class="table-light sticky-top">
-                            <tr>
-                                <th scope="col" style="width: 100px;">Nomor Blok</th>
-                                <th scope="col">Judul Blok</th>
-                                <th scope="col" class="text-center" style="width: 80px;">Baris</th>
-                                <th scope="col" class="text-center" style="width: 140px;">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="daftar-blok-tbody">
-                            <!-- Data blok akan dimuat di sini oleh JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div id="blok-kosong-placeholder" class="text-center py-5 text-muted">
-                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                    <p class="mb-0">Belum ada blok yang tersimpan. Gunakan formulir di sebelah kiri untuk menambahkan blok pertama Anda.</p>
-                </div>
-            </div>
+        <div class="card">
+            <h3>Restore</h3>
+            <p class="text-muted">Upload file backup JSON</p>
+            <input type="file" id="restoreFile" accept=".json">
+            <button class="btn btn-warning btn-block" onclick="restoreData()" style="margin-top:10px;"><i class="fas fa-upload"></i> Restore Data</button>
         </div>
-
+    </div>
+</div>
+<--=== AKHIR BLOK 12 === -->
+<--=== BLOK 13: MODAL TAMBAH USER & HARGA === -->
+<div id="modalTambahUser" class="hidden modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <div class="modal-header"><h3>Tambah User</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahUser')"><i class="fas fa-times"></i></button></div>
+        <div class="modal-body">
+            <div style="margin-bottom:10px;"><label>Username</label><input type="text" id="newUsername"></div>
+            <div style="margin-bottom:10px;"><label>Password</label><input type="password" id="newPassword"></div>
+            <div style="margin-bottom:10px;"><label>Nama</label><input type="text" id="newNama"></div>
+            <div style="margin-bottom:10px;"><label>Alamat</label><input type="text" id="newAlamat"></div>
+            <div style="margin-bottom:10px;"><label>Nomor HP</label><input type="text" id="newHp"></div>
+            <div style="margin-bottom:10px;"><label>Email</label><input type="email" id="newEmail"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="tutupModal('modalTambahUser')">Batal</button>
+            <button class="btn btn-primary" onclick="simpanUserBaru()">Simpan</button>
+        </div>
     </div>
 </div>
 
+<div id="modalTambahHarga" class="hidden modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <div class="modal-header"><h3>Tambah Harga</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahHarga')"><i class="fas fa-times"></i></button></div>
+        <div class="modal-body">
+            <div style="margin-bottom:10px;"><label>Durasi</label><input type="text" id="newDurasi" placeholder="Contoh: 1 Bulan"></div>
+            <div style="margin-bottom:10px;"><label>Harga (Rp)</label><input type="number" id="newHarga"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="tutupModal('modalTambahHarga')">Batal</button>
+            <button class="btn btn-primary" onclick="simpanHargaBaru()">Simpan</button>
+        </div>
+    </div>
+</div>
+<--=== AKHIR BLOK 13 === -->
+<--=== BLOK 14: SIDEBAR & LAYOUT === -->
+<div id="appContainer" class="hidden" style="display:none; height:100vh;">
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-book" style="color: var(--accent-green); font-size: 24px;"></i>
+                <h3 style="margin-top:5px;">NotepadPro++</h3>
+            </div>
+            <div class="sidebar-menu">
+                <!-- Menu SuperAdmin -->
+                <div id="menuAdmin" class="hidden">
+                    <div class="sidebar-item active" onclick="navigasi('dashboard')" id="menuDashboard"><i class="fas fa-th-large"></i> Dashboard</div>
+                    <div class="sidebar-item" onclick="navigasi('panelAdmin')" id="menuPanelAdmin"><i class="fas fa-users"></i> Panel Admin</div>
+                    <div class="sidebar-item" onclick="navigasi('menuAktivasi')" id="menuAktivasi"><i class="fas fa-key"></i> Aktivasi Pro</div>
+                    <div class="sidebar-item" onclick="navigasi('menuHarga')" id="menuHarga"><i class="fas fa-tags"></i> Menu Harga</div>
+                    <div class="sidebar-item" onclick="navigasi('blokManager')" id="menuBlok"><i class="fas fa-code"></i> Catatan Kode</div>
+                    <div class="sidebar-item" onclick="navigasi('gabungBlok')" id="menuGabung"><i class="fas fa-layer-group"></i> Gabung Blok</div>
+                    <div class="sidebar-item" onclick="navigasi('backupRestore')" id="menuBackup"><i class="fas fa-database"></i> Backup & Restore</div>
+                    <div class="sidebar-item" onclick="navigasi('chat')" id="menuChatAdmin"><i class="fas fa-comments"></i> Chat</div>
+                </div>
+                <!-- Menu User -->
+                <div id="menuUser" class="hidden">
+                    <div class="sidebar-item active" onclick="navigasi('dashboardUser')" id="menuDashboardUser"><i class="fas fa-th-large"></i> Dashboard</div>
+                    <div class="sidebar-item" onclick="navigasi('blokManager')" id="menuBlokUser"><i class="fas fa-code"></i> Catatan Kode</div>
+                    <div class="sidebar-item" onclick="navigasi('gabungBlok')" id="menuGabungUser"><i class="fas fa-layer-group"></i> Gabung Blok</div>
+                    <div class="sidebar-item" onclick="navigasi('chat')" id="menuChatUser"><i class="fas fa-comments"></i> Chat</div>
+                </div>
+            </div>
+            <div class="user-footer">
+                <p id="sidebarUserName" style="font-weight:600;"></p>
+                <p id="sidebarUserRole" class="text-muted"></p>
+                <button class="btn btn-outline btn-block" onclick="logout()" style="margin-top:10px;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Semua halaman dirender di sini -->
+        </div>
+    </div>
+</div>
+<--=== AKHIR BLOK 14 === -->
+<--=== BLOK 15: JAVASCRIPT LENGKAP === -->
 <script>
-    // Kunci localStorage untuk menyimpan daftar blok dan catatan
-    const STORAGE_KEY = 'notepad_blok_data';
-    const CATATAN_KEY = 'notepad_catatan';
+// ============================================
+// DATA DUMMY & KONFIGURASI
+// ============================================
+const SUPERADMIN = { username: 'NotePadePro', password: 'MyHand0286', nama: 'Dede', role: 'superadmin', pro: true, status: 'aktif', hp: '', email: '', alamat: '' };
+
+let dataUser = JSON.parse(localStorage.getItem('np_users')) || [
+    SUPERADMIN,
+    { username: 'demo', password: 'demo123', nama: 'User Demo', role: 'user', pro: false, status: 'aktif', hp: '08123456789', email: 'demo@email.com', alamat: 'Garut' },
+    { username: 'pro_user', password: 'pro123', nama: 'Pro User', role: 'user', pro: true, status: 'aktif', hp: '08987654321', email: 'pro@email.com', alamat: 'Garut' }
+];
+
+let dataBlok = JSON.parse(localStorage.getItem('np_blok')) || [
+    { id: 1, judul: 'Blok 1: Pembukaan HTML', isi: '<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="UTF-8">\n<title>App</title>\n</head>\n<body>' },
+    { id: 2, judul: 'Blok 5.4 R3: Input Produk', isi: '<!-- Form Input Produk -->\n<div class="form-group">\n  <label>Nama Produk</label>\n  <input type="text">\n</div>' }
+];
+
+let dataKodeAktivasi = JSON.parse(localStorage.getItem('np_kode')) || ['PRO-ABCD-1234', 'PRO-EFGH-5678'];
+
+let dataHarga = JSON.parse(localStorage.getItem('np_harga')) || [
+    { id: 1, durasi: '1 Bulan', harga: 10000 },
+    { id: 2, durasi: '3 Bulan', harga: 20000 },
+    { id: 3, durasi: '6 Bulan', harga: 30000 }
+];
+
+let dataChat = JSON.parse(localStorage.getItem('np_chat')) || [];
+
+let currentUser = null;
+let currentEditBlokId = null;
+let halamanAktif = 'dashboard';
+
+// ============================================
+// PWA & OFFLINE
+// ============================================
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('pwaInstallPrompt').style.display = 'block';
+});
+document.getElementById('installBtn').addEventListener('click', () => {
+    if (deferredPrompt) deferredPrompt.prompt();
+});
+
+window.addEventListener('online', () => document.getElementById('offlineIndicator').style.display = 'none');
+window.addEventListener('offline', () => document.getElementById('offlineIndicator').style.display = 'block');
+if (!navigator.onLine) document.getElementById('offlineIndicator').style.display = 'block';
+
+// ============================================
+// SIMPAN DATA
+// ============================================
+function simpanSemua() {
+    localStorage.setItem('np_users', JSON.stringify(dataUser));
+    localStorage.setItem('np_blok', JSON.stringify(dataBlok));
+    localStorage.setItem('np_kode', JSON.stringify(dataKodeAktivasi));
+    localStorage.setItem('np_harga', JSON.stringify(dataHarga));
+    localStorage.setItem('np_chat', JSON.stringify(dataChat));
+}
+
+function tampilkanToast(pesan, tipe = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipe}`;
+    toast.textContent = pesan;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function tutupModal(id) { document.getElementById(id).style.display = 'none'; }
+function bukaModal(id) { document.getElementById(id).style.display = 'flex'; }
+
+// ============================================
+// NAVIGASI
+// ============================================
+function navigasi(halaman) {
+    halamanAktif = halaman;
+    const semuaPage = ['dashboard', 'panelAdmin', 'menuAktivasi', 'menuHarga', 'dashboardUser', 'blokManager', 'gabungBlok', 'chat', 'backupRestore'];
     
-    // Variabel untuk menandai mode edit
-    let sedangEdit = false;
-    let nomorBlokEdit = '';
-    
-    // Fungsi untuk menyimpan blok baru atau update blok yang diedit
-    function simpanBlokBaru() {
-        const nomorBlok = document.getElementById('input-nomor-blok').value.trim();
-        const judulBlok = document.getElementById('input-judul-blok').value.trim();
-        const kodeBlok = document.getElementById('input-kode-blok').value.trim();
-        
-        if (!nomorBlok || !judulBlok || !kodeBlok) {
-            alert('Mohon isi semua kolom yang diperlukan.');
-            return;
-        }
-        
-        let daftarBlok = ambilDaftarBlok();
-        
-        if (sedangEdit && nomorBlokEdit !== nomorBlok) {
-            daftarBlok = daftarBlok.filter(blok => blok.nomor !== nomorBlokEdit);
-        }
-        
-        const indexExist = daftarBlok.findIndex(blok => blok.nomor === nomorBlok);
-        if (indexExist >= 0 && (!sedangEdit || nomorBlokEdit !== nomorBlok)) {
-            if (!confirm('Nomor blok "' + nomorBlok + '" sudah ada. Apakah Anda ingin menimpanya?')) {
-                return;
-            }
-            daftarBlok.splice(indexExist, 1);
-        }
-        
-        const jumlahBaris = kodeBlok.split('\n').length;
-        
-        const blokBaru = {
-            nomor: nomorBlok,
-            judul: judulBlok,
-            kode: kodeBlok,
-            baris: jumlahBaris,
-            tanggal: new Date().toISOString()
-        };
-        
-        if (sedangEdit && nomorBlokEdit === nomorBlok) {
-            daftarBlok = daftarBlok.filter(blok => blok.nomor !== nomorBlokEdit);
-        }
-        
-        daftarBlok.push(blokBaru);
-        simpanDaftarBlok(daftarBlok);
-        resetFormBlok();
-        refreshDaftarBlok();
-        
-        alert('Blok "' + nomorBlok + '" berhasil disimpan!');
-    }
-    
-    function ambilDaftarBlok() {
-        const data = localStorage.getItem(STORAGE_KEY);
-        if (data) {
-            try {
-                return JSON.parse(data);
-            } catch (error) {
-                console.error('Gagal membaca data blok:', error);
-                return [];
-            }
-        }
-        return [];
-    }
-    
-    function simpanDaftarBlok(daftarBlok) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(daftarBlok));
-    }
-    
-    function urutkanBlok(daftarBlok) {
-        return daftarBlok.sort((a, b) => {
-            return a.nomor.localeCompare(b.nomor, undefined, { numeric: true, sensitivity: 'base' });
-        });
-    }
-    
-    function refreshDaftarBlok() {
-        const tbody = document.getElementById('daftar-blok-tbody');
-        const placeholder = document.getElementById('blok-kosong-placeholder');
-        let daftarBlok = ambilDaftarBlok();
-        daftarBlok = urutkanBlok(daftarBlok);
-        
-        tbody.innerHTML = '';
-        
-        if (daftarBlok.length === 0) {
-            placeholder.classList.remove('d-none');
-        } else {
-            placeholder.classList.add('d-none');
-            
-            daftarBlok.forEach(blok => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong class="text-primary">${escapeHTML(blok.nomor)}</strong></td>
-                    <td>
-                        <strong class="d-block small text-dark">${escapeHTML(blok.judul)}</strong>
-                        <small class="text-muted" style="font-size: 0.7rem;">Disimpan: ${formatTanggal(blok.tanggal)}</small>
-                    </td>
-                    <td class="text-center"><span class="badge bg-secondary">${blok.baris} baris</span></td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-outline-info py-1 px-2 mb-1" title="Lihat Kode" onclick="lihatKodeBlok('${escapeHTML(blok.nomor)}')">
-                            <i class="bi bi-eye-fill"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-warning py-1 px-2 mb-1 text-dark" title="Edit Blok" onclick="editBlok('${escapeHTML(blok.nomor)}')">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger py-1 px-2 mb-1" title="Hapus Blok" onclick="hapusBlok('${escapeHTML(blok.nomor)}')">
-                            <i class="bi bi-trash-fill"></i>
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-        
-        updateStatistik(daftarBlok);
-    }
-    
-    function updateStatistik(daftarBlok) {
-        document.getElementById('total-blok-notepad').textContent = daftarBlok.length + ' Blok';
-        
-        let totalBaris = 0;
-        daftarBlok.forEach(blok => {
-            totalBaris += blok.baris || 0;
-        });
-        document.getElementById('total-baris-notepad').textContent = totalBaris + ' Baris';
-    }
-    
-    function lihatKodeBlok(nomor) {
-        const daftarBlok = ambilDaftarBlok();
-        const blok = daftarBlok.find(b => b.nomor === nomor);
-        if (blok) {
-            const popup = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
-            popup.document.write('<pre style="white-space: pre-wrap; word-wrap: break-word; font-family: monospace; padding: 20px;">' + escapeHTML(blok.kode) + '</pre>');
-            popup.document.title = 'Kode Blok: ' + blok.nomor;
-        }
-    }
-    
-    function editBlok(nomor) {
-        const daftarBlok = ambilDaftarBlok();
-        const blok = daftarBlok.find(b => b.nomor === nomor);
-        if (blok) {
-            document.getElementById('input-nomor-blok').value = blok.nomor;
-            document.getElementById('input-judul-blok').value = blok.judul;
-            document.getElementById('input-kode-blok').value = blok.kode;
-            
-            sedangEdit = true;
-            nomorBlokEdit = nomor;
-            
-            document.getElementById('btn-batal-edit').classList.remove('d-none');
-            document.querySelector('#form-tambah-blok button[type="submit"]').innerHTML = '<i class="bi bi-pencil-square me-2"></i> PERBARUI BLOK';
-            
-            document.getElementById('input-nomor-blok').scrollIntoView({ behavior: 'smooth' });
-        }
-    }
-    
-    function batalEditBlok() {
-        resetFormBlok();
-    }
-    
-    function resetFormBlok() {
-        document.getElementById('input-nomor-blok').value = '';
-        document.getElementById('input-judul-blok').value = '';
-        document.getElementById('input-kode-blok').value = '';
-        
-        sedangEdit = false;
-        nomorBlokEdit = '';
-        
-        document.getElementById('btn-batal-edit').classList.add('d-none');
-        document.querySelector('#form-tambah-blok button[type="submit"]').innerHTML = '<i class="bi bi-save-fill me-2"></i> SIMPAN BLOK';
-    }
-    
-    function hapusBlok(nomor) {
-        if (confirm('Apakah Anda yakin ingin menghapus blok "' + nomor + '" secara permanen?')) {
-            let daftarBlok = ambilDaftarBlok();
-            daftarBlok = daftarBlok.filter(blok => blok.nomor !== nomor);
-            simpanDaftarBlok(daftarBlok);
-            refreshDaftarBlok();
-            alert('Blok "' + nomor + '" berhasil dihapus.');
-        }
-    }
-    
-    function hapusSemuaBlok() {
-        if (confirm('PERINGATAN: Hapus SEMUA blok?')) {
-            if (confirm('KONFIRMASI TERAKHIR: Lanjutkan?')) {
-                localStorage.removeItem(STORAGE_KEY);
-                refreshDaftarBlok();
-                alert('Semua blok telah dihapus.');
-            }
-        }
-    }
-    
-    function escapeHTML(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
-    function formatTanggal(isoString) {
-        if (!isoString) return '-';
-        const tanggal = new Date(isoString);
-        const bulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        return tanggal.getDate() + ' ' + bulan[tanggal.getMonth()] + ' ' + tanggal.getFullYear() + ', ' +
-            String(tanggal.getHours()).padStart(2, '0') + ':' + String(tanggal.getMinutes()).padStart(2, '0');
-    }
-    
-    function bukaEditorBaru() {
-        document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
-        document.getElementById('halaman-editor-blok').classList.remove('d-none-custom');
-        // Reset editor untuk blok baru
-        if (typeof resetEditorBaru === 'function') {
-            resetEditorBaru();
-        }
-    }
-    
-    function bukaModalPenggabungan() {
-        // Akan memanggil fungsi dari NP-02.2
-        if (typeof tampilkanModalGabung === 'function') {
-            tampilkanModalGabung();
-        } else {
-            alert('Fitur penggabungan akan segera tersedia.');
-        }
-    }
-    
-    function updateKapasitas() {
-        let total = 0;
-        for (let key in localStorage) {
-            if (localStorage.hasOwnProperty(key)) {
-                total += (localStorage[key].length + key.length) * 2;
-            }
-        }
-        const totalKB = (total / 1024).toFixed(1);
-        document.getElementById('kapasitas-notepad').textContent = totalKB + ' KB';
-    }
-    
-    // Catatan
-    const catatanTextarea = document.getElementById('notepad-catatan');
-    if (catatanTextarea) {
-        // Muat catatan tersimpan
-        const catatanTersimpan = localStorage.getItem(CATATAN_KEY);
-        if (catatanTersimpan) {
-            catatanTextarea.value = catatanTersimpan;
-        }
-        // Simpan otomatis saat mengetik
-        catatanTextarea.addEventListener('input', function() {
-            localStorage.setItem(CATATAN_KEY, catatanTextarea.value);
-        });
-    }
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        refreshDaftarBlok();
-        updateKapasitas();
+    // Sembunyikan semua halaman
+    semuaPage.forEach(p => {
+        const el = document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1));
+        if (el) el.style.display = 'none';
     });
-</script>
-<!-- AKHIR BLOK NP-02.1 -->
-<!-- ==========================================
-BLOK NP-02.2 - MODAL PENGGABUNGAN BLOK (COPY & DOWNLOAD)
-===========================================
-PENJELASAN FUNGSI PERINTAH BLOK NP-02.2:
-1. Penggabungan Kode Otomatis: Mengambil seluruh blok yang tersimpan di localStorage, mengurutkannya berdasarkan nomor, dan menggabungkan semua kode menjadi satu kesatuan yang siap disalin atau diunduh.
-2. Tombol Salin (Copy): Menyediakan tombol untuk menyalin seluruh kode gabungan ke clipboard perangkat dengan satu klik, memudahkan pemindahan kode ke aplikasi lain.
-3. Tombol Unduh (Download): Menyediakan tombol untuk mengunduh kode gabungan sebagai file HTML (.html) dengan nama yang mengandung tanggal dan waktu unduhan.
-4. Tampilan Modal Interaktif: Hasil penggabungan ditampilkan dalam kotak dialog (modal) yang nyaman, lengkap dengan informasi jumlah blok dan total baris kode.
-=========================================== -->
-<!-- Modal Penggabungan Blok -->
-<div class="modal fade" id="modalGabungBlok" tabindex="-1" aria-labelledby="modalGabungBlokLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title fw-bold" id="modalGabungBlokLabel">
-                    <i class="bi bi-file-earmark-code me-2"></i> Hasil Penggabungan Semua Blok
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3 d-flex justify-content-between align-items-center">
-                    <div>
-                        <span class="badge bg-primary me-2" id="modal-jumlah-blok">0 Blok</span>
-                        <span class="badge bg-secondary" id="modal-jumlah-baris">0 Baris</span>
-                    </div>
-                    <small class="text-muted">Kode di bawah adalah gabungan semua blok yang tersimpan.</small>
-                </div>
-                <textarea id="textarea-gabungan" class="form-control" rows="20" readonly style="font-family: 'Courier New', monospace; font-size: 0.85rem; background-color: #f8f9fa;"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary fw-bold" onclick="salinKodeGabungan()">
-                    <i class="bi bi-clipboard me-2"></i> SALIN KE CLIPBOARD
-                </button>
-                <button type="button" class="btn btn-primary fw-bold" onclick="unduhKodeGabungan()">
-                    <i class="bi bi-download me-2"></i> UNDUH FILE HTML
-                </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Kunci localStorage
-    const STORAGE_KEY_MODAL = 'notepad_blok_data';
     
-    // Fungsi untuk menampilkan modal penggabungan
-    function tampilkanModalGabung() {
-        let daftarBlok = ambilDaftarBlokModal();
-        
-        if (daftarBlok.length === 0) {
-            alert('Tidak ada blok yang tersimpan. Silakan tambahkan blok terlebih dahulu.');
+    // Tampilkan halaman tujuan
+    const targetEl = document.getElementById('page' + halaman.charAt(0).toUpperCase() + halaman.slice(1));
+    if (targetEl) targetEl.style.display = 'block';
+    
+    // Update sidebar active
+    document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+    const menuMap = {
+        'dashboard': 'menuDashboard', 'panelAdmin': 'menuPanelAdmin', 'menuAktivasi': 'menuAktivasi',
+        'menuHarga': 'menuHarga', 'dashboardUser': 'menuDashboardUser', 'blokManager': currentUser?.role === 'superadmin' ? 'menuBlok' : 'menuBlokUser',
+        'gabungBlok': currentUser?.role === 'superadmin' ? 'menuGabung' : 'menuGabungUser', 
+        'chat': currentUser?.role === 'superadmin' ? 'menuChatAdmin' : 'menuChatUser',
+        'backupRestore': 'menuBackup'
+    };
+    const menuId = menuMap[halaman];
+    if (menuId) document.getElementById(menuId)?.classList.add('active');
+    
+    // Render konten
+    renderKonten(halaman);
+}
+
+function renderKonten(halaman) {
+    switch(halaman) {
+        case 'dashboard': renderDashboard(); break;
+        case 'panelAdmin': renderPanelAdmin(); break;
+        case 'menuAktivasi': renderAktivasi(); break;
+        case 'menuHarga': renderHarga(); break;
+        case 'dashboardUser': renderDashboardUser(); break;
+        case 'blokManager': renderBlokManager(); break;
+        case 'gabungBlok': renderGabungan(); break;
+        case 'chat': renderChat(); break;
+        case 'backupRestore': break;
+    }
+}
+
+// ============================================
+// LOGIN
+// ============================================
+function prosesLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const user = dataUser.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+        if (user.status === 'nonaktif') {
+            document.getElementById('loginError').classList.remove('hidden');
+            document.getElementById('loginError').textContent = 'Akun dinonaktifkan. Hubungi Admin.';
             return;
         }
+        currentUser = user;
+        document.getElementById('pageLogin').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'block';
+        document.getElementById('sidebarUserName').textContent = user.nama;
+        document.getElementById('sidebarUserRole').textContent = user.role === 'superadmin' ? 'SuperAdmin' : (user.pro ? 'Pro User' : 'Free User');
         
-        // Urutkan blok
-        daftarBlok.sort((a, b) => {
-            return a.nomor.localeCompare(b.nomor, undefined, { numeric: true, sensitivity: 'base' });
-        });
+        // Tampilkan menu sesuai role
+        document.getElementById('menuAdmin').classList.toggle('hidden', user.role !== 'superadmin');
+        document.getElementById('menuUser').classList.toggle('hidden', user.role === 'superadmin');
         
-        // Gabungkan semua kode
-        let kodeGabungan = '';
-        daftarBlok.forEach(blok => {
-            kodeGabungan += blok.kode + '\n\n';
-        });
-        
-        // Hitung total baris
-        const totalBaris = kodeGabungan.split('\n').length;
-        
-        // Tampilkan di textarea
-        document.getElementById('textarea-gabungan').value = kodeGabungan;
-        document.getElementById('modal-jumlah-blok').textContent = daftarBlok.length + ' Blok';
-        document.getElementById('modal-jumlah-baris').textContent = totalBaris + ' Baris';
-        
-        // Tampilkan modal
-        const modal = new bootstrap.Modal(document.getElementById('modalGabungBlok'));
-        modal.show();
-    }
-    
-    // Fungsi untuk mengambil daftar blok
-    function ambilDaftarBlokModal() {
-        const data = localStorage.getItem(STORAGE_KEY_MODAL);
-        if (data) {
-            try {
-                return JSON.parse(data);
-            } catch (error) {
-                return [];
-            }
+        // Cek fitur pro untuk user
+        if (user.role === 'user' && !user.pro) {
+            document.getElementById('menuGabungUser').classList.add('hidden');
         }
-        return [];
-    }
-    
-    // Fungsi untuk menyalin kode ke clipboard
-    function salinKodeGabungan() {
-        const textarea = document.getElementById('textarea-gabungan');
-        textarea.select();
-        textarea.setSelectionRange(0, 99999); // Untuk mobile
         
+        navigasi(user.role === 'superadmin' ? 'dashboard' : 'dashboardUser');
+    } else {
+        document.getElementById('loginError').classList.remove('hidden');
+        document.getElementById('loginError').textContent = 'Username atau Password salah!';
+    }
+}
+
+function logout() {
+    currentUser = null;
+    document.getElementById('appContainer').style.display = 'none';
+    document.getElementById('pageLogin').style.display = 'flex';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+}
+
+// ============================================
+// DASHBOARD
+// ============================================
+function renderDashboard() {
+    document.getElementById('statTotalUser').textContent = dataUser.length;
+    document.getElementById('statProUser').textContent = dataUser.filter(u => u.pro).length;
+    document.getElementById('statTotalBlok').textContent = dataBlok.length;
+    document.getElementById('statKodeAktif').textContent = dataKodeAktivasi.length;
+}
+
+function renderDashboardUser() {
+    document.getElementById('userNama').textContent = currentUser.nama;
+    document.getElementById('userUsername').textContent = currentUser.username;
+    document.getElementById('userEmail').textContent = currentUser.email || '-';
+    document.getElementById('userHp').textContent = currentUser.hp || '-';
+    const statusPro = document.getElementById('userStatusPro');
+    statusPro.textContent = currentUser.pro ? 'Pro' : 'Free';
+    statusPro.className = currentUser.pro ? 'badge badge-pro' : 'badge badge-free';
+    document.getElementById('upgradePanel').style.display = currentUser.pro ? 'none' : 'block';
+}
+
+// ============================================
+// PANEL ADMIN
+// ============================================
+function renderPanelAdmin() {
+    const tbody = document.getElementById('tabelUserAdmin');
+    tbody.innerHTML = dataUser.filter(u => u.role !== 'superadmin').map((u, i) => `
+        <tr>
+            <td>${u.username}</td>
+            <td>${u.nama}</td>
+            <td>${u.hp || '-'}</td>
+            <td><span class="badge ${u.status === 'aktif' ? 'badge-success' : 'badge-error'}">${u.status}</span></td>
+            <td><span class="badge ${u.pro ? 'badge-pro' : 'badge-free'}">${u.pro ? 'Pro' : 'Free'}</span></td>
+            <td>
+                <button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">${u.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan'}</button>
+                <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function tambahUserModal() { bukaModal('modalTambahUser'); }
+
+function simpanUserBaru() {
+    const username = document.getElementById('newUsername').value.trim();
+    const password = document.getElementById('newPassword').value;
+    const nama = document.getElementById('newNama').value.trim();
+    const alamat = document.getElementById('newAlamat').value.trim();
+    const hp = document.getElementById('newHp').value.trim();
+    const email = document.getElementById('newEmail').value.trim();
+    
+    if (!username || !password || !nama) return tampilkanToast('Username, Password, Nama wajib diisi', 'error');
+    if (dataUser.find(u => u.username === username)) return tampilkanToast('Username sudah ada', 'error');
+    
+    dataUser.push({ username, password, nama, role: 'user', pro: false, status: 'aktif', hp, email, alamat });
+    simpanSemua();
+    tutupModal('modalTambahUser');
+    renderPanelAdmin();
+    tampilkanToast('User berhasil ditambahkan');
+}
+
+function toggleStatus(username) {
+    const user = dataUser.find(u => u.username === username);
+    user.status = user.status === 'aktif' ? 'nonaktif' : 'aktif';
+    simpanSemua();
+    renderPanelAdmin();
+    tampilkanToast(`User ${user.status === 'aktif' ? 'diaktifkan' : 'dinonaktifkan'}`);
+}
+
+function hapusUser(username) {
+    if (!confirm('Hapus user ' + username + '?')) return;
+    dataUser = dataUser.filter(u => u.username !== username);
+    simpanSemua();
+    renderPanelAdmin();
+    tampilkanToast('User dihapus');
+}
+
+// ============================================
+// AKTIVASI & HARGA
+// ============================================
+function renderAktivasi() {
+    const select = document.getElementById('selectPaketAktivasi');
+    select.innerHTML = dataHarga.map(h => `<option value="${h.id}">${h.durasi} - Rp ${h.harga.toLocaleString()}</option>`).join('');
+    
+    const list = document.getElementById('listKodeAktivasi');
+    list.innerHTML = dataKodeAktivasi.map((k, i) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--bg-tertiary); border-radius:8px;">
+            <span style="font-family:'JetBrains Mono',monospace;">${k}</span>
+            <button class="btn btn-danger btn-sm" onclick="hapusKode(${i})"><i class="fas fa-trash"></i></button>
+        </div>
+    `).join('');
+}
+
+function generateKode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let kode = 'PRO-';
+    for (let i = 0; i < 8; i++) kode += chars.charAt(Math.floor(Math.random() * chars.length));
+    dataKodeAktivasi.push(kode);
+    simpanSemua();
+    renderAktivasi();
+    tampilkanToast('Kode aktivasi dibuat: ' + kode);
+}
+
+function hapusKode(index) {
+    dataKodeAktivasi.splice(index, 1);
+    simpanSemua();
+    renderAktivasi();
+}
+
+function renderHarga() {
+    document.getElementById('tabelHarga').innerHTML = dataHarga.map((h, i) => `
+        <tr>
+            <td><input type="text" value="${h.durasi}" onchange="editHarga(${i}, 'durasi', this.value)"></td>
+            <td><input type="number" value="${h.harga}" onchange="editHarga(${i}, 'harga', this.value)"></td>
+            <td><button class="btn btn-danger btn-sm" onclick="hapusHarga(${i})"><i class="fas fa-trash"></i></button></td>
+        </tr>
+    `).join('');
+}
+
+function tambahHargaModal() { bukaModal('modalTambahHarga'); }
+
+function simpanHargaBaru() {
+    const durasi = document.getElementById('newDurasi').value.trim();
+    const harga = parseInt(document.getElementById('newHarga').value) || 0;
+    if (!durasi || !harga) return tampilkanToast('Isi semua field', 'error');
+    dataHarga.push({ id: Date.now(), durasi, harga });
+    simpanSemua();
+    tutupModal('modalTambahHarga');
+    renderHarga();
+    tampilkanToast('Harga ditambahkan');
+}
+
+function editHarga(index, field, value) {
+    dataHarga[index][field] = field === 'harga' ? parseInt(value) : value;
+    simpanSemua();
+}
+
+function hapusHarga(index) {
+    dataHarga.splice(index, 1);
+    simpanSemua();
+    renderHarga();
+}
+
+function upgradePro() {
+    const kode = document.getElementById('inputKodeUpgrade').value.trim();
+    if (dataKodeAktivasi.includes(kode)) {
+        currentUser.pro = true;
+        const user = dataUser.find(u => u.username === currentUser.username);
+        if (user) user.pro = true;
+        dataKodeAktivasi = dataKodeAktivasi.filter(k => k !== kode);
+        simpanSemua();
+        renderDashboardUser();
+        document.getElementById('menuGabungUser').classList.remove('hidden');
+        tampilkanToast('Upgrade Pro berhasil!');
+    } else {
+        tampilkanToast('Kode aktivasi tidak valid', 'error');
+    }
+}
+
+// ============================================
+// BLOK MANAGER
+// ============================================
+function renderBlokManager() {
+    const sorted = [...dataBlok].sort((a, b) => {
+        const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
+        const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
+        return numA - numB || a.judul.localeCompare(b.judul);
+    });
+    
+    document.getElementById('listBlok').innerHTML = sorted.map(b => `
+        <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div><strong>${b.judul}</strong><br><span class="text-muted">${b.isi.substring(0, 80)}...</span></div>
+            <div style="display:flex; gap:5px;">
+                <button class="btn btn-outline btn-sm" onclick="editBlok(${b.id})"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline btn-sm" onclick="copyBlokById(${b.id})"><i class="fas fa-copy"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="hapusBlok(${b.id})"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function tambahBlokModal() {
+    const judul = prompt('Judul Blok (contoh: Blok 5.4 R3):');
+    if (!judul) return;
+    const id = Date.now();
+    dataBlok.push({ id, judul, isi: '<!-- ' + judul + ' -->\n' });
+    simpanSemua();
+    renderBlokManager();
+    editBlok(id);
+}
+
+function editBlok(id) {
+    const blok = dataBlok.find(b => b.id === id);
+    if (!blok) return;
+    currentEditBlokId = id;
+    document.getElementById('editorTitle').textContent = blok.judul;
+    document.getElementById('editorTextarea').value = blok.isi;
+    bukaModal('modalEditor');
+}
+
+function simpanEditBlok() {
+    const blok = dataBlok.find(b => b.id === currentEditBlokId);
+    if (blok) {
+        blok.isi = document.getElementById('editorTextarea').value;
+        simpanSemua();
+        tutupModal('modalEditor');
+        renderBlokManager();
+        tampilkanToast('Blok disimpan');
+    }
+}
+
+function tutupEditor() { tutupModal('modalEditor'); }
+
+function copyBlokAktif() {
+    navigator.clipboard.writeText(document.getElementById('editorTextarea').value);
+    tampilkanToast('Kode blok dicopy!');
+}
+
+function copyBlokById(id) {
+    const blok = dataBlok.find(b => b.id === id);
+    if (blok) {
+        navigator.clipboard.writeText(blok.isi);
+        tampilkanToast('Blok dicopy!');
+    }
+}
+
+function hapusBlok(id) {
+    if (!confirm('Hapus blok ini?')) return;
+    dataBlok = dataBlok.filter(b => b.id !== id);
+    simpanSemua();
+    renderBlokManager();
+    tampilkanToast('Blok dihapus');
+}
+
+// ============================================
+// GABUNG BLOK
+// ============================================
+function renderGabungan() {
+    if (currentUser?.role !== 'superadmin' && !currentUser?.pro) {
+        document.getElementById('previewGabungan').textContent = 'Fitur ini hanya untuk Akun Pro. Silakan upgrade.';
+        return;
+    }
+    const sorted = [...dataBlok].sort((a, b) => {
+        const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
+        const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
+        return numA - numB || a.judul.localeCompare(b.judul);
+    });
+    const gabungan = sorted.map(b => b.isi).join('\n\n');
+    document.getElementById('previewGabungan').textContent = gabungan;
+}
+
+function copyGabungan() {
+    navigator.clipboard.writeText(document.getElementById('previewGabungan').textContent);
+    tampilkanToast('HTML Gabungan dicopy!');
+}
+
+function downloadGabungan() {
+    const blob = new Blob([document.getElementById('previewGabungan').textContent], {type: 'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'index.html';
+    a.click();
+}
+
+// ============================================
+// CHAT
+// ============================================
+function kirimChat() {
+    const input = document.getElementById('chatInput');
+    const pesan = input.value.trim();
+    if (!pesan) return;
+    dataChat.push({ user: currentUser.username, nama: currentUser.nama, text: pesan, waktu: new Date().toLocaleTimeString() });
+    input.value = '';
+    simpanSemua();
+    renderChat();
+}
+
+function renderChat() {
+    const container = document.getElementById('chatMessages');
+    container.innerHTML = dataChat.map(c => `
+        <div class="chat-bubble ${c.user === currentUser.username ? 'chat-sent' : 'chat-received'}">
+            <strong style="font-size:11px;">${c.nama || c.user}</strong>
+            <p>${c.text}</p>
+            <span style="font-size:10px; opacity:0.6;">${c.waktu}</span>
+        </div>
+    `).join('') || '<p class="text-muted" style="text-align:center;">Belum ada pesan</p>';
+    container.scrollTop = container.scrollHeight;
+}
+
+// ============================================
+// BACKUP & RESTORE
+// ============================================
+function backupData() {
+    const data = { users: dataUser, blok: dataBlok, kode: dataKodeAktivasi, harga: dataHarga, chat: dataChat };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'backup_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    tampilkanToast('Backup didownload!');
+}
+
+function downloadIndexHtml() {
+    const sorted = [...dataBlok].sort((a, b) => {
+        const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
+        const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
+        return numA - numB || a.judul.localeCompare(b.judul);
+    });
+    const gabungan = sorted.map(b => b.isi).join('\n\n');
+    const blob = new Blob([gabungan], {type: 'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'index_gabungan.html';
+    a.click();
+    tampilkanToast('index.html didownload!');
+}
+
+function restoreData() {
+    const file = document.getElementById('restoreFile').files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
         try {
-            navigator.clipboard.writeText(textarea.value).then(() => {
-                alert('Kode berhasil disalin ke clipboard!');
-            }).catch(() => {
-                // Fallback untuk browser lama
-                document.execCommand('copy');
-                alert('Kode berhasil disalin ke clipboard!');
-            });
-        } catch (err) {
-            alert('Gagal menyalin. Silakan pilih teks secara manual.');
+            const data = JSON.parse(e.target.result);
+            if (data.users) dataUser = data.users;
+            if (data.blok) dataBlok = data.blok;
+            if (data.kode) dataKodeAktivasi = data.kode;
+            if (data.harga) dataHarga = data.harga;
+            if (data.chat) dataChat = data.chat;
+            simpanSemua();
+            tampilkanToast('Data berhasil direstore!');
+            if (currentUser?.role === 'superadmin') navigasi('dashboard');
+        } catch(err) {
+            tampilkanToast('File JSON tidak valid', 'error');
         }
-    }
-    
-    // Fungsi untuk mengunduh kode sebagai file HTML
-    function unduhKodeGabungan() {
-        const kode = document.getElementById('textarea-gabungan').value;
-        const blob = new Blob([kode], { type: 'text/html; charset=UTF-8' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        
-        const tanggal = new Date();
-        const namaFile = 'gabungan_blok_' + 
-            tanggal.getFullYear() + 
-            String(tanggal.getMonth() + 1).padStart(2, '0') + 
-            String(tanggal.getDate()).padStart(2, '0') + 
-            '_' + 
-            String(tanggal.getHours()).padStart(2, '0') + 
-            String(tanggal.getMinutes()).padStart(2, '0') + 
-            '.html';
-        
-        link.download = namaFile;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        alert('File "' + namaFile + '" berhasil diunduh.');
-    }
+    };
+    reader.readAsText(file);
+}
+
+// ============================================
+// INISIALISASI
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+    simpanSemua();
+    console.log('✅ NotepadPro++ Siap!');
+    console.log('👤 SuperAdmin: NotePadePro / MyHand0286');
+    console.log('👤 Demo User: demo / demo123');
+});
 </script>
-<!-- AKHIR BLOK NP-02.2 -->
-<!-- ==========================================
-BLOK NP-03 - EDITOR BLOK DENGAN PRATINJAU LANGSUNG (BIRU-PUTIH)
-===========================================
-PENJELASAN FUNGSI PERINTAH BLOK NP-03:
-1. Pengeditan Kode Blok: Menyediakan halaman editor dengan area penulisan kode HTML yang luas, nyaman digunakan untuk menulis atau mengedit kode blok secara langsung.
-2. Pratinjau Langsung (Live Preview): Panel pratinjau di sebelah kanan akan menampilkan hasil render kode HTML secara otomatis setiap kali pengguna selesai mengetik, sehingga memudahkan pengecekan tampilan.
-3. Mode Editor Baru dan Edit Blok: Dapat digunakan untuk membuat blok baru dari awal (Editor Baru) maupun mengedit blok yang sudah tersimpan dengan memanggil fungsi dari dashboard.
-4. Navigasi dan Penyimpanan: Tombol simpan akan menyimpan perubahan ke localStorage, dan tombol kembali akan mengarahkan pengguna ke Dashboard tanpa kehilangan data yang belum tersimpan (dengan konfirmasi).
-=========================================== -->
-<div class="container-fluid mt-4" id="halaman-editor-blok">
-    
-    <!-- Header Halaman -->
-    <div class="d-flex justify-content-between align-items-center mb-3 px-2">
-        <div>
-            <h4 class="text-primary fw-bold mb-0"><i class="bi bi-pencil-square me-2"></i> Editor Blok</h4>
-            <small class="text-muted" id="editor-nomor-blok-display">Mode: Editor Baru</small>
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-primary fw-bold shadow-sm" onclick="simpanDariEditor()">
-                <i class="bi bi-check-circle-fill me-2"></i> Simpan Perubahan
-            </button>
-            <button class="btn btn-outline-secondary fw-bold shadow-sm" onclick="kembaliKeDashboardDariEditor()">
-                <i class="bi bi-arrow-left me-2"></i> Kembali ke Dashboard
-            </button>
-        </div>
-    </div>
-
-    <!-- Informasi Judul Blok -->
-    <div class="px-2 mb-3">
-        <div class="bg-light rounded-3 p-3 border">
-            <h5 class="fw-bold text-dark mb-1" id="editor-judul-blok-display">Blok Baru</h5>
-            <small class="text-muted" id="editor-tanggal-blok-display">Belum disimpan</small>
-        </div>
-    </div>
-
-    <div class="row g-3 px-2" style="height: calc(100vh - 220px);">
-        
-        <!-- BAGIAN KIRI: TEXTAREA EDITOR -->
-        <div class="col-md-6" style="height: 100%;">
-            <div class="card-custom border-top-primary shadow-sm border-0 h-100 d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                    <h6 class="text-dark fw-bold mb-0"><i class="bi bi-code-slash me-2 text-primary"></i> Kode HTML Blok</h6>
-                    <small class="text-muted" id="editor-jumlah-baris">0 baris</small>
-                </div>
-                <textarea id="editor-textarea" class="form-control flex-grow-1" style="font-family: 'Courier New', monospace; font-size: 0.85rem; resize: none; min-height: 400px;" placeholder="Ketik atau tempel kode HTML di sini..."></textarea>
-            </div>
-        </div>
-
-        <!-- BAGIAN KANAN: PRATINJAU LANGSUNG -->
-        <div class="col-md-6" style="height: 100%;">
-            <div class="card-custom border-top-primary shadow-sm border-0 h-100 d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                    <h6 class="text-dark fw-bold mb-0"><i class="bi bi-eye-fill me-2 text-success"></i> Pratinjau Langsung</h6>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="refreshPratinjau()" title="Segarkan Pratinjau">
-                        <i class="bi bi-arrow-clockwise me-1"></i> Segarkan
-                    </button>
-                </div>
-                <div class="flex-grow-1 border rounded bg-white" style="overflow: auto; min-height: 400px;">
-                    <iframe id="pratinjau-iframe" style="width: 100%; height: 100%; border: none;" sandbox="allow-scripts allow-same-origin"></iframe>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<script>
-    // Kunci localStorage
-    const STORAGE_KEY_EDITOR = 'notepad_blok_data';
-    
-    // Variabel status editor
-    let editorMode = 'baru'; // 'baru' atau 'edit'
-    let editorNomorBlok = '';
-    
-    // Debounce timer
-    let debounceTimer;
-    
-    // Fungsi untuk mereset editor ke mode baru
-    function resetEditorBaru() {
-        editorMode = 'baru';
-        editorNomorBlok = '';
-        document.getElementById('editor-nomor-blok-display').textContent = 'Mode: Editor Baru';
-        document.getElementById('editor-judul-blok-display').textContent = 'Blok Baru';
-        document.getElementById('editor-tanggal-blok-display').textContent = 'Belum disimpan';
-        document.getElementById('editor-textarea').value = '';
-        document.getElementById('editor-jumlah-baris').textContent = '0 baris';
-        refreshPratinjau();
-    }
-    
-    // Fungsi untuk membuka editor dengan blok yang sudah ada
-    function bukaEditorBlok(nomor) {
-        const daftarBlok = ambilDaftarBlokEditor();
-        const blok = daftarBlok.find(b => b.nomor === nomor);
-        
-        if (!blok) {
-            alert('Blok dengan nomor "' + nomor + '" tidak ditemukan.');
-            return;
-        }
-        
-        editorMode = 'edit';
-        editorNomorBlok = nomor;
-        
-        document.getElementById('editor-nomor-blok-display').textContent = 'Mengedit: ' + blok.nomor;
-        document.getElementById('editor-judul-blok-display').textContent = blok.judul;
-        document.getElementById('editor-tanggal-blok-display').textContent = 'Terakhir disimpan: ' + formatTanggalEditor(blok.tanggal);
-        document.getElementById('editor-textarea').value = blok.kode;
-        updateJumlahBarisEditor();
-        refreshPratinjau();
-        
-        // Tampilkan editor
-        document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
-        document.getElementById('halaman-editor-blok').classList.remove('d-none-custom');
-        
-        document.getElementById('editor-textarea').focus();
-    }
-    
-    // Fungsi untuk mengambil daftar blok
-    function ambilDaftarBlokEditor() {
-        const data = localStorage.getItem(STORAGE_KEY_EDITOR);
-        if (data) {
-            try {
-                return JSON.parse(data);
-            } catch (e) {
-                return [];
-            }
-        }
-        return [];
-    }
-    
-    // Fungsi untuk menyimpan daftar blok
-    function simpanDaftarBlokEditor(daftarBlok) {
-        localStorage.setItem(STORAGE_KEY_EDITOR, JSON.stringify(daftarBlok));
-    }
-    
-    // Fungsi untuk menyimpan dari editor
-    function simpanDariEditor() {
-        const kode = document.getElementById('editor-textarea').value.trim();
-        
-        if (!kode) {
-            alert('Kode blok tidak boleh kosong.');
-            return;
-        }
-        
-        if (editorMode === 'baru') {
-            // Minta nomor dan judul blok
-            const nomor = prompt('Masukkan Nomor Blok (contoh: TG-31):', '');
-            if (!nomor || !nomor.trim()) {
-                alert('Nomor blok wajib diisi.');
-                return;
-            }
-            const judul = prompt('Masukkan Judul Blok:', '');
-            if (!judul || !judul.trim()) {
-                alert('Judul blok wajib diisi.');
-                return;
-            }
-            
-            let daftarBlok = ambilDaftarBlokEditor();
-            const jumlahBaris = kode.split('\n').length;
-            
-            const blokBaru = {
-                nomor: nomor.trim(),
-                judul: judul.trim(),
-                kode: kode,
-                baris: jumlahBaris,
-                tanggal: new Date().toISOString()
-            };
-            
-            // Cek duplikat
-            const indexExist = daftarBlok.findIndex(b => b.nomor === blokBaru.nomor);
-            if (indexExist >= 0) {
-                if (!confirm('Nomor blok sudah ada. Timpa?')) return;
-                daftarBlok.splice(indexExist, 1);
-            }
-            
-            daftarBlok.push(blokBaru);
-            simpanDaftarBlokEditor(daftarBlok);
-            
-            // Update status editor
-            editorMode = 'edit';
-            editorNomorBlok = blokBaru.nomor;
-            document.getElementById('editor-nomor-blok-display').textContent = 'Mengedit: ' + blokBaru.nomor;
-            document.getElementById('editor-judul-blok-display').textContent = blokBaru.judul;
-            document.getElementById('editor-tanggal-blok-display').textContent = 'Terakhir disimpan: ' + formatTanggalEditor(blokBaru.tanggal);
-            
-            alert('Blok "' + blokBaru.nomor + '" berhasil disimpan!');
-        } else {
-            // Mode edit
-            let daftarBlok = ambilDaftarBlokEditor();
-            const index = daftarBlok.findIndex(b => b.nomor === editorNomorBlok);
-            
-            if (index >= 0) {
-                daftarBlok[index].kode = kode;
-                daftarBlok[index].baris = kode.split('\n').length;
-                daftarBlok[index].tanggal = new Date().toISOString();
-                simpanDaftarBlokEditor(daftarBlok);
-                
-                document.getElementById('editor-tanggal-blok-display').textContent = 'Terakhir disimpan: ' + formatTanggalEditor(daftarBlok[index].tanggal);
-                updateJumlahBarisEditor();
-                
-                alert('Perubahan pada blok "' + editorNomorBlok + '" berhasil disimpan!');
-            } else {
-                alert('Blok tidak ditemukan. Mungkin sudah dihapus.');
-            }
-        }
-    }
-    
-    // Fungsi untuk kembali ke dashboard
-    function kembaliKeDashboardDariEditor() {
-        const kodeSekarang = document.getElementById('editor-textarea').value.trim();
-        if (kodeSekarang) {
-            if (!confirm('Anda memiliki kode yang belum disimpan. Yakin ingin kembali? Perubahan akan hilang.')) {
-                return;
-            }
-        }
-        document.getElementById('halaman-editor-blok').classList.add('d-none-custom');
-        document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
-        if (typeof refreshDaftarBlok === 'function') {
-            refreshDaftarBlok();
-        }
-        resetEditorBaru();
-    }
-    
-    // Fungsi untuk refresh pratinjau
-    function refreshPratinjau() {
-        const iframe = document.getElementById('pratinjau-iframe');
-        const kode = document.getElementById('editor-textarea').value;
-        
-        const kontenIframe = `
-            <!DOCTYPE html>
-            <html lang="id">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-                <style>
-                    body {
-                        background-color: #f8f9fa;
-                        color: #212529;
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        padding: 20px;
-                    }
-                    .bg-primary { background-color: #0d6efd !important; }
-                    .text-primary { color: #0d6efd !important; }
-                    .card-custom {
-                        border: none;
-                        border-radius: 16px;
-                        box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-                        background: #ffffff;
-                        padding: 30px;
-                    }
-                    .border-top-primary { border-top: 4px solid #0d6efd !important; }
-                    .btn-primary {
-                        background-color: #0d6efd;
-                        border: none;
-                        font-weight: 700;
-                        border-radius: 8px;
-                        color: #ffffff;
-                    }
-                    .btn-outline-primary {
-                        border: 2px solid #0d6efd;
-                        color: #0d6efd;
-                        font-weight: 700;
-                        border-radius: 8px;
-                    }
-                    .d-none-custom { display: block !important; }
-                </style>
-            </head>
-            <body>
-                ${kode}
-            </body>
-            </html>
-        `;
-        
-        iframe.srcdoc = kontenIframe;
-    }
-    
-    // Fungsi update jumlah baris
-    function updateJumlahBarisEditor() {
-        const kode = document.getElementById('editor-textarea').value;
-        const baris = kode.split('\n').length;
-        document.getElementById('editor-jumlah-baris').textContent = baris + ' baris';
-    }
-    
-    // Format tanggal
-    function formatTanggalEditor(isoString) {
-        if (!isoString) return '-';
-        const tgl = new Date(isoString);
-        const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-        return tgl.getDate() + ' ' + bulan[tgl.getMonth()] + ' ' + tgl.getFullYear() + ', ' +
-            String(tgl.getHours()).padStart(2,'0') + ':' + String(tgl.getMinutes()).padStart(2,'0');
-    }
-    
-    // Event listener untuk textarea
-    document.addEventListener('DOMContentLoaded', function() {
-        const textarea = document.getElementById('editor-textarea');
-        if (textarea) {
-            textarea.addEventListener('input', function() {
-                updateJumlahBarisEditor();
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(refreshPratinjau, 500);
-            });
-        }
-        
-        // Keyboard shortcut Ctrl+S
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                if (!document.getElementById('halaman-editor-blok').classList.contains('d-none-custom')) {
-                    simpanDariEditor();
-                }
-            }
-        });
-    });
-</script>
-<!-- AKHIR BLOK NP-03 -->
-<!-- ==========================================
-BLOK NP-04 - PRATINJAU GABUNGAN BLOK (UJI COBA)
-===========================================
-PENJELASAN FUNGSI PERINTAH BLOK NP-04:
-1. Pratinjau Gabungan Penuh: Menampilkan seluruh blok yang tersimpan di localStorage dalam satu halaman pratinjau yang dirender secara langsung di dalam iframe, sehingga pengguna dapat melihat hasil akhir sebelum diunduh.
-2. Panel Daftar Blok Interaktif: Menyediakan daftar semua blok yang sedang digabungkan, lengkap dengan tombol Edit (membuka editor NP-03) dan Hapus (menghapus blok dari penyimpanan) untuk uji coba dan perbaikan cepat.
-3. Sinkronisasi Data Real-Time: Setiap perubahan (edit atau hapus) yang dilakukan melalui panel daftar blok akan langsung memperbarui pratinjau gabungan secara otomatis tanpa perlu memuat ulang halaman.
-4. Navigasi dan Kontrol: Tersedia tombol untuk menyegarkan pratinjau secara manual serta tombol kembali ke Dashboard Manajemen Blok untuk melanjutkan pengelolaan.
-=========================================== -->
-<div id="halaman-pratinjau-gabungan" class="container-fluid mt-4 d-none-custom">
-    
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-3 px-2">
-        <div>
-            <h4 class="text-primary fw-bold mb-0"><i class="bi bi-eye-fill me-2"></i> Pratinjau Gabungan Semua Blok</h4>
-            <small class="text-muted">Uji coba tampilan akhir sebelum mengunduh.</small>
-        </div>
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-primary fw-bold shadow-sm" onclick="refreshPratinjauGabungan()">
-                <i class="bi bi-arrow-clockwise me-2"></i> Segarkan Pratinjau
-            </button>
-            <button class="btn btn-outline-secondary fw-bold shadow-sm" onclick="kembaliKeDashboardDariPratinjau()">
-                <i class="bi bi-arrow-left me-2"></i> Kembali ke Dashboard
-            </button>
-        </div>
-    </div>
-
-    <div class="row g-3 px-2" style="height: calc(100vh - 120px);">
-        
-        <!-- KIRI: IFRAME PRATINJAU -->
-        <div class="col-md-8" style="height: 100%;">
-            <div class="card-custom border-top-primary shadow-sm border-0 h-100 d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                    <h6 class="text-dark fw-bold mb-0"><i class="bi bi-window-stack me-2 text-primary"></i> Tampilan Gabungan</h6>
-                    <span class="badge bg-primary" id="pratinjau-jumlah-blok-badge">0 Blok</span>
-                </div>
-                <div class="flex-grow-1 border rounded bg-white" style="overflow: auto;">
-                    <iframe id="pratinjau-gabungan-iframe" style="width: 100%; height: 100%; border: none;" sandbox="allow-scripts allow-same-origin"></iframe>
-                </div>
-            </div>
-        </div>
-
-        <!-- KANAN: DAFTAR BLOK + AKSI -->
-        <div class="col-md-4" style="height: 100%;">
-            <div class="card-custom border-top-primary shadow-sm border-0 h-100 d-flex flex-column">
-                <h6 class="text-dark fw-bold border-bottom pb-2 mb-3"><i class="bi bi-list-check me-2 text-primary"></i> Daftar Blok</h6>
-                <div class="flex-grow-1" style="overflow-y: auto; max-height: calc(100% - 50px);">
-                    <div class="list-group list-group-flush" id="pratinjau-daftar-blok">
-                        <!-- Diisi oleh JavaScript -->
-                    </div>
-                </div>
-                <small class="text-muted mt-2"><i class="bi bi-info-circle-fill me-1"></i> Klik Edit atau Hapus untuk mengelola blok.</small>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<script>
-    // Asumsikan fungsi-fungsi berikut sudah tersedia dari NP-02.1 atau NP-03:
-    // ambilDaftarBlok(), simpanDaftarBlok(), hapusBlok(nomor), bukaEditorBlok(nomor)
-    // Jika belum, kita definisikan ulang di sini dengan namespace berbeda? 
-    // Karena Notepad adalah satu aplikasi, fungsi-fungsi tersebut akan digabung.
-    // Untuk kemandirian, kita gunakan langsung localStorage key yang sama.
-
-    const STORAGE_KEY_NP04 = 'notepad_blok_data';
-
-    function ambilDaftarBlokNP04() {
-        const data = localStorage.getItem(STORAGE_KEY_NP04);
-        return data ? JSON.parse(data) : [];
-    }
-
-    function simpanDaftarBlokNP04(daftar) {
-        localStorage.setItem(STORAGE_KEY_NP04, JSON.stringify(daftar));
-    }
-
-    function hapusBlokDariPratinjau(nomor) {
-        if (confirm('Hapus blok "' + nomor + '" secara permanen?')) {
-            let daftar = ambilDaftarBlokNP04();
-            daftar = daftar.filter(b => b.nomor !== nomor);
-            simpanDaftarBlokNP04(daftar);
-            muatPanelDaftarBlok();
-            refreshPratinjauGabungan();
-        }
-    }
-
-    function editBlokDariPratinjau(nomor) {
-        // Tandai untuk membuka editor
-        // Kita perlu memastikan fungsi bukaEditorBlok dari NP-03 tersedia
-        if (typeof bukaEditorBlok === 'function') {
-            // Sembunyikan pratinjau, tampilkan editor
-            document.getElementById('halaman-pratinjau-gabungan').classList.add('d-none-custom');
-            document.getElementById('halaman-editor-blok').classList.remove('d-none-custom');
-            bukaEditorBlok(nomor);
-        } else {
-            alert('Editor tidak tersedia. Pastikan Blok NP-03 sudah digabungkan.');
-        }
-    }
-
-    function muatPanelDaftarBlok() {
-        const container = document.getElementById('pratinjau-daftar-blok');
-        const daftar = ambilDaftarBlokNP04();
-        // Urutkan
-        daftar.sort((a, b) => a.nomor.localeCompare(b.nomor, undefined, { numeric: true, sensitivity: 'base' }));
-        
-        container.innerHTML = '';
-        if (daftar.length === 0) {
-            container.innerHTML = '<div class="text-center text-muted py-3">Tidak ada blok tersimpan.</div>';
-            document.getElementById('pratinjau-jumlah-blok-badge').textContent = '0 Blok';
-            return;
-        }
-
-        document.getElementById('pratinjau-jumlah-blok-badge').textContent = daftar.length + ' Blok';
-        
-        daftar.forEach(blok => {
-            const item = document.createElement('div');
-            item.className = 'list-group-item d-flex justify-content-between align-items-center py-2 px-2';
-            item.innerHTML = `
-                <div style="flex: 1; min-width: 0;">
-                    <strong class="d-block small text-dark text-truncate">${escapeHTML(blok.nomor)}</strong>
-                    <small class="text-muted text-truncate d-block" style="font-size:0.7rem;">${escapeHTML(blok.judul)}</small>
-                </div>
-                <div class="d-flex gap-1 ms-2">
-                    <button class="btn btn-sm btn-outline-warning py-0 px-1" title="Edit Blok" onclick="editBlokDariPratinjau('${escapeHTML(blok.nomor)}')">
-                        <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Hapus Blok" onclick="hapusBlokDariPratinjau('${escapeHTML(blok.nomor)}')">
-                        <i class="bi bi-trash-fill"></i>
-                    </button>
-                </div>
-            `;
-            container.appendChild(item);
-        });
-    }
-
-    function refreshPratinjauGabungan() {
-        const iframe = document.getElementById('pratinjau-gabungan-iframe');
-        const daftar = ambilDaftarBlokNP04();
-        daftar.sort((a, b) => a.nomor.localeCompare(b.nomor, undefined, { numeric: true, sensitivity: 'base' }));
-        
-        let kodeGabungan = '';
-        daftar.forEach(blok => {
-            kodeGabungan += blok.kode + '\n\n';
-        });
-
-        const kontenIframe = `
-            <!DOCTYPE html>
-            <html lang="id">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-                <style>
-                    body {
-                        background-color: #f8f9fa;
-                        color: #212529;
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                        padding: 20px;
-                    }
-                    .bg-primary { background-color: #0d6efd !important; }
-                    .text-primary { color: #0d6efd !important; }
-                    .card-custom {
-                        border: none; border-radius: 16px;
-                        box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-                        background: #ffffff; padding: 30px;
-                    }
-                    .border-top-primary { border-top: 4px solid #0d6efd !important; }
-                    .btn-primary {
-                        background-color: #0d6efd; border: none; font-weight: 700; border-radius: 8px; color: #ffffff;
-                    }
-                    .btn-outline-primary {
-                        border: 2px solid #0d6efd; color: #0d6efd; font-weight: 700; border-radius: 8px;
-                    }
-                    .d-none-custom { display: block !important; }
-                </style>
-            </head>
-            <body>
-                ${kodeGabungan}
-            </body>
-            </html>
-        `;
-        iframe.srcdoc = kontenIframe;
-    }
-
-    function kembaliKeDashboardDariPratinjau() {
-        document.getElementById('halaman-pratinjau-gabungan').classList.add('d-none-custom');
-        document.getElementById('halaman-dashboard-notepad').classList.remove('d-none-custom');
-        // Refresh daftar di dashboard jika fungsi tersedia
-        if (typeof refreshDaftarBlok === 'function') {
-            refreshDaftarBlok();
-        }
-    }
-
-    // Bantuan escape HTML
-    function escapeHTML(str) {
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    }
-
-    // Inisialisasi saat halaman pratinjau ditampilkan (bisa dipanggil dari dashboard)
-    function tampilkanPratinjauGabungan() {
-        document.getElementById('halaman-dashboard-notepad').classList.add('d-none-custom');
-        document.getElementById('halaman-pratinjau-gabungan').classList.remove('d-none-custom');
-        muatPanelDaftarBlok();
-        refreshPratinjauGabungan();
-    }
-
-    // Tambahkan tombol di dashboard untuk memanggil fungsi ini (akan ditambahkan di NP-02.1 nanti)
-    // Untuk sekarang, kita buat agar fungsi ini bisa dipanggil dari konsol atau tombol yang sudah ada.
-</script>
-<!-- AKHIR BLOK NP-04 -->
+<--=== AKHIR BLOK 15 === -->
 </body>
 </html>
