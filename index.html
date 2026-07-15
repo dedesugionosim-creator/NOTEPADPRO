@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#1E1E1E">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="NotepadPro++ - Catatan Kode SuperAdmin">
   <title>NotepadPro++</title>
   <link rel="manifest" href="data:application/json,{}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -17,19 +16,21 @@
       --text-primary: #CCCCCC; --text-secondary: #9CA3AF; --accent-green: #4CAF50;
       --accent-green-hover: #66BB6A; --accent-green-bg: rgba(76, 175, 80, 0.15);
       --border-color: #3E3E3E; --danger: #EF4444; --warning: #F59E0B; --info: #3B82F6;
-      --white: #FFFFFF; --black: #000000; --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
-      --shadow: 0 4px 6px rgba(0,0,0,0.3);
+      --white: #FFFFFF; --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+      --sidebar-width: 260px;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body { height:100%; font-family:'Inter',sans-serif; background:var(--bg-primary); color:var(--text-primary); line-height:1.6; overflow:hidden; }
     body { display:flex; flex-direction:column; }
     ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:var(--bg-secondary); } ::-webkit-scrollbar-thumb { background:var(--border-color); border-radius:3px; }
-    .app-container { display:flex; height:100%; width:100%; }
-    .sidebar { width:260px; background:var(--bg-secondary); border-right:1px solid var(--border-color); display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto; }
+    .navbar { background:var(--bg-secondary); border-bottom:1px solid var(--border-color); padding:0 20px; display:flex; align-items:center; gap:15px; height:50px; flex-shrink:0; }
+    .app-container { display:flex; flex:1; overflow:hidden; }
+    .sidebar { width:var(--sidebar-width); background:var(--bg-secondary); border-right:1px solid var(--border-color); display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto; transition:width 0.3s; }
+    .sidebar.closed { width:0; overflow:hidden; border:none; }
     .main-content { flex:1; overflow-y:auto; padding:20px; background:var(--bg-primary); }
-    .sidebar-header { padding:20px; border-bottom:1px solid var(--border-color); text-align:center; }
+    .sidebar-header { padding:20px; border-bottom:1px solid var(--border-color); text-align:center; white-space:nowrap; }
     .sidebar-menu { flex:1; padding:10px; }
-    .sidebar-item { display:flex; align-items:center; gap:10px; padding:12px 15px; border-radius:var(--radius-md); cursor:pointer; margin-bottom:4px; color:var(--text-secondary); font-weight:500; transition:all 0.2s; }
+    .sidebar-item { display:flex; align-items:center; gap:10px; padding:12px 15px; border-radius:var(--radius-md); cursor:pointer; margin-bottom:4px; color:var(--text-secondary); font-weight:500; transition:all 0.2s; white-space:nowrap; }
     .sidebar-item i { width:20px; text-align:center; }
     .sidebar-item:hover { background:var(--bg-hover); color:var(--text-primary); }
     .sidebar-item.active { background:var(--accent-green-bg); color:var(--accent-green); }
@@ -86,9 +87,14 @@
   </div>
 
   <!-- APP CONTAINER -->
-  <div id="appContainer" class="hidden" style="height:100%;">
+  <div id="appContainer" class="hidden" style="display:flex; flex-direction:column; height:100%;">
+    <!-- NAVBAR DENGAN TOGGLE -->
+    <div class="navbar">
+      <button class="btn btn-outline btn-sm" onclick="toggleSidebar()" title="Tutup/Buka Menu"><i class="fas fa-bars"></i></button>
+      <span style="font-weight:600;">NotepadPro++</span>
+    </div>
     <div class="app-container">
-      <div class="sidebar">
+      <div class="sidebar" id="sidebar">
         <div class="sidebar-header"><i class="fas fa-book" style="color:var(--accent-green); font-size:24px;"></i><span style="font-weight:700;">NotepadPro++</span></div>
         <div class="sidebar-menu">
           <div id="menuAdmin" class="hidden">
@@ -184,12 +190,11 @@
     </div>
   </div>
 
-  <!-- MODAL TAMBAH USER & HARGA -->
+  <!-- MODALS -->
   <div id="modalTambahUser" class="modal-overlay hidden"><div class="modal-box"><div class="modal-header"><h3>Tambah User</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahUser')"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="text" id="newUsername" placeholder="Username" style="margin-bottom:10px;"><input type="password" id="newPassword" placeholder="Password" style="margin-bottom:10px;"><input type="text" id="newNama" placeholder="Nama" style="margin-bottom:10px;"><input type="text" id="newAlamat" placeholder="Alamat" style="margin-bottom:10px;"><input type="text" id="newHp" placeholder="HP"><input type="email" id="newEmail" placeholder="Email" style="margin-top:10px;"></div><div class="modal-footer"><button class="btn btn-outline" onclick="tutupModal('modalTambahUser')">Batal</button><button class="btn btn-primary" onclick="simpanUserBaru()">Simpan</button></div></div></div>
   <div id="modalTambahHarga" class="modal-overlay hidden"><div class="modal-box"><div class="modal-header"><h3>Tambah Harga</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahHarga')"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="text" id="newDurasi" placeholder="Durasi" style="margin-bottom:10px;"><input type="number" id="newHarga" placeholder="Harga"></div><div class="modal-footer"><button class="btn btn-outline" onclick="tutupModal('modalTambahHarga')">Batal</button><button class="btn btn-primary" onclick="simpanHargaBaru()">Simpan</button></div></div></div>
 
 <script>
-  // DATA
   const SUPERADMIN = { username:'NotePadePro', password:'MyHand0286', nama:'Dede', role:'superadmin', pro:true, status:'aktif', hp:'', email:'' };
   let dataUser = JSON.parse(localStorage.getItem('np_users')) || [SUPERADMIN, { username:'demo', password:'demo123', nama:'Demo', role:'user', pro:false, status:'aktif' }, { username:'pro_user', password:'pro123', nama:'Pro', role:'user', pro:true, status:'aktif' }];
   let dataBlok = JSON.parse(localStorage.getItem('np_blok')) || [{ id:1, judul:'Blok 1', isi:'<!-- Kode -->' }];
@@ -197,39 +202,77 @@
   let dataHarga = JSON.parse(localStorage.getItem('np_harga')) || [{ id:1, durasi:'1 Bulan', harga:10000 },{ id:2, durasi:'3 Bulan', harga:20000 },{ id:3, durasi:'6 Bulan', harga:30000 }];
   let dataChat = JSON.parse(localStorage.getItem('np_chat')) || [];
   let currentUser = null, editId = null;
-  function simpan() { localStorage.setItem('np_users',JSON.stringify(dataUser)); localStorage.setItem('np_blok',JSON.stringify(dataBlok)); localStorage.setItem('np_kode',JSON.stringify(dataKode)); localStorage.setItem('np_harga',JSON.stringify(dataHarga)); localStorage.setItem('np_chat',JSON.stringify(dataChat)); }
+
+  function simpan() { 
+    localStorage.setItem('np_users',JSON.stringify(dataUser)); localStorage.setItem('np_blok',JSON.stringify(dataBlok)); 
+    localStorage.setItem('np_kode',JSON.stringify(dataKode)); localStorage.setItem('np_harga',JSON.stringify(dataHarga)); 
+    localStorage.setItem('np_chat',JSON.stringify(dataChat)); 
+  }
   function toast(p,t='success') { let el=document.createElement('div'); el.className='toast '+t; el.textContent=p; document.body.appendChild(el); setTimeout(()=>el.remove(),3000); }
   function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
   function bukaModal(id) { document.getElementById(id).classList.remove('hidden'); }
 
-  // NAVIGASI
-  function navigasi(h) {
-    ['dashboard','dashboardUser','panelAdmin','aktivasi','harga','blokManager','gabungBlok','chat','backupRestore'].forEach(p=>{ let el=document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1)); if(el) el.classList.add('hidden'); });
-    let target=document.getElementById('page'+h.charAt(0).toUpperCase()+h.slice(1)); if(target) target.classList.remove('hidden');
-    document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
-    let map={ dashboard:'menuDashboard', dashboardUser:'menuDashboardUser', panelAdmin:'menuPanelAdmin', aktivasi:'menuAktivasi', harga:'menuHarga', blokManager:currentUser?.role==='superadmin'?'menuBlok':'menuBlokUser', gabungBlok:currentUser?.role==='superadmin'?'menuGabung':'menuGabungUser', chat:currentUser?.role==='superadmin'?'menuChatAdmin':'menuChatUser', backupRestore:'menuBackup' };
-    let mid=map[h]; if(mid) document.getElementById(mid).classList.add('active');
-    if(h==='dashboard') { document.getElementById('statTotalUser').textContent=dataUser.length; document.getElementById('statProUser').textContent=dataUser.filter(u=>u.pro).length; document.getElementById('statTotalBlok').textContent=dataBlok.length; document.getElementById('statKodeAktif').textContent=dataKode.length; }
-    else if(h==='dashboardUser') { document.getElementById('userNama').textContent=currentUser.nama; document.getElementById('userUsername').textContent=currentUser.username; document.getElementById('userEmail').textContent=currentUser.email||'-'; document.getElementById('userHp').textContent=currentUser.hp||'-'; let sp=document.getElementById('userStatusPro'); sp.textContent=currentUser.pro?'Pro':'Free'; sp.className=currentUser.pro?'badge badge-pro':'badge badge-free'; document.getElementById('upgradePanel').style.display=currentUser.pro?'none':'block'; }
-    else if(h==='panelAdmin') { let tb=document.getElementById('tabelUserAdmin'); let users=dataUser.filter(u=>u.role!=='superadmin'); tb.innerHTML=users.map(u=>`<tr><td>${u.username}</td><td>${u.nama}</td><td>${u.hp||'-'}</td><td>${u.email||'-'}</td><td><span class="badge ${u.status==='aktif'?'badge-success':'badge-error'}">${u.status}</span></td><td><span class="badge ${u.pro?'badge-pro':'badge-free'}">${u.pro?'Pro':'Free'}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">${u.status==='aktif'?'Nonaktifkan':'Aktifkan'}</button> <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
-    else if(h==='aktivasi') { document.getElementById('selectPaketAktivasi').innerHTML=dataHarga.map(h=>`<option>${h.durasi} - Rp ${h.harga.toLocaleString()}</option>`).join(''); let list=document.getElementById('listKodeAktivasi'); list.innerHTML=dataKode.length===0?'<p class="text-muted">Belum ada kode</p>':dataKode.map((k,i)=>`<div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-tertiary);border-radius:8px;"><span style="font-family:monospace;">${k}</span><button class="btn btn-danger btn-sm" onclick="hapusKode(${i})"><i class="fas fa-trash"></i></button></div>`).join(''); }
-    else if(h==='harga') { document.getElementById('tabelHarga').innerHTML=dataHarga.map((h,i)=>`<tr><td><input type="text" value="${h.durasi}" onchange="editHarga(${i},'durasi',this.value)"></td><td><input type="number" value="${h.harga}" onchange="editHarga(${i},'harga',this.value)"></td><td><button class="btn btn-danger btn-sm" onclick="hapusHarga(${i})"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
-    else if(h==='blokManager') { let sorted=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); let container=document.getElementById('listBlok'); container.innerHTML=sorted.map(b=>`<div class="card" style="display:flex;justify-content:space-between;"><div><strong style="color:var(--accent-green);">${b.judul}</strong><br><span class="text-muted">${b.isi.substring(0,60)}...</span></div><div><button class="btn btn-outline btn-sm" onclick="editBlok(${b.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-outline btn-sm" onclick="copyBlokById(${b.id})"><i class="fas fa-copy"></i></button> <button class="btn btn-danger btn-sm" onclick="hapusBlok(${b.id})"><i class="fas fa-trash"></i></button></div></div>`).join(''); document.getElementById('blokKosong').classList.toggle('hidden',dataBlok.length>0); }
-    else if(h==='gabungBlok') { if(currentUser?.role!=='superadmin'&&!currentUser?.pro){ document.getElementById('previewGabungan').textContent='Fitur Pro'; return; } let sorted=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); document.getElementById('previewGabungan').textContent=sorted.map(b=>b.isi).join('\n\n'); }
-    else if(h==='chat') renderChat();
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('closed');
   }
 
-  // LOGIN/LOGOUT
+  function navigasi(h) {
+    ['dashboard','dashboardUser','panelAdmin','aktivasi','harga','blokManager','gabungBlok','chat','backupRestore'].forEach(p=>{ 
+      let el=document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1)); if(el) el.classList.add('hidden'); 
+    });
+    let target=document.getElementById('page'+h.charAt(0).toUpperCase()+h.slice(1)); if(target) target.classList.remove('hidden');
+    document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+    let map={ dashboard:'menuDashboard', dashboardUser:'menuDashboardUser', panelAdmin:'menuPanelAdmin', aktivasi:'menuAktivasi', harga:'menuHarga', 
+              blokManager:currentUser?.role==='superadmin'?'menuBlok':'menuBlokUser', 
+              gabungBlok:currentUser?.role==='superadmin'?'menuGabung':'menuGabungUser', 
+              chat:currentUser?.role==='superadmin'?'menuChatAdmin':'menuChatUser', backupRestore:'menuBackup' };
+    let mid=map[h]; if(mid) document.getElementById(mid).classList.add('active');
+    if(h==='dashboard') { 
+      document.getElementById('statTotalUser').textContent=dataUser.length; 
+      document.getElementById('statProUser').textContent=dataUser.filter(u=>u.pro).length; 
+      document.getElementById('statTotalBlok').textContent=dataBlok.length; 
+      document.getElementById('statKodeAktif').textContent=dataKode.length; 
+    } else if(h==='dashboardUser') { 
+      document.getElementById('userNama').textContent=currentUser.nama; 
+      document.getElementById('userUsername').textContent=currentUser.username; 
+      document.getElementById('userEmail').textContent=currentUser.email||'-'; 
+      document.getElementById('userHp').textContent=currentUser.hp||'-'; 
+      let sp=document.getElementById('userStatusPro'); 
+      sp.textContent=currentUser.pro?'Pro':'Free'; 
+      sp.className=currentUser.pro?'badge badge-pro':'badge badge-free'; 
+      document.getElementById('upgradePanel').style.display=currentUser.pro?'none':'block'; 
+    } else if(h==='panelAdmin') { 
+      let tb=document.getElementById('tabelUserAdmin'); 
+      let users=dataUser.filter(u=>u.role!=='superadmin'); 
+      tb.innerHTML=users.map(u=>`<tr><td>${u.username}</td><td>${u.nama}</td><td>${u.hp||'-'}</td><td>${u.email||'-'}</td>
+        <td><span class="badge ${u.status==='aktif'?'badge-success':'badge-error'}">${u.status}</span></td>
+        <td><span class="badge ${u.pro?'badge-pro':'badge-free'}">${u.pro?'Pro':'Free'}</span></td>
+        <td><button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">${u.status==='aktif'?'Nonaktifkan':'Aktifkan'}</button> 
+        <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''); 
+    } else if(h==='aktivasi') { 
+      document.getElementById('selectPaketAktivasi').innerHTML=dataHarga.map(h=>`<option>${h.durasi} - Rp ${h.harga.toLocaleString()}</option>`).join(''); 
+      let list=document.getElementById('listKodeAktivasi'); 
+      list.innerHTML=dataKode.length===0?'<p class="text-muted">Belum ada kode</p>':dataKode.map((k,i)=>`<div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-tertiary);border-radius:8px;"><span style="font-family:monospace;">${k}</span><button class="btn btn-danger btn-sm" onclick="hapusKode(${i})"><i class="fas fa-trash"></i></button></div>`).join(''); 
+    } else if(h==='harga') { 
+      document.getElementById('tabelHarga').innerHTML=dataHarga.map((h,i)=>`<tr><td><input type="text" value="${h.durasi}" onchange="editHarga(${i},'durasi',this.value)"></td><td><input type="number" value="${h.harga}" onchange="editHarga(${i},'harga',this.value)"></td><td><button class="btn btn-danger btn-sm" onclick="hapusHarga(${i})"><i class="fas fa-trash"></i></button></td></tr>`).join(''); 
+    } else if(h==='blokManager') { 
+      let sorted=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); 
+      let container=document.getElementById('listBlok'); 
+      container.innerHTML=sorted.map(b=>`<div class="card" style="display:flex;justify-content:space-between;"><div><strong style="color:var(--accent-green);">${b.judul}</strong><br><span class="text-muted">${b.isi.substring(0,60)}...</span></div><div><button class="btn btn-outline btn-sm" onclick="editBlok(${b.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-outline btn-sm" onclick="copyBlokById(${b.id})"><i class="fas fa-copy"></i></button> <button class="btn btn-danger btn-sm" onclick="hapusBlok(${b.id})"><i class="fas fa-trash"></i></button></div></div>`).join(''); 
+      document.getElementById('blokKosong').classList.toggle('hidden',dataBlok.length>0); 
+    } else if(h==='gabungBlok') { 
+      if(currentUser?.role!=='superadmin'&&!currentUser?.pro){ document.getElementById('previewGabungan').textContent='Fitur Pro'; return; } 
+      let sorted=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); 
+      document.getElementById('previewGabungan').textContent=sorted.map(b=>b.isi).join('\n\n'); 
+    } else if(h==='chat') renderChat(); 
+  }
+
   function prosesLogin(e){ e.preventDefault(); let u=dataUser.find(u=>u.username===document.getElementById('loginUsername').value.trim()&&u.password===document.getElementById('loginPassword').value); if(u&&u.status==='aktif'){ currentUser=u; document.getElementById('pageLogin').style.display='none'; document.getElementById('appContainer').classList.remove('hidden'); document.getElementById('sidebarUserName').textContent=u.nama; document.getElementById('sidebarUserRole').textContent=u.role==='superadmin'?'SuperAdmin':(u.pro?'Pro User':'Free User'); document.getElementById('menuAdmin').classList.toggle('hidden',u.role!=='superadmin'); document.getElementById('menuUser').classList.toggle('hidden',u.role==='superadmin'); navigasi(u.role==='superadmin'?'dashboard':'dashboardUser'); } else { document.getElementById('loginError').classList.remove('hidden'); document.getElementById('loginError').textContent='Username/Password salah'; } }
   function logout(){ currentUser=null; document.getElementById('appContainer').classList.add('hidden'); document.getElementById('pageLogin').style.display='flex'; }
-
-  // CRUD USER
   function tambahUserModal(){ ['newUsername','newPassword','newNama','newAlamat','newHp','newEmail'].forEach(id=>document.getElementById(id).value=''); bukaModal('modalTambahUser'); }
   function simpanUserBaru(){ let un=document.getElementById('newUsername').value.trim(), pw=document.getElementById('newPassword').value, nm=document.getElementById('newNama').value.trim(); if(!un||!pw||!nm) return toast('Data wajib diisi','error'); if(dataUser.find(u=>u.username===un)) return toast('Username sudah ada','error'); dataUser.push({username:un,password:pw,nama:nm,role:'user',pro:false,status:'aktif',hp:document.getElementById('newHp').value,email:document.getElementById('newEmail').value,alamat:document.getElementById('newAlamat').value}); simpan(); tutupModal('modalTambahUser'); navigasi('panelAdmin'); toast('User ditambahkan'); }
   function toggleStatus(un){ let u=dataUser.find(x=>x.username===un); u.status=u.status==='aktif'?'nonaktif':'aktif'; simpan(); navigasi('panelAdmin'); }
   function hapusUser(un){ if(confirm('Hapus?')){ dataUser=dataUser.filter(x=>x.username!==un); simpan(); navigasi('panelAdmin'); } }
-
-  // AKTIVASI & HARGA
   function generateKode(){ let k='PRO-'; for(let i=0;i<8;i++) k+='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*36)]; dataKode.push(k); simpan(); navigasi('aktivasi'); toast('Kode: '+k); }
   function hapusKode(i){ dataKode.splice(i,1); simpan(); navigasi('aktivasi'); }
   function upgradePro(){ let k=document.getElementById('inputKodeUpgrade').value.trim(); if(dataKode.includes(k)){ currentUser.pro=true; let u=dataUser.find(x=>x.username===currentUser.username); if(u) u.pro=true; dataKode=dataKode.filter(x=>x!==k); simpan(); navigasi('dashboardUser'); document.getElementById('menuGabungUser').classList.remove('hidden'); toast('Pro!'); } else toast('Kode salah','error'); }
@@ -237,8 +280,6 @@
   function simpanHargaBaru(){ let d=document.getElementById('newDurasi').value.trim(), h=parseInt(document.getElementById('newHarga').value); if(!d||!h) return; dataHarga.push({id:Date.now(),durasi:d,harga:h}); simpan(); tutupModal('modalTambahHarga'); navigasi('harga'); }
   function editHarga(i,f,v){ dataHarga[i][f]=f==='harga'?parseInt(v):v; simpan(); }
   function hapusHarga(i){ dataHarga.splice(i,1); simpan(); navigasi('harga'); }
-
-  // BLOK & EDITOR
   function tambahBlokModal(){ let j=prompt('Judul Blok:'); if(!j) return; let id=Date.now(); dataBlok.push({id,judul:j,isi:'<!-- '+j+' -->\n'}); simpan(); navigasi('blokManager'); editBlok(id); }
   function editBlok(id){ let b=dataBlok.find(x=>x.id===id); editId=id; document.getElementById('editorTitle').textContent=b.judul; document.getElementById('editorTextarea').value=b.isi; bukaModal('modalEditor'); document.getElementById('editorLineCount').textContent=b.isi.split('\n').length; }
   function simpanEditBlok(){ let b=dataBlok.find(x=>x.id===editId); if(b){ b.isi=document.getElementById('editorTextarea').value; simpan(); tutupEditor(); navigasi('blokManager'); } }
@@ -248,8 +289,6 @@
   function hapusBlok(id){ if(confirm('Hapus?')){ dataBlok=dataBlok.filter(x=>x.id!==id); simpan(); navigasi('blokManager'); } }
   document.addEventListener('keydown',e=>{ if(document.getElementById('modalEditor')&&!document.getElementById('modalEditor').classList.contains('hidden')){ if(e.ctrlKey&&e.key==='s'){ e.preventDefault(); simpanEditBlok(); } if(e.key==='Escape') tutupEditor(); } });
   document.addEventListener('input',e=>{ if(e.target.id==='editorTextarea') document.getElementById('editorLineCount').textContent=e.target.value.split('\n').length; });
-
-  // GABUNG, CHAT, BACKUP
   function copyGabungan(){ let p=document.getElementById('previewGabungan').textContent; if(p.trim()) navigator.clipboard.writeText(p); toast('HTML disalin!'); }
   function downloadGabungan(){ let b=new Blob([document.getElementById('previewGabungan').textContent],{type:'text/html'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='index.html'; a.click(); }
   function kirimChat(){ let i=document.getElementById('chatInput'); dataChat.push({user:currentUser.username,nama:currentUser.nama,text:i.value,waktu:new Date().toLocaleTimeString()}); i.value=''; simpan(); renderChat(); }
@@ -260,14 +299,12 @@
   function eksporBlok(){ let b=new Blob([JSON.stringify(dataBlok)],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='blok.json'; a.click(); }
   function imporBlok(){ let f=document.getElementById('imporBlokFile').files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ try{ let d=JSON.parse(e.target.result); if(Array.isArray(d)){ dataBlok=d; simpan(); navigasi('blokManager'); toast('Blok diimpor!'); } }catch(err){ toast('File tidak valid','error'); } }; r.readAsText(f); }
 
-  // PWA
   let deferredPrompt;
   window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredPrompt=e; document.getElementById('pwaInstallPrompt').classList.remove('hidden'); });
   document.getElementById('installBtn').addEventListener('click',()=>{ if(deferredPrompt) deferredPrompt.prompt(); });
   window.addEventListener('online',()=>document.getElementById('offlineIndicator').classList.add('hidden'));
   window.addEventListener('offline',()=>document.getElementById('offlineIndicator').classList.remove('hidden'));
 
-  // INIT
   simpan();
 </script>
 </body>
