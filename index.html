@@ -1,1403 +1,274 @@
-<--=== BLOK 1: FONDASI HTML, CSS, & HALAMAN LOGIN === -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1E1E1E">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="NotepadPro++ - Catatan Kode SuperAdmin">
-    <title>NotepadPro++</title>
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/json,{}">
-
-    <!-- Font Awesome 6.5.1 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- Google Fonts: Inter (UI) & JetBrains Mono (Kode) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-
-    <style>
-        /* ============================================ */
-        /* CSS VARIABLES (TEMA HITAM-PUTIH-HIJAU)       */
-        /* ============================================ */
-        :root {
-            --bg-primary: #1E1E1E;
-            --bg-secondary: #252526;
-            --bg-tertiary: #2D2D2D;
-            --bg-hover: #3E3E3E;
-            --text-primary: #CCCCCC;
-            --text-secondary: #9CA3AF;
-            --accent-green: #4CAF50;
-            --accent-green-hover: #66BB6A;
-            --accent-green-bg: rgba(76, 175, 80, 0.15);
-            --border-color: #3E3E3E;
-            --danger: #EF4444;
-            --warning: #F59E0B;
-            --info: #3B82F6;
-            --white: #FFFFFF;
-            --black: #000000;
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        /* ============================================ */
-        /* RESET GLOBAL                                 */
-        /* ============================================ */
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html, body {
-            height: 100%;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow: hidden;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-
-        /* ============================================ */
-        /* TIPOGRAFI & EDITOR KODE                      */
-        /* ============================================ */
-        .code-editor {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            background-color: var(--bg-secondary);
-            color: var(--accent-green);
-            border: 1px solid var(--border-color);
-            padding: 15px;
-            border-radius: var(--radius-md);
-            width: 100%;
-            resize: vertical;
-            line-height: 1.8;
-            tab-size: 4;
-            font-size: 14px;
-            outline: none;
-        }
-
-        /* ============================================ */
-        /* KOMPONEN UMUM                                */
-        /* ============================================ */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .btn-primary { background: var(--accent-green); color: var(--white); }
-        .btn-primary:hover { background: var(--accent-green-hover); transform: translateY(-1px); }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
-        .btn-outline:hover { background: var(--bg-hover); border-color: var(--accent-green); }
-        .btn-danger { background: var(--danger); color: var(--white); }
-        .btn-sm { padding: 6px 12px; font-size: 12px; }
-        .btn-block { width: 100%; }
-
-        /* Form Elements */
-        input, textarea, select {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 12px 15px;
-            border-radius: var(--radius-md);
-            width: 100%;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        input:focus, textarea:focus, select:focus { border-color: var(--accent-green); }
-        textarea { resize: vertical; min-height: 80px; }
-
-        /* Badge */
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .badge-success { background: var(--accent-green-bg); color: var(--accent-green); }
-        .badge-error { background: rgba(239,68,68,0.2); color: var(--danger); }
-        .badge-pro { background: var(--accent-green-bg); color: var(--accent-green); }
-        .badge-free { background: var(--bg-tertiary); color: var(--text-secondary); }
-
-        /* ============================================ */
-        /* LAYOUT UTAMA                                 */
-        /* ============================================ */
-        .app-container {
-            display: flex;
-            height: 100%;
-            width: 100%;
-        }
-        .sidebar {
-            width: 260px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            overflow-y: auto;
-        }
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: var(--bg-primary);
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-        .sidebar-menu { flex: 1; padding: 10px; }
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            margin-bottom: 4px;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-        .sidebar-item i { width: 20px; text-align: center; font-size: 16px; }
-        .sidebar-item:hover { background: var(--bg-hover); color: var(--text-primary); }
-        .sidebar-item.active { background: var(--accent-green-bg); color: var(--accent-green); font-weight: 600; }
-
-        .user-footer {
-            padding: 15px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        /* ============================================ */
-        /* CARDS & TABLES                               */
-        /* ============================================ */
-        .card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-
-        table { width: 100%; border-collapse: collapse; }
-        th {
-            text-align: left;
-            padding: 12px;
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-        tr:hover td { background: var(--bg-hover); }
-
-        /* ============================================ */
-        /* MODAL                                        */
-        /* ============================================ */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-box {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            width: 90%;
-            max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            font-weight: 600;
-        }
-        .modal-body { padding: 20px; }
-        .modal-footer {
-            padding: 15px 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        /* ============================================ */
-        /* UTILITY                                      */
-        /* ============================================ */
-        .text-green { color: var(--accent-green); }
-        .text-muted { color: var(--text-secondary); font-size: 13px; }
-        .hidden { display: none !important; }
-
-        .toast {
-            position: fixed;
-            bottom: 20px; right: 20px;
-            padding: 12px 20px;
-            border-radius: var(--radius-md);
-            color: var(--white);
-            z-index: 9999;
-            animation: slideInRight 0.3s ease;
-            font-weight: 500;
-            box-shadow: var(--shadow);
-        }
-        .toast.success { background: var(--accent-green); }
-        .toast.error { background: var(--danger); }
-
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1E1E1E">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="NotepadPro++ - Catatan Kode SuperAdmin">
+  <title>NotepadPro++</title>
+  <link rel="manifest" href="data:application/json,{}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #1E1E1E; --bg-secondary: #252526; --bg-tertiary: #2D2D2D; --bg-hover: #3E3E3E;
+      --text-primary: #CCCCCC; --text-secondary: #9CA3AF; --accent-green: #4CAF50;
+      --accent-green-hover: #66BB6A; --accent-green-bg: rgba(76, 175, 80, 0.15);
+      --border-color: #3E3E3E; --danger: #EF4444; --warning: #F59E0B; --info: #3B82F6;
+      --white: #FFFFFF; --black: #000000; --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px;
+      --shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; font-family:'Inter',sans-serif; background:var(--bg-primary); color:var(--text-primary); line-height:1.6; overflow:hidden; }
+    body { display:flex; flex-direction:column; }
+    ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:var(--bg-secondary); } ::-webkit-scrollbar-thumb { background:var(--border-color); border-radius:3px; }
+    .app-container { display:flex; height:100%; width:100%; }
+    .sidebar { width:260px; background:var(--bg-secondary); border-right:1px solid var(--border-color); display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto; }
+    .main-content { flex:1; overflow-y:auto; padding:20px; background:var(--bg-primary); }
+    .sidebar-header { padding:20px; border-bottom:1px solid var(--border-color); text-align:center; }
+    .sidebar-menu { flex:1; padding:10px; }
+    .sidebar-item { display:flex; align-items:center; gap:10px; padding:12px 15px; border-radius:var(--radius-md); cursor:pointer; margin-bottom:4px; color:var(--text-secondary); font-weight:500; transition:all 0.2s; }
+    .sidebar-item i { width:20px; text-align:center; }
+    .sidebar-item:hover { background:var(--bg-hover); color:var(--text-primary); }
+    .sidebar-item.active { background:var(--accent-green-bg); color:var(--accent-green); }
+    .user-footer { padding:15px; border-top:1px solid var(--border-color); }
+    .card { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius-lg); padding:20px; margin-bottom:20px; }
+    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; font-size:18px; font-weight:600; }
+    .grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
+    .grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; }
+    table { width:100%; border-collapse:collapse; } th { text-align:left; padding:12px; background:var(--bg-tertiary); color:var(--text-secondary); font-size:12px; text-transform:uppercase; letter-spacing:0.5px; }
+    td { padding:12px; border-bottom:1px solid var(--border-color); font-size:14px; } tr:hover td { background:var(--bg-hover); }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 20px; border-radius:var(--radius-md); font-weight:600; cursor:pointer; border:none; font-size:14px; transition:all 0.2s; }
+    .btn-primary { background:var(--accent-green); color:var(--white); } .btn-primary:hover { background:var(--accent-green-hover); }
+    .btn-outline { background:transparent; border:1px solid var(--border-color); color:var(--text-primary); } .btn-outline:hover { background:var(--bg-hover); }
+    .btn-danger { background:var(--danger); color:var(--white); } .btn-sm { padding:6px 12px; font-size:12px; } .btn-block { width:100%; }
+    input, textarea, select { background:var(--bg-secondary); border:1px solid var(--border-color); color:var(--text-primary); padding:12px 15px; border-radius:var(--radius-md); width:100%; font-family:'Inter',sans-serif; outline:none; }
+    input:focus, textarea:focus, select:focus { border-color:var(--accent-green); }
+    .code-editor { font-family:'JetBrains Mono',monospace; background:var(--bg-secondary); color:var(--accent-green); border:1px solid var(--border-color); padding:15px; border-radius:var(--radius-md); width:100%; resize:vertical; line-height:1.7; tab-size:4; }
+    .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000; display:flex; justify-content:center; align-items:center; }
+    .modal-box { background:var(--bg-secondary); border:1px solid var(--border-color); border-radius:var(--radius-lg); width:90%; max-width:500px; max-height:85vh; overflow-y:auto; }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; border-bottom:1px solid var(--border-color); }
+    .modal-body { padding:20px; } .modal-footer { padding:15px 20px; border-top:1px solid var(--border-color); display:flex; justify-content:flex-end; gap:10px; }
+    .chat-container { display:flex; flex-direction:column; height:70vh; }
+    .chat-messages { flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:10px; }
+    .chat-bubble { max-width:75%; padding:10px 15px; border-radius:16px; font-size:14px; }
+    .chat-sent { background:var(--accent-green-bg); color:var(--accent-green); align-self:flex-end; }
+    .chat-received { background:var(--bg-tertiary); align-self:flex-start; }
+    .badge { padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600; }
+    .badge-success { background:var(--accent-green-bg); color:var(--accent-green); } .badge-error { background:rgba(239,68,68,0.2); color:var(--danger); }
+    .badge-pro { background:var(--accent-green-bg); color:var(--accent-green); } .badge-free { background:var(--bg-tertiary); color:var(--text-secondary); }
+    .text-green { color:var(--accent-green); } .text-muted { color:var(--text-secondary); font-size:13px; } .hidden { display:none !important; }
+    .toast { position:fixed; bottom:20px; right:20px; padding:12px 20px; border-radius:var(--radius-md); color:var(--white); z-index:9999; animation:slideIn 0.3s; }
+    .toast.success { background:var(--accent-green); } .toast.error { background:var(--danger); }
+    @keyframes slideIn { from{transform:translateX(100%);opacity:0;} to{transform:translateX(0);opacity:1;} }
+  </style>
 </head>
 <body>
+  <div id="offlineIndicator" class="hidden" style="background:var(--danger); color:white; text-align:center; padding:6px; font-size:12px;">Offline</div>
+  <div id="pwaInstallPrompt" class="hidden" style="position:fixed; bottom:20px; left:20px; z-index:9998; background:var(--bg-secondary); border:1px solid var(--border-color); padding:15px; border-radius:var(--radius-lg);"><p style="margin-bottom:10px;">Install Aplikasi?</p><button id="installBtn" class="btn btn-primary btn-sm">Install</button> <button onclick="document.getElementById('pwaInstallPrompt').classList.add('hidden')" class="btn btn-outline btn-sm">Nanti</button></div>
 
-    <!-- Offline Indicator -->
-    <div id="offlineIndicator" class="hidden" style="background:var(--danger); color:white; text-align:center; padding:6px; font-size:12px; font-weight:600;">
-        Anda sedang Offline. Data disimpan lokal.
+  <!-- LOGIN PAGE -->
+  <div id="pageLogin" style="display:flex; justify-content:center; align-items:center; height:100%;">
+    <div class="card" style="width:380px; text-align:center;">
+      <i class="fas fa-book" style="color:var(--accent-green); font-size:48px;"></i>
+      <h2>NotepadPro++</h2>
+      <p class="text-muted">Login ke Akun Anda</p>
+      <div id="loginError" class="hidden" style="background:var(--danger); padding:10px; border-radius:8px; margin:15px 0; color:white; font-size:13px;"></div>
+      <form onsubmit="prosesLogin(event)">
+        <input type="text" id="loginUsername" placeholder="Username" required style="margin-bottom:12px;">
+        <input type="password" id="loginPassword" placeholder="Password" required style="margin-bottom:15px;">
+        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+      </form>
+      <p class="text-muted" style="margin-top:15px; cursor:pointer;" onclick="alert('Hubungi Admin Dede')">Lupa Password?</p>
     </div>
+  </div>
 
-    <!-- PWA Install Prompt -->
-    <div id="pwaInstallPrompt" class="hidden" style="position:fixed; bottom:20px; left:20px; z-index:9998; background:var(--bg-secondary); border:1px solid var(--border-color); padding:15px 20px; border-radius:var(--radius-lg); box-shadow:var(--shadow); max-width:300px;">
-        <p style="margin-bottom:10px; font-weight:600;">Install NotepadPro++?</p>
-        <div style="display:flex; gap:10px;">
-            <button id="installBtn" class="btn btn-primary btn-sm">Install</button>
-            <button onclick="document.getElementById('pwaInstallPrompt').classList.add('hidden')" class="btn btn-outline btn-sm">Nanti</button>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- HALAMAN LOGIN                                -->
-    <!-- ============================================ -->
-    <div id="pageLogin" style="display:flex; justify-content:center; align-items:center; height:100%; width:100%; background:var(--bg-primary);">
-        <div class="card" style="width:380px; max-width:90%; text-align:center;">
-            <i class="fas fa-book" style="color:var(--accent-green); font-size:48px; margin-bottom:10px;"></i>
-            <h2 style="margin-bottom:5px;">NotepadPro++</h2>
-            <p class="text-muted" style="margin-bottom:20px;">Login ke Akun Anda</p>
-            <div id="loginError" class="hidden" style="background:var(--danger); padding:10px; border-radius:var(--radius-md); margin-bottom:15px; color:white; font-size:13px;"></div>
-            <form onsubmit="prosesLogin(event)">
-                <div style="margin-bottom:12px;"><input type="text" id="loginUsername" placeholder="Username" required></div>
-                <div style="margin-bottom:15px;"><input type="password" id="loginPassword" placeholder="Password" required></div>
-                <button type="submit" class="btn btn-primary btn-block">Masuk</button>
-            </form>
-            <p class="text-muted" style="margin-top:15px; cursor:pointer;" onclick="alert('Hubungi Admin Dede')">Lupa Password?</p>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- APP CONTAINER (SIDEBAR + MAIN) - AKAN DIISI  -->
-    <!-- ============================================ -->
-    <div id="appContainer" class="hidden" style="height:100%; width:100%;">
-        <!-- Blok 2: Sidebar & Layout Utama -->
-    </div>
-
-    <script>
-        console.log('✅ NotepadPro++ - Blok 1 berhasil dimuat.');
-    </script>
-<--=== AKHIR BLOK 1 === -->
-<--=== BLOK 2: SIDEBAR & LAYOUT UTAMA (APP CONTAINER) === -->
-<!-- ============================================ -->
-<!-- APP CONTAINER (SIDEBAR + MAIN CONTENT)       -->
-<!-- ============================================ -->
-<div class="app-container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <i class="fas fa-book" style="color:var(--accent-green); font-size:24px;"></i>
-            <span style="font-weight:700;">NotepadPro++</span>
-        </div>
+  <!-- APP CONTAINER -->
+  <div id="appContainer" class="hidden" style="height:100%;">
+    <div class="app-container">
+      <div class="sidebar">
+        <div class="sidebar-header"><i class="fas fa-book" style="color:var(--accent-green); font-size:24px;"></i><span style="font-weight:700;">NotepadPro++</span></div>
         <div class="sidebar-menu">
-            <!-- Menu SuperAdmin -->
-            <div id="menuAdmin" class="hidden">
-                <div class="sidebar-item active" onclick="navigasi('dashboard')" id="menuDashboard">
-                    <i class="fas fa-th-large"></i>Dashboard
-                </div>
-                <div class="sidebar-item" onclick="navigasi('panelAdmin')" id="menuPanelAdmin">
-                    <i class="fas fa-users-cog"></i>Panel Admin
-                </div>
-                <div class="sidebar-item" onclick="navigasi('aktivasi')" id="menuAktivasi">
-                    <i class="fas fa-key"></i>Aktivasi Pro
-                </div>
-                <div class="sidebar-item" onclick="navigasi('harga')" id="menuHarga">
-                    <i class="fas fa-tags"></i>Menu Harga
-                </div>
-                <div class="sidebar-item" onclick="navigasi('blokManager')" id="menuBlok">
-                    <i class="fas fa-code"></i>Catatan Kode
-                </div>
-                <div class="sidebar-item" onclick="navigasi('gabungBlok')" id="menuGabung">
-                    <i class="fas fa-layer-group"></i>Gabung Blok
-                </div>
-                <div class="sidebar-item" onclick="navigasi('backupRestore')" id="menuBackup">
-                    <i class="fas fa-database"></i>Backup/Restore
-                </div>
-                <div class="sidebar-item" onclick="navigasi('chat')" id="menuChatAdmin">
-                    <i class="fas fa-comments"></i>Chat
-                </div>
-            </div>
-            <!-- Menu User Biasa -->
-            <div id="menuUser" class="hidden">
-                <div class="sidebar-item active" onclick="navigasi('dashboardUser')" id="menuDashboardUser">
-                    <i class="fas fa-th-large"></i>Dashboard
-                </div>
-                <div class="sidebar-item" onclick="navigasi('blokManager')" id="menuBlokUser">
-                    <i class="fas fa-code"></i>Catatan Kode
-                </div>
-                <div class="sidebar-item" onclick="navigasi('gabungBlok')" id="menuGabungUser">
-                    <i class="fas fa-layer-group"></i>Gabung Blok
-                </div>
-                <div class="sidebar-item" onclick="navigasi('chat')" id="menuChatUser">
-                    <i class="fas fa-comments"></i>Chat
-                </div>
-            </div>
+          <div id="menuAdmin" class="hidden">
+            <div class="sidebar-item active" onclick="navigasi('dashboard')"><i class="fas fa-th-large"></i>Dashboard</div>
+            <div class="sidebar-item" onclick="navigasi('panelAdmin')"><i class="fas fa-users-cog"></i>Panel Admin</div>
+            <div class="sidebar-item" onclick="navigasi('aktivasi')"><i class="fas fa-key"></i>Aktivasi Pro</div>
+            <div class="sidebar-item" onclick="navigasi('harga')"><i class="fas fa-tags"></i>Menu Harga</div>
+            <div class="sidebar-item" onclick="navigasi('blokManager')"><i class="fas fa-code"></i>Catatan Kode</div>
+            <div class="sidebar-item" onclick="navigasi('gabungBlok')"><i class="fas fa-layer-group"></i>Gabung Blok</div>
+            <div class="sidebar-item" onclick="navigasi('backupRestore')"><i class="fas fa-database"></i>Backup/Restore</div>
+            <div class="sidebar-item" onclick="navigasi('chat')"><i class="fas fa-comments"></i>Chat</div>
+          </div>
+          <div id="menuUser" class="hidden">
+            <div class="sidebar-item active" onclick="navigasi('dashboardUser')"><i class="fas fa-th-large"></i>Dashboard</div>
+            <div class="sidebar-item" onclick="navigasi('blokManager')"><i class="fas fa-code"></i>Catatan Kode</div>
+            <div class="sidebar-item" onclick="navigasi('gabungBlok')"><i class="fas fa-layer-group"></i>Gabung Blok</div>
+            <div class="sidebar-item" onclick="navigasi('chat')"><i class="fas fa-comments"></i>Chat</div>
+          </div>
         </div>
         <div class="user-footer">
-            <p id="sidebarUserName" style="font-weight:600;"></p>
-            <p id="sidebarUserRole" class="text-muted" style="font-size:12px;"></p>
-            <button class="btn btn-outline btn-block btn-sm" onclick="logout()" style="margin-top:10px;">
-                <i class="fas fa-sign-out-alt"></i>Logout
-            </button>
+          <p id="sidebarUserName" style="font-weight:600;"></p>
+          <p id="sidebarUserRole" class="text-muted"></p>
+          <button class="btn btn-outline btn-block btn-sm" onclick="logout()"><i class="fas fa-sign-out-alt"></i>Logout</button>
         </div>
+      </div>
+      <div class="main-content" id="mainContent">
+        <!-- DASHBOARD SUPERADMIN -->
+        <div id="pageDashboard" class="hidden">
+          <div class="card-header"><h2>📊 Dashboard SuperAdmin</h2><p class="text-muted">Selamat datang, <strong>Dede</strong></p></div>
+          <div class="grid-4">
+            <div class="card" style="text-align:center;"><div class="text-muted">👥 Total User</div><div class="text-green" style="font-size:32px;font-weight:700;" id="statTotalUser">0</div></div>
+            <div class="card" style="text-align:center;"><div class="text-muted">⭐ User Pro</div><div class="text-green" style="font-size:32px;font-weight:700;" id="statProUser">0</div></div>
+            <div class="card" style="text-align:center;"><div class="text-muted">📝 Total Blok</div><div class="text-green" style="font-size:32px;font-weight:700;" id="statTotalBlok">0</div></div>
+            <div class="card" style="text-align:center;"><div class="text-muted">🔑 Kode Aktif</div><div class="text-green" style="font-size:32px;font-weight:700;" id="statKodeAktif">0</div></div>
+          </div>
+          <div class="card"><h3>⚡ Menu Cepat</h3><div class="grid-2"><button class="btn btn-outline btn-block" onclick="navigasi('panelAdmin')">👥 Kelola User</button><button class="btn btn-outline btn-block" onclick="navigasi('aktivasi')">🔑 Aktivasi</button><button class="btn btn-outline btn-block" onclick="navigasi('harga')">🏷️ Harga</button><button class="btn btn-outline btn-block" onclick="navigasi('blokManager')">📝 Catatan</button><button class="btn btn-outline btn-block" onclick="navigasi('gabungBlok')">🧩 Gabung Blok</button><button class="btn btn-outline btn-block" onclick="navigasi('backupRestore')">🗄️ Backup</button></div></div>
+        </div>
+        <!-- DASHBOARD USER -->
+        <div id="pageDashboardUser" class="hidden">
+          <div class="card-header"><h2>👤 Dashboard Saya</h2></div>
+          <div class="card"><div class="grid-2"><div><p class="text-muted">Nama</p><p id="userNama">-</p></div><div><p class="text-muted">Username</p><p id="userUsername">-</p></div><div><p class="text-muted">Email</p><p id="userEmail">-</p></div><div><p class="text-muted">HP</p><p id="userHp">-</p></div><div><p class="text-muted">Status</p><span id="userStatusPro" class="badge badge-free">Free</span></div></div></div>
+          <div id="upgradePanel" class="card" style="border:1px solid var(--accent-green);"><h3 style="color:var(--accent-green);">🚀 Upgrade Pro</h3><p class="text-muted">Fitur Gabung Blok & Editor Advanced</p><div style="display:flex; gap:10px;"><input type="text" id="inputKodeUpgrade" placeholder="Kode Aktivasi"><button class="btn btn-primary" onclick="upgradePro()">Upgrade</button></div></div>
+        </div>
+        <!-- PANEL ADMIN -->
+        <div id="pagePanelAdmin" class="hidden">
+          <div class="card-header"><h2>👥 Panel Admin</h2><button class="btn btn-primary" onclick="tambahUserModal()">+ Tambah User</button></div>
+          <div class="card"><table><thead><tr><th>Username</th><th>Nama</th><th>HP</th><th>Email</th><th>Status</th><th>Pro</th><th>Aksi</th></tr></thead><tbody id="tabelUserAdmin"></tbody></table></div>
+        </div>
+        <!-- AKTIVASI -->
+        <div id="pageAktivasi" class="hidden">
+          <div class="card-header"><h2>🔑 Generate Kode Aktivasi</h2></div>
+          <div class="card"><div class="grid-2"><select id="selectPaketAktivasi"></select><button class="btn btn-primary" onclick="generateKode()">Generate</button></div></div>
+          <div class="card"><h3>📋 Daftar Kode</h3><div id="listKodeAktivasi"></div></div>
+        </div>
+        <!-- HARGA -->
+        <div id="pageHarga" class="hidden">
+          <div class="card-header"><h2>🏷️ Menu Harga</h2><button class="btn btn-primary" onclick="tambahHargaModal()">+ Tambah</button></div>
+          <div class="card"><table><thead><tr><th>Durasi</th><th>Harga</th><th>Aksi</th></tr></thead><tbody id="tabelHarga"></tbody></table></div>
+        </div>
+        <!-- MANAJER BLOK -->
+        <div id="pageBlokManager" class="hidden">
+          <div class="card-header"><h2>📝 Catatan Kode</h2><button class="btn btn-primary" onclick="tambahBlokModal()">+ Tambah Blok</button></div>
+          <div class="card" style="background:var(--accent-green-bg);"><p><i class="fas fa-info-circle"></i> UTF-8 | Urut Otomatis</p></div>
+          <div id="listBlok"></div><div id="blokKosong" class="hidden" style="text-align:center;padding:40px;"><i class="fas fa-code" style="font-size:48px;opacity:0.3;"></i><p class="text-muted">Belum ada blok</p></div>
+        </div>
+        <!-- EDITOR MODAL -->
+        <div id="modalEditor" class="modal-overlay hidden">
+          <div class="modal-box" style="width:95%; height:90%; display:flex; flex-direction:column;">
+            <div class="modal-header"><span id="editorTitle">Editor</span><div><button class="btn btn-outline btn-sm" onclick="copyBlokAktif()"><i class="fas fa-copy"></i> Copy</button><button class="btn btn-primary btn-sm" onclick="simpanEditBlok()"><i class="fas fa-save"></i> Simpan</button><button class="btn btn-outline btn-sm" onclick="tutupEditor()"><i class="fas fa-times"></i></button></div></div>
+            <textarea id="editorTextarea" class="code-editor" style="flex:1; border-radius:0; border:none; resize:none;"></textarea>
+            <div style="padding:8px 20px; font-size:12px; border-top:1px solid var(--border-color);">Baris: <span id="editorLineCount">0</span></div>
+          </div>
+        </div>
+        <!-- GABUNG BLOK -->
+        <div id="pageGabungBlok" class="hidden">
+          <div class="card-header"><h2>🧩 Gabung Blok</h2><div><button class="btn btn-primary" onclick="copyGabungan()"><i class="fas fa-copy"></i> Copy HTML</button><button class="btn btn-outline" onclick="downloadGabungan()"><i class="fas fa-download"></i> Download</button></div></div>
+          <pre id="previewGabungan" style="background:var(--bg-tertiary); padding:15px; border-radius:8px; max-height:60vh; overflow:auto; font-family:'JetBrains Mono'; white-space:pre-wrap; color:var(--accent-green);"></pre>
+        </div>
+        <!-- CHAT -->
+        <div id="pageChat" class="hidden">
+          <div class="chat-container"><div class="card-header">💬 Chat</div><div class="chat-messages" id="chatMessages"></div><div style="display:flex; gap:10px; padding:15px; border-top:1px solid var(--border-color);"><input type="text" id="chatInput" placeholder="Ketik pesan..." onkeydown="if(event.key==='Enter')kirimChat()"><button class="btn btn-primary" onclick="kirimChat()">Kirim</button></div></div>
+        </div>
+        <!-- BACKUP RESTORE -->
+        <div id="pageBackupRestore" class="hidden">
+          <div class="card-header"><h2>🗄️ Backup & Restore</h2><span class="badge badge-pro">SuperAdmin</span></div>
+          <div class="grid-2">
+            <div class="card"><h3>📥 Backup</h3><button class="btn btn-primary btn-block" onclick="backupData()">Download Backup JSON</button><button class="btn btn-outline btn-block" onclick="downloadIndexHtml()" style="margin-top:10px;">Download index.html</button></div>
+            <div class="card"><h3>📤 Restore</h3><input type="file" id="restoreFile" accept=".json"><button class="btn btn-warning btn-block" onclick="restoreData()" style="margin-top:10px;">Restore</button></div>
+          </div>
+          <div class="card"><h3>📁 Ekspor/Impor Blok</h3><div class="grid-2"><div><button class="btn btn-outline btn-block" onclick="eksporBlok()">Ekspor Blok (JSON)</button></div><div><input type="file" id="imporBlokFile" accept=".json"><button class="btn btn-outline btn-block" onclick="imporBlok()">Impor Blok</button></div></div></div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Main Content Area -->
-    <div class="main-content" id="mainContent">
-        <!-- Halaman dinamis akan dirender di sini oleh JavaScript -->
-    </div>
-</div>
-<--=== AKHIR BLOK 2 === -->
-<--=== BLOK 3: DASHBOARD SUPERADMIN & USER === -->
-<!-- ============================================ -->
-<!-- HALAMAN DASHBOARD SUPERADMIN                -->
-<!-- ============================================ -->
-<div id="pageDashboard" class="hidden">
-    <div class="card-header">
-        <h2>📊 Dashboard SuperAdmin</h2>
-        <p class="text-muted">Selamat datang, <strong>Dede</strong> (Pemilik & Pengelola)</p>
-    </div>
+  <!-- MODAL TAMBAH USER & HARGA -->
+  <div id="modalTambahUser" class="modal-overlay hidden"><div class="modal-box"><div class="modal-header"><h3>Tambah User</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahUser')"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="text" id="newUsername" placeholder="Username" style="margin-bottom:10px;"><input type="password" id="newPassword" placeholder="Password" style="margin-bottom:10px;"><input type="text" id="newNama" placeholder="Nama" style="margin-bottom:10px;"><input type="text" id="newAlamat" placeholder="Alamat" style="margin-bottom:10px;"><input type="text" id="newHp" placeholder="HP"><input type="email" id="newEmail" placeholder="Email" style="margin-top:10px;"></div><div class="modal-footer"><button class="btn btn-outline" onclick="tutupModal('modalTambahUser')">Batal</button><button class="btn btn-primary" onclick="simpanUserBaru()">Simpan</button></div></div></div>
+  <div id="modalTambahHarga" class="modal-overlay hidden"><div class="modal-box"><div class="modal-header"><h3>Tambah Harga</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahHarga')"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="text" id="newDurasi" placeholder="Durasi" style="margin-bottom:10px;"><input type="number" id="newHarga" placeholder="Harga"></div><div class="modal-footer"><button class="btn btn-outline" onclick="tutupModal('modalTambahHarga')">Batal</button><button class="btn btn-primary" onclick="simpanHargaBaru()">Simpan</button></div></div></div>
 
-    <!-- Statistik Cards -->
-    <div class="grid-4">
-        <div class="card" style="text-align:center;">
-            <div class="text-muted" style="font-size:12px; margin-bottom:8px;">👥 Total User</div>
-            <div class="text-green" style="font-size:32px; font-weight:700;" id="statTotalUser">0</div>
-        </div>
-        <div class="card" style="text-align:center;">
-            <div class="text-muted" style="font-size:12px; margin-bottom:8px;">⭐ User Pro</div>
-            <div class="text-green" style="font-size:32px; font-weight:700;" id="statProUser">0</div>
-        </div>
-        <div class="card" style="text-align:center;">
-            <div class="text-muted" style="font-size:12px; margin-bottom:8px;">📝 Total Blok</div>
-            <div class="text-green" style="font-size:32px; font-weight:700;" id="statTotalBlok">0</div>
-        </div>
-        <div class="card" style="text-align:center;">
-            <div class="text-muted" style="font-size:12px; margin-bottom:8px;">🔑 Kode Aktif</div>
-            <div class="text-green" style="font-size:32px; font-weight:700;" id="statKodeAktif">0</div>
-        </div>
-    </div>
-
-    <!-- Menu Cepat SuperAdmin -->
-    <div class="card" style="margin-top:20px;">
-        <h3 style="margin-bottom:15px;">⚡ Menu Cepat SuperAdmin</h3>
-        <div class="grid-2">
-            <button class="btn btn-outline btn-block" onclick="navigasi('panelAdmin')">
-                <i class="fas fa-users-cog"></i> Kelola User
-            </button>
-            <button class="btn btn-outline btn-block" onclick="navigasi('aktivasi')">
-                <i class="fas fa-key"></i> Aktivasi Pro
-            </button>
-            <button class="btn btn-outline btn-block" onclick="navigasi('harga')">
-                <i class="fas fa-tags"></i> Menu Harga
-            </button>
-            <button class="btn btn-outline btn-block" onclick="navigasi('blokManager')">
-                <i class="fas fa-code"></i> Catatan Kode
-            </button>
-            <button class="btn btn-outline btn-block" onclick="navigasi('gabungBlok')">
-                <i class="fas fa-layer-group"></i> Gabung Blok
-            </button>
-            <button class="btn btn-outline btn-block" onclick="navigasi('backupRestore')">
-                <i class="fas fa-database"></i> Backup & Restore
-            </button>
-            <button class="btn btn-outline btn-block" onclick="navigasi('chat')">
-                <i class="fas fa-comments"></i> Chat User
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- HALAMAN DASHBOARD USER                      -->
-<!-- ============================================ -->
-<div id="pageDashboardUser" class="hidden">
-    <div class="card-header">
-        <h2>👤 Dashboard Saya</h2>
-    </div>
-
-    <!-- Info Profil -->
-    <div class="card">
-        <div class="grid-2">
-            <div>
-                <p class="text-muted">Nama</p>
-                <p style="font-weight:600;" id="userNama">-</p>
-            </div>
-            <div>
-                <p class="text-muted">Username</p>
-                <p style="font-weight:600;" id="userUsername">-</p>
-            </div>
-            <div>
-                <p class="text-muted">Email</p>
-                <p style="font-weight:600;" id="userEmail">-</p>
-            </div>
-            <div>
-                <p class="text-muted">No. HP</p>
-                <p style="font-weight:600;" id="userHp">-</p>
-            </div>
-            <div>
-                <p class="text-muted">Status</p>
-                <span id="userStatusPro" class="badge badge-free">Free</span>
-            </div>
-            <div>
-                <p class="text-muted">Alamat</p>
-                <p style="font-weight:600;" id="userAlamat">-</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upgrade Panel (untuk user free) -->
-    <div id="upgradePanel" class="card" style="border:1px solid var(--accent-green);">
-        <h3 style="color:var(--accent-green); margin-bottom:10px;">🚀 Upgrade ke Pro</h3>
-        <p class="text-muted" style="margin-bottom:15px;">Dapatkan akses Penggabungan Blok dan fitur Editor Advanced.</p>
-        <div style="display:flex; gap:10px;">
-            <input type="text" id="inputKodeUpgrade" placeholder="Masukkan Kode Aktivasi" style="flex:1;">
-            <button class="btn btn-primary" onclick="upgradePro()">Upgrade</button>
-        </div>
-        <p class="text-muted" style="margin-top:10px; font-size:12px;">Beli kode aktivasi ke Admin.</p>
-    </div>
-</div>
-<--=== AKHIR BLOK 3 === -->
-<--=== BLOK 4: PANEL ADMIN (CRUD USER) === -->
-<!-- ============================================ -->
-<!-- HALAMAN PANEL ADMIN USER                    -->
-<!-- ============================================ -->
-<div id="pagePanelAdmin" class="hidden">
-    <div class="card-header">
-        <h2>👥 Panel Admin User</h2>
-        <button class="btn btn-primary" onclick="tambahUserModal()">
-            <i class="fas fa-plus"></i> Tambah User
-        </button>
-    </div>
-    <div class="card">
-        <div class="table-responsive" style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Nama</th>
-                        <th>HP</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Pro</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelUserAdmin">
-                    <tr>
-                        <td colspan="7" class="text-muted" style="text-align:center; padding:30px;">Memuat data user...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<--=== AKHIR BLOK 4 === -->
-<--=== BLOK 5: AKTIVASI PRO & MENU HARGA === -->
-<!-- ============================================ -->
-<!-- HALAMAN AKTIVASI PRO                         -->
-<!-- ============================================ -->
-<div id="pageAktivasi" class="hidden">
-    <div class="card-header">
-        <h2>🔑 Generate Kode Aktivasi Pro</h2>
-    </div>
-    <div class="card">
-        <div class="grid-2" style="align-items:end;">
-            <div>
-                <label class="text-muted" style="display:block; margin-bottom:5px;">Pilih Paket</label>
-                <select id="selectPaketAktivasi"></select>
-            </div>
-            <button class="btn btn-primary btn-block" onclick="generateKode()" style="height:fit-content;">
-                <i class="fas fa-key"></i> Generate Kode Unik
-            </button>
-        </div>
-    </div>
-
-    <div class="card" style="margin-top:20px;">
-        <h3 style="margin-bottom:15px;">📋 Daftar Kode Aktif</h3>
-        <div id="listKodeAktivasi" style="display:flex; flex-direction:column; gap:10px;">
-            <p class="text-muted">Belum ada kode aktivasi.</p>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- HALAMAN MENU HARGA                          -->
-<!-- ============================================ -->
-<div id="pageHarga" class="hidden">
-    <div class="card-header">
-        <h2>🏷️ Menu Harga</h2>
-        <button class="btn btn-primary" onclick="tambahHargaModal()">
-            <i class="fas fa-plus"></i> Tambah Harga
-        </button>
-    </div>
-    <div class="card">
-        <div class="table-responsive" style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Durasi</th>
-                        <th>Harga (Rp)</th>
-                        <th style="width:100px;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelHarga">
-                    <tr>
-                        <td colspan="3" class="text-muted" style="text-align:center; padding:30px;">Memuat data harga...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- MODAL TAMBAH HARGA                           -->
-<!-- ============================================ -->
-<div id="modalTambahHarga" class="modal-overlay hidden">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h3>Tambah Harga Baru</h3>
-            <button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahHarga')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div style="margin-bottom:12px;">
-                <label>Durasi</label>
-                <input type="text" id="newDurasi" placeholder="Contoh: 1 Bulan">
-            </div>
-            <div style="margin-bottom:12px;">
-                <label>Harga (Rp)</label>
-                <input type="number" id="newHarga" placeholder="10000">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" onclick="tutupModal('modalTambahHarga')">Batal</button>
-            <button class="btn btn-primary" onclick="simpanHargaBaru()">Simpan</button>
-        </div>
-    </div>
-</div>
-<--=== AKHIR BLOK 5 === -->
-<--=== BLOK 6: MANAJER BLOK (CATATAN KODE) & EDITOR FULLSCREEN === -->
-
-<!-- ============================================ -->
-<!-- HALAMAN MANAJER BLOK (CATATAN KODE)         -->
-<!-- ============================================ -->
-<div id="pageBlokManager" class="hidden">
-    <div class="card-header">
-        <h2>📝 Catatan Kode (Blok)</h2>
-        <button class="btn btn-primary" onclick="tambahBlokModal()">
-            <i class="fas fa-plus"></i> Tambah Blok
-        </button>
-    </div>
-
-    <!-- Info Penyimpanan -->
-    <div class="card" style="background:var(--accent-green-bg); border-color:var(--accent-green); margin-bottom:20px;">
-        <p style="font-size:13px;">
-            <i class="fas fa-info-circle"></i> 
-            <strong>Penyimpanan UTF-8</strong> • Setiap blok disimpan dengan encoding UTF-8. 
-            Blok akan otomatis diurutkan berdasarkan nomor blok. 
-            Format penamaan: <code>Blok 1, Blok 2, Blok 5.4 R3, ...</code>
-        </p>
-    </div>
-
-    <!-- Daftar Blok -->
-    <div id="listBlok" style="display:flex; flex-direction:column; gap:15px;">
-        <!-- Blok akan dirender oleh JavaScript -->
-        <div class="card" style="text-align:center; padding:30px;">
-            <p class="text-muted">Memuat data blok...</p>
-        </div>
-    </div>
-
-    <!-- Empty State -->
-    <div id="blokKosong" class="hidden" style="text-align:center; padding:40px;">
-        <i class="fas fa-code" style="font-size:48px; color:var(--border-color); margin-bottom:15px;"></i>
-        <h3>Belum Ada Blok</h3>
-        <p class="text-muted">Klik "Tambah Blok" untuk membuat catatan kode pertama Anda.</p>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- MODAL EDITOR BLOK FULLSCREEN                 -->
-<!-- ============================================ -->
-<div id="modalEditor" class="modal-overlay hidden">
-    <div class="modal-box" style="width:95%; max-width:95%; height:90%; display:flex; flex-direction:column;">
-        <!-- Header Editor -->
-        <div class="modal-header" style="flex-shrink:0;">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <span style="font-weight:600;">✏️ Edit Blok:</span>
-                <strong id="editorTitle" style="color:var(--accent-green);">-</strong>
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-outline btn-sm" onclick="copyBlokAktif()" title="Salin kode blok ini ke clipboard">
-                    <i class="fas fa-copy"></i> Copy HTML
-                </button>
-                <button class="btn btn-primary btn-sm" onclick="simpanEditBlok()" title="Simpan perubahan (Ctrl+S)">
-                    <i class="fas fa-save"></i> Simpan
-                </button>
-                <button class="btn btn-outline btn-sm" onclick="tutupEditor()" title="Tutup editor (Esc)">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Area Editor -->
-        <textarea id="editorTextarea" class="code-editor" style="flex:1; height:100%; border-radius:0; border:none; resize:none; padding:20px; font-size:14px;" placeholder="Tulis kode HTML di sini..."></textarea>
-
-        <!-- Footer Editor -->
-        <div style="flex-shrink:0; padding:10px 20px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-secondary);">
-            <span>UTF-8 | Bahasa: HTML | Baris: <span id="editorLineCount">0</span></span>
-            <span>Ctrl+S untuk simpan | Esc untuk tutup</span>
-        </div>
-    </div>
-</div>
-<--=== AKHIR BLOK 6 === -->
-<--=== BLOK 7: PENGGABUNGAN BLOK (PREVIEW, COPY, DOWNLOAD) === -->
-<!-- ============================================ -->
-<!-- HALAMAN PENGGABUNGAN BLOK                   -->
-<!-- ============================================ -->
-<div id="pageGabungBlok" class="hidden">
-    <div class="card-header">
-        <h2>🧩 Gabung Blok</h2>
-        <div style="display:flex; gap:10px;">
-            <!-- Tombol Copy HTML -->
-            <button class="btn btn-primary" onclick="copyGabungan()" title="Salin HTML gabungan ke clipboard">
-                <i class="fas fa-copy"></i> Copy HTML
-            </button>
-            <!-- Tombol Download -->
-            <button class="btn btn-outline" onclick="downloadGabungan()" title="Unduh sebagai file .html">
-                <i class="fas fa-download"></i> Download .html
-            </button>
-        </div>
-    </div>
-
-    <!-- Info Fitur -->
-    <div class="card" style="background:var(--accent-green-bg); border-color:var(--accent-green); margin-bottom:20px;">
-        <p style="font-size:13px;">
-            <i class="fas fa-info-circle"></i> 
-            <strong>Fitur Pro / SuperAdmin</strong> • Blok diurutkan otomatis berdasarkan nomor blok (natural sort).
-            Hasil gabungan dapat disalin atau diunduh sebagai file HTML.
-        </p>
-    </div>
-
-    <!-- Preview Gabungan -->
-    <div class="card">
-        <h3 style="margin-bottom:15px;">📄 Preview HTML Gabungan</h3>
-        <pre id="previewGabungan" style="background:var(--bg-tertiary); padding:15px; border-radius:var(--radius-md); max-height:60vh; overflow:auto; font-family:'JetBrains Mono',monospace; white-space:pre-wrap; color:var(--accent-green); font-size:13px; line-height:1.6;">Blok akan tampil di sini...</pre>
-    </div>
-</div>
-<--=== AKHIR BLOK 7 === -->
-<--=== BLOK 8: CHAT USER === -->
-<!-- ============================================ -->
-<!-- HALAMAN CHAT USER                           -->
-<!-- ============================================ -->
-<div id="pageChat" class="hidden">
-    <div class="card-header">
-        <h2>💬 Chat User</h2>
-        <span class="text-muted">Pesan antar user terdaftar</span>
-    </div>
-
-    <div class="card" style="display:flex; flex-direction:column; height:70vh;">
-        <!-- Area Pesan -->
-        <div id="chatMessages" class="chat-messages" style="flex:1; overflow-y:auto; padding:15px;">
-            <p class="text-muted" style="text-align:center;">Belum ada pesan. Mulai percakapan!</p>
-        </div>
-
-        <!-- Input Chat -->
-        <div style="display:flex; gap:10px; padding:15px; border-top:1px solid var(--border-color); flex-shrink:0;">
-            <input type="text" id="chatInput" placeholder="Ketik pesan..." style="flex:1;" onkeydown="if(event.key==='Enter')kirimChat()">
-            <button class="btn btn-primary" onclick="kirimChat()">
-                <i class="fas fa-paper-plane"></i> Kirim
-            </button>
-        </div>
-    </div>
-</div>
-<--=== AKHIR BLOK 8 === -->
-<--=== BLOK 9: BACKUP & RESTORE DATA === -->
-<!-- ============================================ -->
-<!-- HALAMAN BACKUP & RESTORE                    -->
-<!-- ============================================ -->
-<div id="pageBackupRestore" class="hidden">
-    <div class="card-header">
-        <h2>🗄️ Backup & Restore Data</h2>
-        <span class="badge badge-pro">SuperAdmin</span>
-    </div>
-
-    <div class="grid-2">
-        <!-- Backup -->
-        <div class="card">
-            <h3 style="margin-bottom:15px;">📥 Backup Data</h3>
-            <p class="text-muted" style="margin-bottom:15px;">Download semua data (User, Blok, Harga, Kode, Chat) dalam format JSON.</p>
-            <button class="btn btn-primary btn-block" onclick="backupData()">
-                <i class="fas fa-download"></i> Download Backup JSON
-            </button>
-            <button class="btn btn-outline btn-block" onclick="downloadIndexHtml()" style="margin-top:10px;">
-                <i class="fas fa-file-code"></i> Download index.html (Gabungan Blok)
-            </button>
-        </div>
-
-        <!-- Restore -->
-        <div class="card">
-            <h3 style="margin-bottom:15px;">📤 Restore Data</h3>
-            <p class="text-muted" style="margin-bottom:15px;">Upload file backup JSON untuk mengembalikan data. <strong style="color:var(--danger);">Data saat ini akan ditimpa!</strong></p>
-            <input type="file" id="restoreFile" accept=".json" style="margin-bottom:15px;">
-            <button class="btn btn-warning btn-block" onclick="restoreData()">
-                <i class="fas fa-upload"></i> Restore Data
-            </button>
-        </div>
-    </div>
-
-    <!-- Ekspor/Impor File Kode -->
-    <div class="card" style="margin-top:20px;">
-        <h3 style="margin-bottom:15px;">📁 Ekspor / Impor File Kode</h3>
-        <div class="grid-2">
-            <div>
-                <p class="text-muted" style="margin-bottom:10px;">Ekspor semua blok sebagai file JSON (termasuk isi kode).</p>
-                <button class="btn btn-outline btn-block" onclick="eksporBlok()">
-                    <i class="fas fa-file-export"></i> Ekspor Blok (JSON)
-                </button>
-            </div>
-            <div>
-                <p class="text-muted" style="margin-bottom:10px;">Impor file JSON blok (akan menambah/mengganti blok).</p>
-                <input type="file" id="imporBlokFile" accept=".json" style="margin-bottom:10px;">
-                <button class="btn btn-outline btn-block" onclick="imporBlok()">
-                    <i class="fas fa-file-import"></i> Impor Blok (JSON)
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<--=== AKHIR BLOK 9 === -->
-<--=== BLOK 10: JAVASCRIPT UTAMA - DATA DUMMY, LOGIN, NAVIGASI === -->
 <script>
-// ============================================
-// NOTEPADPRO++ - MAIN JAVASCRIPT (DATA, LOGIN, NAVIGASI)
-// ============================================
+  // DATA
+  const SUPERADMIN = { username:'NotePadePro', password:'MyHand0286', nama:'Dede', role:'superadmin', pro:true, status:'aktif', hp:'', email:'' };
+  let dataUser = JSON.parse(localStorage.getItem('np_users')) || [SUPERADMIN, { username:'demo', password:'demo123', nama:'Demo', role:'user', pro:false, status:'aktif' }, { username:'pro_user', password:'pro123', nama:'Pro', role:'user', pro:true, status:'aktif' }];
+  let dataBlok = JSON.parse(localStorage.getItem('np_blok')) || [{ id:1, judul:'Blok 1', isi:'<!-- Kode -->' }];
+  let dataKode = JSON.parse(localStorage.getItem('np_kode')) || ['PRO-ABCD-1234'];
+  let dataHarga = JSON.parse(localStorage.getItem('np_harga')) || [{ id:1, durasi:'1 Bulan', harga:10000 },{ id:2, durasi:'3 Bulan', harga:20000 },{ id:3, durasi:'6 Bulan', harga:30000 }];
+  let dataChat = JSON.parse(localStorage.getItem('np_chat')) || [];
+  let currentUser = null, editId = null;
+  function simpan() { localStorage.setItem('np_users',JSON.stringify(dataUser)); localStorage.setItem('np_blok',JSON.stringify(dataBlok)); localStorage.setItem('np_kode',JSON.stringify(dataKode)); localStorage.setItem('np_harga',JSON.stringify(dataHarga)); localStorage.setItem('np_chat',JSON.stringify(dataChat)); }
+  function toast(p,t='success') { let el=document.createElement('div'); el.className='toast '+t; el.textContent=p; document.body.appendChild(el); setTimeout(()=>el.remove(),3000); }
+  function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
+  function bukaModal(id) { document.getElementById(id).classList.remove('hidden'); }
 
-// ============================================
-// DATA DUMMY & VARIABEL GLOBAL
-// ============================================
-const SUPERADMIN = {
-    username: 'NotePadePro',
-    password: 'MyHand0286',
-    nama: 'Dede',
-    role: 'superadmin',
-    pro: true,
-    status: 'aktif',
-    hp: '',
-    email: '',
-    alamat: ''
-};
+  // NAVIGASI
+  function navigasi(h) {
+    ['dashboard','dashboardUser','panelAdmin','aktivasi','harga','blokManager','gabungBlok','chat','backupRestore'].forEach(p=>{ let el=document.getElementById('page'+p.charAt(0).toUpperCase()+p.slice(1)); if(el) el.classList.add('hidden'); });
+    let target=document.getElementById('page'+h.charAt(0).toUpperCase()+h.slice(1)); if(target) target.classList.remove('hidden');
+    document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+    let map={ dashboard:'menuDashboard', dashboardUser:'menuDashboardUser', panelAdmin:'menuPanelAdmin', aktivasi:'menuAktivasi', harga:'menuHarga', blokManager:currentUser?.role==='superadmin'?'menuBlok':'menuBlokUser', gabungBlok:currentUser?.role==='superadmin'?'menuGabung':'menuGabungUser', chat:currentUser?.role==='superadmin'?'menuChatAdmin':'menuChatUser', backupRestore:'menuBackup' };
+    let mid=map[h]; if(mid) document.getElementById(mid).classList.add('active');
+    if(h==='dashboard') { document.getElementById('statTotalUser').textContent=dataUser.length; document.getElementById('statProUser').textContent=dataUser.filter(u=>u.pro).length; document.getElementById('statTotalBlok').textContent=dataBlok.length; document.getElementById('statKodeAktif').textContent=dataKode.length; }
+    else if(h==='dashboardUser') { document.getElementById('userNama').textContent=currentUser.nama; document.getElementById('userUsername').textContent=currentUser.username; document.getElementById('userEmail').textContent=currentUser.email||'-'; document.getElementById('userHp').textContent=currentUser.hp||'-'; let sp=document.getElementById('userStatusPro'); sp.textContent=currentUser.pro?'Pro':'Free'; sp.className=currentUser.pro?'badge badge-pro':'badge badge-free'; document.getElementById('upgradePanel').style.display=currentUser.pro?'none':'block'; }
+    else if(h==='panelAdmin') { let tb=document.getElementById('tabelUserAdmin'); let users=dataUser.filter(u=>u.role!=='superadmin'); tb.innerHTML=users.map(u=>`<tr><td>${u.username}</td><td>${u.nama}</td><td>${u.hp||'-'}</td><td>${u.email||'-'}</td><td><span class="badge ${u.status==='aktif'?'badge-success':'badge-error'}">${u.status}</span></td><td><span class="badge ${u.pro?'badge-pro':'badge-free'}">${u.pro?'Pro':'Free'}</span></td><td><button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">${u.status==='aktif'?'Nonaktifkan':'Aktifkan'}</button> <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
+    else if(h==='aktivasi') { document.getElementById('selectPaketAktivasi').innerHTML=dataHarga.map(h=>`<option>${h.durasi} - Rp ${h.harga.toLocaleString()}</option>`).join(''); let list=document.getElementById('listKodeAktivasi'); list.innerHTML=dataKode.length===0?'<p class="text-muted">Belum ada kode</p>':dataKode.map((k,i)=>`<div style="display:flex;justify-content:space-between;padding:10px;background:var(--bg-tertiary);border-radius:8px;"><span style="font-family:monospace;">${k}</span><button class="btn btn-danger btn-sm" onclick="hapusKode(${i})"><i class="fas fa-trash"></i></button></div>`).join(''); }
+    else if(h==='harga') { document.getElementById('tabelHarga').innerHTML=dataHarga.map((h,i)=>`<tr><td><input type="text" value="${h.durasi}" onchange="editHarga(${i},'durasi',this.value)"></td><td><input type="number" value="${h.harga}" onchange="editHarga(${i},'harga',this.value)"></td><td><button class="btn btn-danger btn-sm" onclick="hapusHarga(${i})"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
+    else if(h==='blokManager') { let sorted=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); let container=document.getElementById('listBlok'); container.innerHTML=sorted.map(b=>`<div class="card" style="display:flex;justify-content:space-between;"><div><strong style="color:var(--accent-green);">${b.judul}</strong><br><span class="text-muted">${b.isi.substring(0,60)}...</span></div><div><button class="btn btn-outline btn-sm" onclick="editBlok(${b.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-outline btn-sm" onclick="copyBlokById(${b.id})"><i class="fas fa-copy"></i></button> <button class="btn btn-danger btn-sm" onclick="hapusBlok(${b.id})"><i class="fas fa-trash"></i></button></div></div>`).join(''); document.getElementById('blokKosong').classList.toggle('hidden',dataBlok.length>0); }
+    else if(h==='gabungBlok') { if(currentUser?.role!=='superadmin'&&!currentUser?.pro){ document.getElementById('previewGabungan').textContent='Fitur Pro'; return; } let sorted=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); document.getElementById('previewGabungan').textContent=sorted.map(b=>b.isi).join('\n\n'); }
+    else if(h==='chat') renderChat();
+  }
 
-let dataUser = JSON.parse(localStorage.getItem('np_users')) || [
-    SUPERADMIN,
-    { username: 'demo', password: 'demo123', nama: 'User Demo', role: 'user', pro: false, status: 'aktif', hp: '08123456789', email: 'demo@email.com', alamat: 'Garut' },
-    { username: 'pro_user', password: 'pro123', nama: 'Pro User', role: 'user', pro: true, status: 'aktif', hp: '08987654321', email: 'pro@email.com', alamat: 'Garut' }
-];
+  // LOGIN/LOGOUT
+  function prosesLogin(e){ e.preventDefault(); let u=dataUser.find(u=>u.username===document.getElementById('loginUsername').value.trim()&&u.password===document.getElementById('loginPassword').value); if(u&&u.status==='aktif'){ currentUser=u; document.getElementById('pageLogin').style.display='none'; document.getElementById('appContainer').classList.remove('hidden'); document.getElementById('sidebarUserName').textContent=u.nama; document.getElementById('sidebarUserRole').textContent=u.role==='superadmin'?'SuperAdmin':(u.pro?'Pro User':'Free User'); document.getElementById('menuAdmin').classList.toggle('hidden',u.role!=='superadmin'); document.getElementById('menuUser').classList.toggle('hidden',u.role==='superadmin'); navigasi(u.role==='superadmin'?'dashboard':'dashboardUser'); } else { document.getElementById('loginError').classList.remove('hidden'); document.getElementById('loginError').textContent='Username/Password salah'; } }
+  function logout(){ currentUser=null; document.getElementById('appContainer').classList.add('hidden'); document.getElementById('pageLogin').style.display='flex'; }
 
-let dataBlok = JSON.parse(localStorage.getItem('np_blok')) || [
-    { id: 1, judul: 'Blok 1: Pembukaan HTML', isi: '<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="UTF-8">\n<title>App</title>\n</head>\n<body>' },
-    { id: 2, judul: 'Blok 5.4 R3: Input Produk', isi: '<!-- Form Input Produk -->\n<div class="form-group">\n  <label>Nama Produk</label>\n  <input type="text">\n</div>' }
-];
+  // CRUD USER
+  function tambahUserModal(){ ['newUsername','newPassword','newNama','newAlamat','newHp','newEmail'].forEach(id=>document.getElementById(id).value=''); bukaModal('modalTambahUser'); }
+  function simpanUserBaru(){ let un=document.getElementById('newUsername').value.trim(), pw=document.getElementById('newPassword').value, nm=document.getElementById('newNama').value.trim(); if(!un||!pw||!nm) return toast('Data wajib diisi','error'); if(dataUser.find(u=>u.username===un)) return toast('Username sudah ada','error'); dataUser.push({username:un,password:pw,nama:nm,role:'user',pro:false,status:'aktif',hp:document.getElementById('newHp').value,email:document.getElementById('newEmail').value,alamat:document.getElementById('newAlamat').value}); simpan(); tutupModal('modalTambahUser'); navigasi('panelAdmin'); toast('User ditambahkan'); }
+  function toggleStatus(un){ let u=dataUser.find(x=>x.username===un); u.status=u.status==='aktif'?'nonaktif':'aktif'; simpan(); navigasi('panelAdmin'); }
+  function hapusUser(un){ if(confirm('Hapus?')){ dataUser=dataUser.filter(x=>x.username!==un); simpan(); navigasi('panelAdmin'); } }
 
-let dataKodeAktivasi = JSON.parse(localStorage.getItem('np_kode')) || ['PRO-ABCD-1234', 'PRO-EFGH-5678'];
+  // AKTIVASI & HARGA
+  function generateKode(){ let k='PRO-'; for(let i=0;i<8;i++) k+='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random()*36)]; dataKode.push(k); simpan(); navigasi('aktivasi'); toast('Kode: '+k); }
+  function hapusKode(i){ dataKode.splice(i,1); simpan(); navigasi('aktivasi'); }
+  function upgradePro(){ let k=document.getElementById('inputKodeUpgrade').value.trim(); if(dataKode.includes(k)){ currentUser.pro=true; let u=dataUser.find(x=>x.username===currentUser.username); if(u) u.pro=true; dataKode=dataKode.filter(x=>x!==k); simpan(); navigasi('dashboardUser'); document.getElementById('menuGabungUser').classList.remove('hidden'); toast('Pro!'); } else toast('Kode salah','error'); }
+  function tambahHargaModal(){ document.getElementById('newDurasi').value=''; document.getElementById('newHarga').value=''; bukaModal('modalTambahHarga'); }
+  function simpanHargaBaru(){ let d=document.getElementById('newDurasi').value.trim(), h=parseInt(document.getElementById('newHarga').value); if(!d||!h) return; dataHarga.push({id:Date.now(),durasi:d,harga:h}); simpan(); tutupModal('modalTambahHarga'); navigasi('harga'); }
+  function editHarga(i,f,v){ dataHarga[i][f]=f==='harga'?parseInt(v):v; simpan(); }
+  function hapusHarga(i){ dataHarga.splice(i,1); simpan(); navigasi('harga'); }
 
-let dataHarga = JSON.parse(localStorage.getItem('np_harga')) || [
-    { id: 1, durasi: '1 Bulan', harga: 10000 },
-    { id: 2, durasi: '3 Bulan', harga: 20000 },
-    { id: 3, durasi: '6 Bulan', harga: 30000 }
-];
+  // BLOK & EDITOR
+  function tambahBlokModal(){ let j=prompt('Judul Blok:'); if(!j) return; let id=Date.now(); dataBlok.push({id,judul:j,isi:'<!-- '+j+' -->\n'}); simpan(); navigasi('blokManager'); editBlok(id); }
+  function editBlok(id){ let b=dataBlok.find(x=>x.id===id); editId=id; document.getElementById('editorTitle').textContent=b.judul; document.getElementById('editorTextarea').value=b.isi; bukaModal('modalEditor'); document.getElementById('editorLineCount').textContent=b.isi.split('\n').length; }
+  function simpanEditBlok(){ let b=dataBlok.find(x=>x.id===editId); if(b){ b.isi=document.getElementById('editorTextarea').value; simpan(); tutupEditor(); navigasi('blokManager'); } }
+  function tutupEditor(){ tutupModal('modalEditor'); editId=null; }
+  function copyBlokAktif(){ navigator.clipboard.writeText(document.getElementById('editorTextarea').value); toast('Kode disalin!'); }
+  function copyBlokById(id){ let b=dataBlok.find(x=>x.id===id); if(b) navigator.clipboard.writeText(b.isi); toast('Kode blok disalin!'); }
+  function hapusBlok(id){ if(confirm('Hapus?')){ dataBlok=dataBlok.filter(x=>x.id!==id); simpan(); navigasi('blokManager'); } }
+  document.addEventListener('keydown',e=>{ if(document.getElementById('modalEditor')&&!document.getElementById('modalEditor').classList.contains('hidden')){ if(e.ctrlKey&&e.key==='s'){ e.preventDefault(); simpanEditBlok(); } if(e.key==='Escape') tutupEditor(); } });
+  document.addEventListener('input',e=>{ if(e.target.id==='editorTextarea') document.getElementById('editorLineCount').textContent=e.target.value.split('\n').length; });
 
-let dataChat = JSON.parse(localStorage.getItem('np_chat')) || [];
+  // GABUNG, CHAT, BACKUP
+  function copyGabungan(){ let p=document.getElementById('previewGabungan').textContent; if(p.trim()) navigator.clipboard.writeText(p); toast('HTML disalin!'); }
+  function downloadGabungan(){ let b=new Blob([document.getElementById('previewGabungan').textContent],{type:'text/html'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='index.html'; a.click(); }
+  function kirimChat(){ let i=document.getElementById('chatInput'); dataChat.push({user:currentUser.username,nama:currentUser.nama,text:i.value,waktu:new Date().toLocaleTimeString()}); i.value=''; simpan(); renderChat(); }
+  function renderChat(){ let c=document.getElementById('chatMessages'); c.innerHTML=dataChat.map(m=>`<div class="chat-bubble ${m.user===currentUser.username?'chat-sent':'chat-received'}"><strong>${m.user===currentUser.username?'Anda':m.nama}</strong><p>${m.text}</p><span style="font-size:10px;">${m.waktu}</span></div>`).join(''); c.scrollTop=c.scrollHeight; }
+  function backupData(){ let b=new Blob([JSON.stringify({users:dataUser,blok:dataBlok,kode:dataKode,harga:dataHarga,chat:dataChat})],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='backup.json'; a.click(); }
+  function downloadIndexHtml(){ let s=dataBlok.slice().sort((a,b)=>(parseInt(a.judul.replace(/\D/g,''))||0)-(parseInt(b.judul.replace(/\D/g,''))||0)); let b=new Blob([s.map(x=>x.isi).join('\n\n')],{type:'text/html'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='index.html'; a.click(); }
+  function restoreData(){ let f=document.getElementById('restoreFile').files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ try{ let d=JSON.parse(e.target.result); if(d.users) dataUser=d.users; if(d.blok) dataBlok=d.blok; if(d.kode) dataKode=d.kode; if(d.harga) dataHarga=d.harga; if(d.chat) dataChat=d.chat; simpan(); toast('Direstore!'); setTimeout(()=>location.reload(),1000); }catch(err){ toast('File tidak valid','error'); } }; r.readAsText(f); }
+  function eksporBlok(){ let b=new Blob([JSON.stringify(dataBlok)],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='blok.json'; a.click(); }
+  function imporBlok(){ let f=document.getElementById('imporBlokFile').files[0]; if(!f) return; let r=new FileReader(); r.onload=e=>{ try{ let d=JSON.parse(e.target.result); if(Array.isArray(d)){ dataBlok=d; simpan(); navigasi('blokManager'); toast('Blok diimpor!'); } }catch(err){ toast('File tidak valid','error'); } }; r.readAsText(f); }
 
-let currentUser = null;
-let currentEditBlokId = null;
+  // PWA
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredPrompt=e; document.getElementById('pwaInstallPrompt').classList.remove('hidden'); });
+  document.getElementById('installBtn').addEventListener('click',()=>{ if(deferredPrompt) deferredPrompt.prompt(); });
+  window.addEventListener('online',()=>document.getElementById('offlineIndicator').classList.add('hidden'));
+  window.addEventListener('offline',()=>document.getElementById('offlineIndicator').classList.remove('hidden'));
 
-// ============================================
-// FUNGSI SIMPAN SEMUA DATA
-// ============================================
-function simpanSemua() {
-    localStorage.setItem('np_users', JSON.stringify(dataUser));
-    localStorage.setItem('np_blok', JSON.stringify(dataBlok));
-    localStorage.setItem('np_kode', JSON.stringify(dataKodeAktivasi));
-    localStorage.setItem('np_harga', JSON.stringify(dataHarga));
-    localStorage.setItem('np_chat', JSON.stringify(dataChat));
-}
-
-// ============================================
-// TOAST NOTIFIKASI
-// ============================================
-function tampilkanToast(pesan, tipe = 'success') {
-    const toast = document.createElement('div');
-    toast.className = 'toast ' + tipe;
-    toast.textContent = pesan;
-    document.body.appendChild(toast);
-    setTimeout(function() { if (toast.parentNode) toast.remove(); }, 3000);
-}
-
-// ============================================
-// FUNGSI MODAL
-// ============================================
-function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
-function bukaModal(id) { document.getElementById(id).classList.remove('hidden'); }
-
-// ============================================
-// FUNGSI LOGIN
-// ============================================
-function prosesLogin(e) {
-    e.preventDefault();
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const user = dataUser.find(function(u) { return u.username === username && u.password === password; });
-
-    if (user) {
-        if (user.status !== 'aktif') {
-            document.getElementById('loginError').classList.remove('hidden');
-            document.getElementById('loginError').textContent = 'Akun dinonaktifkan. Hubungi Admin.';
-            return;
-        }
-        currentUser = user;
-        document.getElementById('pageLogin').style.display = 'none';
-        document.getElementById('appContainer').classList.remove('hidden');
-        document.getElementById('sidebarUserName').textContent = user.nama;
-        document.getElementById('sidebarUserRole').textContent = user.role === 'superadmin' ? 'SuperAdmin' : (user.pro ? 'Pro User' : 'Free User');
-
-        document.getElementById('menuAdmin').classList.toggle('hidden', user.role !== 'superadmin');
-        document.getElementById('menuUser').classList.toggle('hidden', user.role === 'superadmin');
-
-        if (user.role === 'user' && !user.pro) {
-            document.getElementById('menuGabungUser').classList.add('hidden');
-        }
-
-        navigasi(user.role === 'superadmin' ? 'dashboard' : 'dashboardUser');
-    } else {
-        document.getElementById('loginError').classList.remove('hidden');
-        document.getElementById('loginError').textContent = 'Username atau Password salah!';
-    }
-}
-
-// ============================================
-// FUNGSI LOGOUT
-// ============================================
-function logout() {
-    currentUser = null;
-    document.getElementById('appContainer').classList.add('hidden');
-    document.getElementById('pageLogin').style.display = 'flex';
-    document.getElementById('loginUsername').value = '';
-    document.getElementById('loginPassword').value = '';
-}
-
-// ============================================
-// FUNGSI NAVIGASI HALAMAN
-// ============================================
-function navigasi(halaman) {
-    const semuaPage = ['dashboard', 'dashboardUser', 'panelAdmin', 'aktivasi', 'harga', 'blokManager', 'gabungBlok', 'chat', 'backupRestore'];
-    semuaPage.forEach(function(p) {
-        const el = document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1));
-        if (el) el.classList.add('hidden');
-    });
-
-    const target = document.getElementById('page' + halaman.charAt(0).toUpperCase() + halaman.slice(1));
-    if (target) target.classList.remove('hidden');
-
-    document.querySelectorAll('.sidebar-item').forEach(function(item) { item.classList.remove('active'); });
-    const menuMap = {
-        dashboard: 'menuDashboard', dashboardUser: 'menuDashboardUser', panelAdmin: 'menuPanelAdmin',
-        aktivasi: 'menuAktivasi', harga: 'menuHarga',
-        blokManager: currentUser && currentUser.role === 'superadmin' ? 'menuBlok' : 'menuBlokUser',
-        gabungBlok: currentUser && currentUser.role === 'superadmin' ? 'menuGabung' : 'menuGabungUser',
-        chat: currentUser && currentUser.role === 'superadmin' ? 'menuChatAdmin' : 'menuChatUser',
-        backupRestore: 'menuBackup'
-    };
-    const menuId = menuMap[halaman];
-    if (menuId) document.getElementById(menuId).classList.add('active');
-
-    // Render konten
-    if (halaman === 'dashboard') renderDashboard();
-    else if (halaman === 'dashboardUser') renderDashboardUser();
-    else if (halaman === 'panelAdmin') renderPanelAdmin();
-    else if (halaman === 'aktivasi') renderAktivasi();
-    else if (halaman === 'harga') renderHarga();
-    else if (halaman === 'blokManager') renderBlokManager();
-    else if (halaman === 'gabungBlok') renderGabungan();
-    else if (halaman === 'chat') renderChat();
-}
-
-// ============================================
-// RENDER DASHBOARD
-// ============================================
-function renderDashboard() {
-    document.getElementById('statTotalUser').textContent = dataUser.length;
-    document.getElementById('statProUser').textContent = dataUser.filter(function(u) { return u.pro; }).length;
-    document.getElementById('statTotalBlok').textContent = dataBlok.length;
-    document.getElementById('statKodeAktif').textContent = dataKodeAktivasi.length;
-}
-
-function renderDashboardUser() {
-    document.getElementById('userNama').textContent = currentUser.nama || '-';
-    document.getElementById('userUsername').textContent = currentUser.username || '-';
-    document.getElementById('userEmail').textContent = currentUser.email || '-';
-    document.getElementById('userHp').textContent = currentUser.hp || '-';
-    document.getElementById('userAlamat').textContent = currentUser.alamat || '-';
-    const sp = document.getElementById('userStatusPro');
-    sp.textContent = currentUser.pro ? 'Pro' : 'Free';
-    sp.className = currentUser.pro ? 'badge badge-pro' : 'badge badge-free';
-    document.getElementById('upgradePanel').style.display = currentUser.pro ? 'none' : 'block';
-}
-
-// ============================================
-// PANEL ADMIN
-// ============================================
-function renderPanelAdmin() {
-    const tbody = document.getElementById('tabelUserAdmin');
-    const users = dataUser.filter(function(u) { return u.role !== 'superadmin'; });
-    if (users.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="text-align:center;padding:30px;">Tidak ada user terdaftar.</td></tr>';
-        return;
-    }
-    tbody.innerHTML = users.map(function(u) {
-        return '<tr>' +
-            '<td>' + u.username + '</td>' +
-            '<td>' + u.nama + '</td>' +
-            '<td>' + (u.hp || '-') + '</td>' +
-            '<td>' + (u.email || '-') + '</td>' +
-            '<td><span class="badge ' + (u.status === 'aktif' ? 'badge-success' : 'badge-error') + '">' + u.status + '</span></td>' +
-            '<td><span class="badge ' + (u.pro ? 'badge-pro' : 'badge-free') + '">' + (u.pro ? 'Pro' : 'Free') + '</span></td>' +
-            '<td>' +
-                '<button class="btn btn-outline btn-sm" onclick="toggleStatus(\'' + u.username + '\')">' + (u.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan') + '</button> ' +
-                '<button class="btn btn-danger btn-sm" onclick="hapusUser(\'' + u.username + '\')"><i class="fas fa-trash"></i></button>' +
-            '</td>' +
-        '</tr>';
-    }).join('');
-}
-
-function tambahUserModal() { document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; document.getElementById('newNama').value = ''; document.getElementById('newAlamat').value = ''; document.getElementById('newHp').value = ''; document.getElementById('newEmail').value = ''; bukaModal('modalTambahUser'); }
-function simpanUserBaru() {
-    const username = document.getElementById('newUsername').value.trim();
-    const password = document.getElementById('newPassword').value;
-    const nama = document.getElementById('newNama').value.trim();
-    if (!username || !password || !nama) { tampilkanToast('Username, Password, Nama wajib diisi', 'error'); return; }
-    if (dataUser.find(function(u) { return u.username === username; })) { tampilkanToast('Username sudah ada', 'error'); return; }
-    dataUser.push({ username, password, nama, role: 'user', pro: false, status: 'aktif', hp: document.getElementById('newHp').value.trim(), email: document.getElementById('newEmail').value.trim(), alamat: document.getElementById('newAlamat').value.trim() });
-    simpanSemua(); tutupModal('modalTambahUser'); renderPanelAdmin(); tampilkanToast('User ditambahkan');
-}
-function toggleStatus(username) { const u = dataUser.find(function(x) { return x.username === username; }); if (u) { u.status = u.status === 'aktif' ? 'nonaktif' : 'aktif'; simpanSemua(); renderPanelAdmin(); } }
-function hapusUser(username) { if (!confirm('Hapus ' + username + '?')) return; dataUser = dataUser.filter(function(x) { return x.username !== username; }); simpanSemua(); renderPanelAdmin(); }
-
-console.log('✅ Blok 10 - JavaScript Utama siap.');
+  // INIT
+  simpan();
 </script>
-<--=== AKHIR BLOK 10 === -->
-<--=== BLOK 11: JAVASCRIPT - AKTIVASI, HARGA, BLOK, EDITOR, GABUNG, CHAT, BACKUP === -->
-<script>
-// ============================================
-// NOTEPADPRO++ - FITUR LANJUTAN
-// ============================================
-
-// ============================================
-// AKTIVASI PRO
-// ============================================
-function renderAktivasi() {
-    var select = document.getElementById('selectPaketAktivasi');
-    if (select) {
-        if (dataHarga.length === 0) {
-            select.innerHTML = '<option value="">-- Tidak ada paket --</option>';
-        } else {
-            select.innerHTML = dataHarga.map(function(h) {
-                return '<option value="' + h.id + '">' + h.durasi + ' - Rp ' + h.harga.toLocaleString('id-ID') + '</option>';
-            }).join('');
-        }
-    }
-
-    var list = document.getElementById('listKodeAktivasi');
-    if (!list) return;
-    if (dataKodeAktivasi.length === 0) {
-        list.innerHTML = '<p class="text-muted" style="text-align:center; padding:20px;">Belum ada kode aktivasi. Klik Generate untuk membuat.</p>';
-        return;
-    }
-    list.innerHTML = dataKodeAktivasi.map(function(kode, index) {
-        return '<div style="display:flex; justify-content:space-between; align-items:center; padding:15px; background:var(--bg-tertiary); border-radius:8px; border:1px solid var(--border-color);">' +
-            '<div style="display:flex; align-items:center; gap:10px;">' +
-                '<i class="fas fa-key" style="color:var(--accent-green);"></i>' +
-                '<span style="font-family:\'JetBrains Mono\',monospace; font-size:14px; letter-spacing:1px;">' + kode + '</span>' +
-            '</div>' +
-            '<button class="btn btn-danger btn-sm" onclick="hapusKode(' + index + ')" title="Hapus kode ini"><i class="fas fa-trash"></i> Hapus</button>' +
-        '</div>';
-    }).join('');
-}
-
-function generateKode() {
-    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    var kode = 'PRO-';
-    for (var i = 0; i < 8; i++) {
-        kode += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    dataKodeAktivasi.push(kode);
-    simpanSemua();
-    renderAktivasi();
-    tampilkanToast('✅ Kode aktivasi baru: ' + kode);
-    if (confirm('Kode: ' + kode + '\n\nSalin ke clipboard?')) {
-        navigator.clipboard.writeText(kode).then(function() {
-            tampilkanToast('✅ Kode disalin!');
-        }).catch(function() {
-            tampilkanToast('⚠️ Gagal menyalin.', 'error');
-        });
-    }
-}
-
-function hapusKode(index) {
-    if (!confirm('Hapus kode ini?')) return;
-    dataKodeAktivasi.splice(index, 1);
-    simpanSemua();
-    renderAktivasi();
-}
-
-function upgradePro() {
-    var kode = document.getElementById('inputKodeUpgrade').value.trim();
-    if (!kode) { tampilkanToast('⚠️ Masukkan kode aktivasi.', 'error'); return; }
-    if (dataKodeAktivasi.includes(kode)) {
-        currentUser.pro = true;
-        var u = dataUser.find(function(x) { return x.username === currentUser.username; });
-        if (u) u.pro = true;
-        dataKodeAktivasi = dataKodeAktivasi.filter(function(k) { return k !== kode; });
-        simpanSemua();
-        renderDashboardUser();
-        document.getElementById('menuGabungUser').classList.remove('hidden');
-        document.getElementById('sidebarUserRole').textContent = 'Pro User';
-        tampilkanToast('🎉 Upgrade Pro berhasil!');
-    } else {
-        tampilkanToast('❌ Kode tidak valid.', 'error');
-    }
-}
-
-// ============================================
-// MENU HARGA
-// ============================================
-function renderHarga() {
-    var tbody = document.getElementById('tabelHarga');
-    if (!tbody) return;
-    if (dataHarga.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-muted" style="text-align:center;padding:30px;">Belum ada data harga.</td></tr>';
-        return;
-    }
-    tbody.innerHTML = dataHarga.map(function(h, i) {
-        return '<tr>' +
-            '<td><input type="text" value="' + h.durasi + '" onchange="editHarga(' + i + ',\'durasi\',this.value)" style="width:100%;"></td>' +
-            '<td><input type="number" value="' + h.harga + '" onchange="editHarga(' + i + ',\'harga\',this.value)" style="width:150px;"></td>' +
-            '<td><button class="btn btn-danger btn-sm" onclick="hapusHarga(' + i + ')"><i class="fas fa-trash"></i> Hapus</button></td>' +
-        '</tr>';
-    }).join('');
-}
-
-function tambahHargaModal() { document.getElementById('newDurasi').value = ''; document.getElementById('newHarga').value = ''; bukaModal('modalTambahHarga'); }
-function simpanHargaBaru() {
-    var durasi = document.getElementById('newDurasi').value.trim();
-    var harga = parseInt(document.getElementById('newHarga').value);
-    if (!durasi || !harga || harga <= 0) { tampilkanToast('⚠️ Data tidak valid.', 'error'); return; }
-    dataHarga.push({ id: Date.now(), durasi: durasi, harga: harga });
-    simpanSemua(); tutupModal('modalTambahHarga'); renderHarga(); renderAktivasi(); tampilkanToast('✅ Harga ditambahkan.');
-}
-function editHarga(i, field, value) {
-    if (field === 'harga') { dataHarga[i].harga = parseInt(value) || 0; }
-    else { dataHarga[i].durasi = value; }
-    simpanSemua(); renderAktivasi();
-}
-function hapusHarga(i) { if (!confirm('Hapus?')) return; dataHarga.splice(i, 1); simpanSemua(); renderHarga(); renderAktivasi(); }
-
-// ============================================
-// MANAJER BLOK & EDITOR
-// ============================================
-function renderBlokManager() {
-    var container = document.getElementById('listBlok');
-    var empty = document.getElementById('blokKosong');
-    if (!container) return;
-    var sorted = dataBlok.slice().sort(function(a, b) {
-        var na = parseInt(a.judul.replace(/\D/g, '')) || 0;
-        var nb = parseInt(b.judul.replace(/\D/g, '')) || 0;
-        return na - nb || a.judul.localeCompare(b.judul);
-    });
-    if (sorted.length === 0) { container.innerHTML = ''; if (empty) empty.classList.remove('hidden'); return; }
-    if (empty) empty.classList.add('hidden');
-    container.innerHTML = sorted.map(function(b) {
-        var preview = b.isi.substring(0, 80).replace(/</g, '&lt;');
-        return '<div class="card" style="display:flex; justify-content:space-between; align-items:center;">' +
-            '<div><strong style="color:var(--accent-green);">' + b.judul + '</strong><br><span class="text-muted">' + preview + '...</span></div>' +
-            '<div style="display:flex; gap:5px;">' +
-                '<button class="btn btn-outline btn-sm" onclick="editBlok(' + b.id + ')"><i class="fas fa-edit"></i></button>' +
-                '<button class="btn btn-outline btn-sm" onclick="copyBlokById(' + b.id + ')"><i class="fas fa-copy"></i></button>' +
-                '<button class="btn btn-danger btn-sm" onclick="hapusBlok(' + b.id + ')"><i class="fas fa-trash"></i></button>' +
-            '</div></div>';
-    }).join('');
-}
-
-function tambahBlokModal() {
-    var judul = prompt('Judul Blok (contoh: Blok 1):');
-    if (!judul) return;
-    var id = Date.now();
-    dataBlok.push({ id: id, judul: judul, isi: '<!-- ' + judul + ' -->\n' });
-    simpanSemua(); renderBlokManager(); editBlok(id);
-}
-
-function editBlok(id) {
-    var b = dataBlok.find(function(x) { return x.id === id; });
-    if (!b) return;
-    currentEditBlokId = id;
-    document.getElementById('editorTitle').textContent = b.judul;
-    document.getElementById('editorTextarea').value = b.isi;
-    bukaModal('modalEditor');
-    document.getElementById('editorTextarea').focus();
-    updateLineCount();
-}
-
-function simpanEditBlok() {
-    if (!currentEditBlokId) return;
-    var b = dataBlok.find(function(x) { return x.id === currentEditBlokId; });
-    if (b) { b.isi = document.getElementById('editorTextarea').value; simpanSemua(); tutupModal('modalEditor'); renderBlokManager(); tampilkanToast('✅ Blok disimpan.'); }
-}
-
-function tutupEditor() { tutupModal('modalEditor'); currentEditBlokId = null; }
-function updateLineCount() {
-    var ta = document.getElementById('editorTextarea');
-    if (ta) { document.getElementById('editorLineCount').textContent = ta.value.split('\n').length; }
-}
-function copyBlokAktif() {
-    var ta = document.getElementById('editorTextarea');
-    if (ta) { navigator.clipboard.writeText(ta.value); tampilkanToast('✅ Kode disalin!'); }
-}
-function copyBlokById(id) {
-    var b = dataBlok.find(function(x) { return x.id === id; });
-    if (b) { navigator.clipboard.writeText(b.isi); tampilkanToast('✅ Kode blok disalin!'); }
-}
-function hapusBlok(id) { if (!confirm('Hapus blok?')) return; dataBlok = dataBlok.filter(function(x) { return x.id !== id; }); simpanSemua(); renderBlokManager(); }
-
-// Shortcut Keyboard
-document.addEventListener('keydown', function(e) {
-    var editor = document.getElementById('modalEditor');
-    if (editor && !editor.classList.contains('hidden')) {
-        if (e.ctrlKey && e.key === 's') { e.preventDefault(); simpanEditBlok(); }
-        if (e.key === 'Escape') { e.preventDefault(); tutupEditor(); }
-    }
-});
-document.addEventListener('input', function(e) { if (e.target.id === 'editorTextarea') updateLineCount(); });
-
-// ============================================
-// PENGGABUNGAN BLOK
-// ============================================
-function renderGabungan() {
-    var preview = document.getElementById('previewGabungan');
-    if (!preview) return;
-    if (currentUser && currentUser.role !== 'superadmin' && !currentUser.pro) { preview.textContent = '🔒 Fitur Pro. Upgrade dulu.'; return; }
-    var sorted = dataBlok.slice().sort(function(a, b) {
-        var na = parseInt(a.judul.replace(/\D/g, '')) || 0;
-        var nb = parseInt(b.judul.replace(/\D/g, '')) || 0;
-        return na - nb || a.judul.localeCompare(b.judul);
-    });
-    if (sorted.length === 0) { preview.textContent = 'Belum ada blok.'; return; }
-    preview.textContent = sorted.map(function(b) { return b.isi; }).join('\n\n');
-}
-function copyGabungan() {
-    var preview = document.getElementById('previewGabungan');
-    if (preview && preview.textContent.trim()) { navigator.clipboard.writeText(preview.textContent); tampilkanToast('✅ HTML Gabungan disalin!'); }
-    else { tampilkanToast('⚠️ Tidak ada konten.', 'error'); }
-}
-function downloadGabungan() {
-    var preview = document.getElementById('previewGabungan');
-    if (!preview || !preview.textContent.trim()) { tampilkanToast('⚠️ Tidak ada konten.', 'error'); return; }
-    var blob = new Blob([preview.textContent], { type: 'text/html' });
-    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'index_gabungan.html';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a); tampilkanToast('✅ Terunduh!');
-}
-
-// ============================================
-// CHAT USER
-// ============================================
-function kirimChat() {
-    if (!currentUser) return;
-    var input = document.getElementById('chatInput');
-    var pesan = input.value.trim();
-    if (!pesan) return;
-    dataChat.push({ user: currentUser.username, nama: currentUser.nama, text: pesan, waktu: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) });
-    input.value = ''; simpanSemua(); renderChat();
-}
-function renderChat() {
-    var container = document.getElementById('chatMessages');
-    if (!container) return;
-    if (dataChat.length === 0) { container.innerHTML = '<p class="text-muted" style="text-align:center;">Belum ada pesan.</p>'; return; }
-    container.innerHTML = dataChat.map(function(m) {
-        var isMe = m.user === currentUser.username;
-        return '<div class="chat-bubble ' + (isMe ? 'chat-sent' : 'chat-received') + '">' +
-            '<strong style="font-size:11px;">' + (isMe ? 'Anda' : m.nama) + '</strong>' +
-            '<p style="margin:5px 0;">' + m.text + '</p>' +
-            '<span style="font-size:10px;opacity:0.6;">' + m.waktu + '</span></div>';
-    }).join('');
-    container.scrollTop = container.scrollHeight;
-}
-
-// ============================================
-// BACKUP, RESTORE, EKSPOR, IMPOR
-// ============================================
-function backupData() {
-    var data = { users: dataUser, blok: dataBlok, kode: dataKodeAktivasi, harga: dataHarga, chat: dataChat, exportDate: new Date().toISOString() };
-    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = 'backup_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a); tampilkanToast('✅ Backup terunduh!');
-}
-function downloadIndexHtml() {
-    var sorted = dataBlok.slice().sort(function(a, b) { return (parseInt(a.judul.replace(/\D/g,''))||0) - (parseInt(b.judul.replace(/\D/g,''))||0); });
-    var gabungan = sorted.map(function(b) { return b.isi; }).join('\n\n');
-    var blob = new Blob([gabungan], { type: 'text/html' });
-    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'index_gabungan.html';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-}
-function restoreData() {
-    var file = document.getElementById('restoreFile').files[0];
-    if (!file) { tampilkanToast('⚠️ Pilih file.', 'error'); return; }
-    if (!confirm('⚠️ Data saat ini akan DITIMPA. Lanjutkan?')) return;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            var data = JSON.parse(e.target.result);
-            if (data.users) dataUser = data.users; if (data.blok) dataBlok = data.blok;
-            if (data.kode) dataKodeAktivasi = data.kode; if (data.harga) dataHarga = data.harga;
-            if (data.chat) dataChat = data.chat;
-            simpanSemua(); tampilkanToast('✅ Data direstore!'); setTimeout(function() { location.reload(); }, 1000);
-        } catch(err) { tampilkanToast('❌ File tidak valid.', 'error'); }
-    };
-    reader.readAsText(file);
-}
-function eksporBlok() {
-    var blob = new Blob([JSON.stringify({ blok: dataBlok, exportDate: new Date().toISOString() }, null, 2)], { type: 'application/json' });
-    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = 'blok_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a); tampilkanToast('✅ Blok diekspor!');
-}
-function imporBlok() {
-    var file = document.getElementById('imporBlokFile').files[0];
-    if (!file) { tampilkanToast('⚠️ Pilih file.', 'error'); return; }
-    if (dataBlok.length > 0 && !confirm('⚠️ Blok akan ditimpa. Lanjutkan?')) return;
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            var data = JSON.parse(e.target.result);
-            if (data.blok && Array.isArray(data.blok)) { dataBlok = data.blok; simpanSemua(); renderBlokManager(); tampilkanToast('✅ Blok diimpor!'); }
-            else { tampilkanToast('❌ Format salah.', 'error'); }
-        } catch(err) { tampilkanToast('❌ File tidak valid.', 'error'); }
-    };
-    reader.readAsText(file);
-}
-
-// ============================================
-// PWA & OFFLINE
-// ============================================
-var deferredPrompt;
-window.addEventListener('beforeinstallprompt', function(e) { e.preventDefault(); deferredPrompt = e; document.getElementById('pwaInstallPrompt').classList.remove('hidden'); });
-document.getElementById('installBtn').addEventListener('click', function() { if (deferredPrompt) deferredPrompt.prompt(); });
-window.addEventListener('online', function() { document.getElementById('offlineIndicator').classList.add('hidden'); });
-window.addEventListener('offline', function() { document.getElementById('offlineIndicator').classList.remove('hidden'); });
-if (!navigator.onLine) document.getElementById('offlineIndicator').classList.remove('hidden');
-
-// ============================================
-// INISIALISASI AKHIR
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    simpanSemua();
-    console.log('✅ NotepadPro++ siap!');
-    console.log('👤 SuperAdmin: NotePadePro / MyHand0286');
-});
-</script>
-
-<!-- ============================================ -->
-<!-- MODAL TAMBAH USER                            -->
-<!-- ============================================ -->
-<div id="modalTambahUser" class="modal-overlay hidden">
-    <div class="modal-box">
-        <div class="modal-header"><h3>Tambah User</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahUser')"><i class="fas fa-times"></i></button></div>
-        <div class="modal-body">
-            <div style="margin-bottom:12px;"><label>Username *</label><input type="text" id="newUsername" required></div>
-            <div style="margin-bottom:12px;"><label>Password *</label><input type="password" id="newPassword" required></div>
-            <div style="margin-bottom:12px;"><label>Nama *</label><input type="text" id="newNama" required></div>
-            <div style="margin-bottom:12px;"><label>Alamat</label><input type="text" id="newAlamat"></div>
-            <div style="margin-bottom:12px;"><label>No. HP</label><input type="text" id="newHp"></div>
-            <div style="margin-bottom:12px;"><label>Email</label><input type="email" id="newEmail"></div>
-        </div>
-        <div class="modal-footer"><button class="btn btn-outline" onclick="tutupModal('modalTambahUser')">Batal</button><button class="btn btn-primary" onclick="simpanUserBaru()">Simpan</button></div>
-    </div>
-</div>
-
 </body>
 </html>
-<--=== AKHIR BLOK 11 === -->
