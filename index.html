@@ -1,4 +1,4 @@
-<--=== BLOK 1: FONDASI HTML, CSS, & STRUKTUR AWAL === -->
+<--=== BLOK 1: FONDASI HTML, CSS, & HALAMAN LOGIN === -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -16,7 +16,7 @@
     <!-- Font Awesome 6.5.1 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Google Fonts: Inter (UI) + JetBrains Mono (Kode) -->
+    <!-- Google Fonts: Inter (UI) & JetBrains Mono (Kode) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
@@ -59,7 +59,7 @@
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
-            overflow: hidden; /* Mencegah scroll body dobel */
+            overflow: hidden;
         }
         body {
             display: flex;
@@ -147,7 +147,7 @@
         .badge-free { background: var(--bg-tertiary); color: var(--text-secondary); }
 
         /* ============================================ */
-        /* LAYOUT UTAMA (APP CONTAINER & SIDEBAR)       */
+        /* LAYOUT UTAMA                                 */
         /* ============================================ */
         .app-container {
             display: flex;
@@ -162,7 +162,6 @@
             flex-direction: column;
             flex-shrink: 0;
             overflow-y: auto;
-            transition: width 0.2s;
         }
         .main-content {
             flex: 1;
@@ -282,28 +281,6 @@
         }
 
         /* ============================================ */
-        /* CHAT                                          */
-        /* ============================================ */
-        .chat-area { display: flex; flex-direction: column; height: 70vh; }
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .chat-bubble {
-            max-width: 75%;
-            padding: 10px 15px;
-            border-radius: 16px;
-            word-wrap: break-word;
-            font-size: 14px;
-        }
-        .chat-sent { background: var(--accent-green-bg); color: var(--accent-green); align-self: flex-end; border-bottom-right-radius: 4px; }
-        .chat-received { background: var(--bg-tertiary); align-self: flex-start; border-bottom-left-radius: 4px; }
-
-        /* ============================================ */
         /* UTILITY                                      */
         /* ============================================ */
         .text-green { color: var(--accent-green); }
@@ -332,13 +309,12 @@
 </head>
 <body>
 
-    <!-- ============================================ -->
-    <!-- INDIKATOR OFFLINE & PWA                      -->
-    <!-- ============================================ -->
+    <!-- Offline Indicator -->
     <div id="offlineIndicator" class="hidden" style="background:var(--danger); color:white; text-align:center; padding:6px; font-size:12px; font-weight:600;">
         Anda sedang Offline. Data disimpan lokal.
     </div>
 
+    <!-- PWA Install Prompt -->
     <div id="pwaInstallPrompt" class="hidden" style="position:fixed; bottom:20px; left:20px; z-index:9998; background:var(--bg-secondary); border:1px solid var(--border-color); padding:15px 20px; border-radius:var(--radius-lg); box-shadow:var(--shadow); max-width:300px;">
         <p style="margin-bottom:10px; font-weight:600;">Install NotepadPro++?</p>
         <div style="display:flex; gap:10px;">
@@ -366,69 +342,94 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- APP CONTAINER (SIDEBAR + MAIN CONTENT)       -->
+    <!-- APP CONTAINER (SIDEBAR + MAIN) - AKAN DIISI  -->
     <!-- ============================================ -->
     <div id="appContainer" class="hidden" style="height:100%; width:100%;">
-        <div class="app-container">
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="sidebar-header">
-                    <i class="fas fa-book" style="color:var(--accent-green); font-size:24px;"></i>
-                    <span style="font-weight:700;">NotepadPro++</span>
-                </div>
-                <div class="sidebar-menu">
-                    <!-- Menu SuperAdmin -->
-                    <div id="menuAdmin" class="hidden">
-                        <div class="sidebar-item active" onclick="navigasi('dashboard')"><i class="fas fa-th-large"></i>Dashboard</div>
-                        <div class="sidebar-item" onclick="navigasi('panelAdmin')"><i class="fas fa-users-cog"></i>Panel Admin</div>
-                        <div class="sidebar-item" onclick="navigasi('aktivasi')"><i class="fas fa-key"></i>Aktivasi Pro</div>
-                        <div class="sidebar-item" onclick="navigasi('harga')"><i class="fas fa-tags"></i>Menu Harga</div>
-                        <div class="sidebar-item" onclick="navigasi('blokManager')"><i class="fas fa-code"></i>Catatan Kode</div>
-                        <div class="sidebar-item" onclick="navigasi('gabungBlok')"><i class="fas fa-layer-group"></i>Gabung Blok</div>
-                        <div class="sidebar-item" onclick="navigasi('backupRestore')"><i class="fas fa-database"></i>Backup/Restore</div>
-                        <div class="sidebar-item" onclick="navigasi('chat')"><i class="fas fa-comments"></i>Chat</div>
-                    </div>
-                    <!-- Menu User Biasa -->
-                    <div id="menuUser" class="hidden">
-                        <div class="sidebar-item active" onclick="navigasi('dashboardUser')"><i class="fas fa-th-large"></i>Dashboard</div>
-                        <div class="sidebar-item" onclick="navigasi('blokManager')"><i class="fas fa-code"></i>Catatan Kode</div>
-                        <div class="sidebar-item" onclick="navigasi('gabungBlok')"><i class="fas fa-layer-group"></i>Gabung Blok</div>
-                        <div class="sidebar-item" onclick="navigasi('chat')"><i class="fas fa-comments"></i>Chat</div>
-                    </div>
-                </div>
-                <div class="user-footer">
-                    <p id="sidebarUserName" style="font-weight:600;"></p>
-                    <p id="sidebarUserRole" class="text-muted" style="font-size:12px;"></p>
-                    <button class="btn btn-outline btn-block btn-sm" onclick="logout()" style="margin-top:10px;"><i class="fas fa-sign-out-alt"></i>Logout</button>
-                </div>
-            </div>
+        <!-- Blok 2: Sidebar & Layout Utama -->
+    </div>
 
-            <!-- Main Content -->
-            <div class="main-content" id="mainContent">
-                <!-- Halaman dinamis dirender di sini oleh JS -->
+    <script>
+        console.log('✅ NotepadPro++ - Blok 1 berhasil dimuat.');
+    </script>
+<--=== AKHIR BLOK 1 === -->
+<--=== BLOK 2: SIDEBAR & LAYOUT UTAMA (APP CONTAINER) === -->
+<!-- ============================================ -->
+<!-- APP CONTAINER (SIDEBAR + MAIN CONTENT)       -->
+<!-- ============================================ -->
+<div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-book" style="color:var(--accent-green); font-size:24px;"></i>
+            <span style="font-weight:700;">NotepadPro++</span>
+        </div>
+        <div class="sidebar-menu">
+            <!-- Menu SuperAdmin -->
+            <div id="menuAdmin" class="hidden">
+                <div class="sidebar-item active" onclick="navigasi('dashboard')" id="menuDashboard">
+                    <i class="fas fa-th-large"></i>Dashboard
+                </div>
+                <div class="sidebar-item" onclick="navigasi('panelAdmin')" id="menuPanelAdmin">
+                    <i class="fas fa-users-cog"></i>Panel Admin
+                </div>
+                <div class="sidebar-item" onclick="navigasi('aktivasi')" id="menuAktivasi">
+                    <i class="fas fa-key"></i>Aktivasi Pro
+                </div>
+                <div class="sidebar-item" onclick="navigasi('harga')" id="menuHarga">
+                    <i class="fas fa-tags"></i>Menu Harga
+                </div>
+                <div class="sidebar-item" onclick="navigasi('blokManager')" id="menuBlok">
+                    <i class="fas fa-code"></i>Catatan Kode
+                </div>
+                <div class="sidebar-item" onclick="navigasi('gabungBlok')" id="menuGabung">
+                    <i class="fas fa-layer-group"></i>Gabung Blok
+                </div>
+                <div class="sidebar-item" onclick="navigasi('backupRestore')" id="menuBackup">
+                    <i class="fas fa-database"></i>Backup/Restore
+                </div>
+                <div class="sidebar-item" onclick="navigasi('chat')" id="menuChatAdmin">
+                    <i class="fas fa-comments"></i>Chat
+                </div>
             </div>
+            <!-- Menu User Biasa -->
+            <div id="menuUser" class="hidden">
+                <div class="sidebar-item active" onclick="navigasi('dashboardUser')" id="menuDashboardUser">
+                    <i class="fas fa-th-large"></i>Dashboard
+                </div>
+                <div class="sidebar-item" onclick="navigasi('blokManager')" id="menuBlokUser">
+                    <i class="fas fa-code"></i>Catatan Kode
+                </div>
+                <div class="sidebar-item" onclick="navigasi('gabungBlok')" id="menuGabungUser">
+                    <i class="fas fa-layer-group"></i>Gabung Blok
+                </div>
+                <div class="sidebar-item" onclick="navigasi('chat')" id="menuChatUser">
+                    <i class="fas fa-comments"></i>Chat
+                </div>
+            </div>
+        </div>
+        <div class="user-footer">
+            <p id="sidebarUserName" style="font-weight:600;"></p>
+            <p id="sidebarUserRole" class="text-muted" style="font-size:12px;"></p>
+            <button class="btn btn-outline btn-block btn-sm" onclick="logout()" style="margin-top:10px;">
+                <i class="fas fa-sign-out-alt"></i>Logout
+            </button>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- JAVASCRIPT (Fondasi)                         -->
-    <!-- ============================================ -->
-    <script>
-        // Variabel global awal
-        const APP_NAME = 'NotepadPro++';
-        let currentUser = null;
-        console.log(`✅ ${APP_NAME} - Blok 1 berhasil dimuat.`);
-    </script>
-<--=== AKHIR BLOK 1 === -->
-<--=== BLOK 2: HALAMAN DASHBOARD, PANEL ADMIN, AKTIVASI & HARGA === -->
-
+    <!-- Main Content Area -->
+    <div class="main-content" id="mainContent">
+        <!-- Halaman dinamis akan dirender di sini oleh JavaScript -->
+    </div>
+</div>
+<--=== AKHIR BLOK 2 === -->
+<--=== BLOK 3: DASHBOARD SUPERADMIN & USER === -->
 <!-- ============================================ -->
 <!-- HALAMAN DASHBOARD SUPERADMIN                -->
 <!-- ============================================ -->
 <div id="pageDashboard" class="hidden">
     <div class="card-header">
         <h2>📊 Dashboard SuperAdmin</h2>
-        <p class="text-muted">Selamat datang, Dede (Pemilik & Pengelola)</p>
+        <p class="text-muted">Selamat datang, <strong>Dede</strong> (Pemilik & Pengelola)</p>
     </div>
 
     <!-- Statistik Cards -->
@@ -518,7 +519,7 @@
         </div>
     </div>
 
-    <!-- Upgrade Panel -->
+    <!-- Upgrade Panel (untuk user free) -->
     <div id="upgradePanel" class="card" style="border:1px solid var(--accent-green);">
         <h3 style="color:var(--accent-green); margin-bottom:10px;">🚀 Upgrade ke Pro</h3>
         <p class="text-muted" style="margin-bottom:15px;">Dapatkan akses Penggabungan Blok dan fitur Editor Advanced.</p>
@@ -529,14 +530,17 @@
         <p class="text-muted" style="margin-top:10px; font-size:12px;">Beli kode aktivasi ke Admin.</p>
     </div>
 </div>
-
+<--=== AKHIR BLOK 3 === -->
+<--=== BLOK 4: PANEL ADMIN (CRUD USER) === -->
 <!-- ============================================ -->
 <!-- HALAMAN PANEL ADMIN USER                    -->
 <!-- ============================================ -->
 <div id="pagePanelAdmin" class="hidden">
     <div class="card-header">
         <h2>👥 Panel Admin User</h2>
-        <button class="btn btn-primary" onclick="tambahUserModal()"><i class="fas fa-plus"></i> Tambah User</button>
+        <button class="btn btn-primary" onclick="tambahUserModal()">
+            <i class="fas fa-plus"></i> Tambah User
+        </button>
     </div>
     <div class="card">
         <div class="table-responsive" style="overflow-x:auto;">
@@ -554,14 +558,15 @@
                 </thead>
                 <tbody id="tabelUserAdmin">
                     <tr>
-                        <td colspan="7" class="text-muted" style="text-align:center; padding:30px;">Memuat data...</td>
+                        <td colspan="7" class="text-muted" style="text-align:center; padding:30px;">Memuat data user...</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
+<--=== AKHIR BLOK 4 === -->
+<--=== BLOK 5: AKTIVASI PRO & MENU HARGA === -->
 <!-- ============================================ -->
 <!-- HALAMAN AKTIVASI PRO                         -->
 <!-- ============================================ -->
@@ -595,7 +600,9 @@
 <div id="pageHarga" class="hidden">
     <div class="card-header">
         <h2>🏷️ Menu Harga</h2>
-        <button class="btn btn-primary" onclick="tambahHargaModal()"><i class="fas fa-plus"></i> Tambah Harga</button>
+        <button class="btn btn-primary" onclick="tambahHargaModal()">
+            <i class="fas fa-plus"></i> Tambah Harga
+        </button>
     </div>
     <div class="card">
         <div class="table-responsive" style="overflow-x:auto;">
@@ -609,34 +616,10 @@
                 </thead>
                 <tbody id="tabelHarga">
                     <tr>
-                        <td colspan="3" class="text-muted" style="text-align:center; padding:30px;">Memuat data...</td>
+                        <td colspan="3" class="text-muted" style="text-align:center; padding:30px;">Memuat data harga...</td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- MODAL TAMBAH USER                            -->
-<!-- ============================================ -->
-<div id="modalTambahUser" class="modal-overlay hidden">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h3>Tambah User Baru</h3>
-            <button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahUser')"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="modal-body">
-            <div style="margin-bottom:12px;"><label>Username *</label><input type="text" id="newUsername" required></div>
-            <div style="margin-bottom:12px;"><label>Password *</label><input type="password" id="newPassword" required></div>
-            <div style="margin-bottom:12px;"><label>Nama Lengkap *</label><input type="text" id="newNama" required></div>
-            <div style="margin-bottom:12px;"><label>Alamat</label><input type="text" id="newAlamat"></div>
-            <div style="margin-bottom:12px;"><label>Nomor HP</label><input type="text" id="newHp"></div>
-            <div style="margin-bottom:12px;"><label>Email</label><input type="email" id="newEmail"></div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" onclick="tutupModal('modalTambahUser')">Batal</button>
-            <button class="btn btn-primary" onclick="simpanUserBaru()">Simpan User</button>
         </div>
     </div>
 </div>
@@ -648,11 +631,19 @@
     <div class="modal-box">
         <div class="modal-header">
             <h3>Tambah Harga Baru</h3>
-            <button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahHarga')"><i class="fas fa-times"></i></button>
+            <button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahHarga')">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="modal-body">
-            <div style="margin-bottom:12px;"><label>Durasi</label><input type="text" id="newDurasi" placeholder="Contoh: 1 Bulan"></div>
-            <div style="margin-bottom:12px;"><label>Harga (Rp)</label><input type="number" id="newHarga" placeholder="10000"></div>
+            <div style="margin-bottom:12px;">
+                <label>Durasi</label>
+                <input type="text" id="newDurasi" placeholder="Contoh: 1 Bulan">
+            </div>
+            <div style="margin-bottom:12px;">
+                <label>Harga (Rp)</label>
+                <input type="number" id="newHarga" placeholder="10000">
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-outline" onclick="tutupModal('modalTambahHarga')">Batal</button>
@@ -660,12 +651,8 @@
         </div>
     </div>
 </div>
-
-<!-- ============================================ -->
-<!-- JAVASCRIPT UNTUK BLOK INI (DIPANGGIL DI MAIN)-->
-<!-- ============================================ -->
-<--=== AKHIR BLOK 2 === -->
-<--=== BLOK 3: MANAJER BLOK (CATATAN) & EDITOR FULLSCREEN === -->
+<--=== AKHIR BLOK 5 === -->
+<--=== BLOK 6: MANAJER BLOK (CATATAN KODE) & EDITOR FULLSCREEN === -->
 
 <!-- ============================================ -->
 <!-- HALAMAN MANAJER BLOK (CATATAN KODE)         -->
@@ -716,13 +703,13 @@
                 <strong id="editorTitle" style="color:var(--accent-green);">-</strong>
             </div>
             <div style="display:flex; gap:10px;">
-                <button class="btn btn-outline btn-sm" onclick="copyBlokAktif()" title="Copy Kode (Ctrl+C)">
-                    <i class="fas fa-copy"></i> Copy
+                <button class="btn btn-outline btn-sm" onclick="copyBlokAktif()" title="Salin kode blok ini ke clipboard">
+                    <i class="fas fa-copy"></i> Copy HTML
                 </button>
-                <button class="btn btn-primary btn-sm" onclick="simpanEditBlok()" title="Simpan (Ctrl+S)">
+                <button class="btn btn-primary btn-sm" onclick="simpanEditBlok()" title="Simpan perubahan (Ctrl+S)">
                     <i class="fas fa-save"></i> Simpan
                 </button>
-                <button class="btn btn-outline btn-sm" onclick="tutupEditor()" title="Tutup (Esc)">
+                <button class="btn btn-outline btn-sm" onclick="tutupEditor()" title="Tutup editor (Esc)">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -738,191 +725,8 @@
         </div>
     </div>
 </div>
-
-<!-- ============================================ -->
-<!-- JAVASCRIPT UNTUK BLOK 3 (SEMENTARA)          -->
-<!-- ============================================ -->
-<script>
-    // Fungsi-fungsi ini akan digabung dengan main script di blok terakhir.
-    // Untuk sementara, kita definisikan placeholder agar tidak error.
-
-    // Data blok (default)
-    if (typeof dataBlok === 'undefined') {
-        var dataBlok = JSON.parse(localStorage.getItem('np_blok')) || [];
-    }
-
-    // Render daftar blok
-    function renderBlokManager() {
-        const container = document.getElementById('listBlok');
-        const emptyEl = document.getElementById('blokKosong');
-        if (!container) return;
-
-        // Sort natural: ambil angka dari judul
-        const sorted = [...dataBlok].sort((a, b) => {
-            const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-            const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-            return numA - numB || a.judul.localeCompare(b.judul);
-        });
-
-        if (sorted.length === 0) {
-            container.innerHTML = '';
-            if (emptyEl) emptyEl.classList.remove('hidden');
-            return;
-        }
-        if (emptyEl) emptyEl.classList.add('hidden');
-
-        container.innerHTML = sorted.map(blok => {
-            const preview = blok.isi.substring(0, 100).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return `
-                <div class="card" style="display:flex; justify-content:space-between; align-items:center; gap:15px;">
-                    <div style="flex:1; min-width:0;">
-                        <strong style="color:var(--accent-green);">${blok.judul}</strong>
-                        <div class="text-muted" style="font-size:12px; margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            ${preview}...
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:5px; flex-shrink:0;">
-                        <button class="btn btn-outline btn-sm" onclick="editBlok(${blok.id})" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-outline btn-sm" onclick="copyBlokById(${blok.id})" title="Copy Kode">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="hapusBlok(${blok.id})" title="Hapus">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    // Tambah blok baru
-    function tambahBlokModal() {
-        const judul = prompt('Masukkan judul blok:\nContoh: Blok 5.4 R3 atau Blok 1');
-        if (!judul) return;
-        const id = Date.now();
-        dataBlok.push({
-            id: id,
-            judul: judul,
-            isi: '<!-- ' + judul + ' -->\n'
-        });
-        simpanSemuaBlok();
-        renderBlokManager();
-        // Langsung buka editor
-        setTimeout(() => editBlok(id), 200);
-    }
-
-    // Edit blok (buka modal editor)
-    function editBlok(id) {
-        const blok = dataBlok.find(b => b.id === id);
-        if (!blok) return;
-        document.getElementById('editorTitle').textContent = blok.judul;
-        document.getElementById('editorTextarea').value = blok.isi;
-        document.getElementById('modalEditor').classList.remove('hidden');
-        document.getElementById('editorTextarea').focus();
-        updateLineCount();
-        // Simpan ID blok yang sedang diedit
-        window._currentEditBlokId = id;
-    }
-
-    // Simpan perubahan dari editor
-    function simpanEditBlok() {
-        const id = window._currentEditBlokId;
-        if (!id) return;
-        const blok = dataBlok.find(b => b.id === id);
-        if (blok) {
-            blok.isi = document.getElementById('editorTextarea').value;
-            simpanSemuaBlok();
-            tutupEditor();
-            renderBlokManager();
-            tampilkanToast('Blok berhasil disimpan!');
-        }
-    }
-
-    // Tutup editor
-    function tutupEditor() {
-        document.getElementById('modalEditor').classList.add('hidden');
-        window._currentEditBlokId = null;
-    }
-
-    // Hitung jumlah baris di editor
-    function updateLineCount() {
-        const textarea = document.getElementById('editorTextarea');
-        if (textarea) {
-            const lines = textarea.value.split('\n').length;
-            document.getElementById('editorLineCount').textContent = lines;
-        }
-    }
-
-    // Copy kode dari editor
-    function copyBlokAktif() {
-        const textarea = document.getElementById('editorTextarea');
-        if (textarea) {
-            navigator.clipboard.writeText(textarea.value);
-            tampilkanToast('Kode blok disalin ke clipboard!');
-        }
-    }
-
-    // Copy kode blok berdasarkan ID
-    function copyBlokById(id) {
-        const blok = dataBlok.find(b => b.id === id);
-        if (blok) {
-            navigator.clipboard.writeText(blok.isi);
-            tampilkanToast(`Blok "${blok.judul}" disalin!`);
-        }
-    }
-
-    // Hapus blok
-    function hapusBlok(id) {
-        if (!confirm('Hapus blok ini? Tindakan tidak dapat dibatalkan.')) return;
-        dataBlok = dataBlok.filter(b => b.id !== id);
-        simpanSemuaBlok();
-        renderBlokManager();
-        tampilkanToast('Blok dihapus.');
-    }
-
-    // Simpan data blok ke localStorage
-    function simpanSemuaBlok() {
-        localStorage.setItem('np_blok', JSON.stringify(dataBlok));
-    }
-
-    // Placeholder toast (akan di-override di main script)
-    function tampilkanToast(pesan, tipe = 'success') {
-        const existing = document.querySelector('.toast');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.className = 'toast ' + tipe;
-        toast.textContent = pesan;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-
-    // Event listener untuk shortcut keyboard di editor
-    document.addEventListener('keydown', function(e) {
-        if (document.getElementById('modalEditor') && !document.getElementById('modalEditor').classList.contains('hidden')) {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                simpanEditBlok();
-            }
-            if (e.key === 'Escape') {
-                tutupEditor();
-            }
-        }
-    });
-
-    // Update line count saat mengetik
-    document.addEventListener('input', function(e) {
-        if (e.target.id === 'editorTextarea') {
-            updateLineCount();
-        }
-    });
-
-    console.log('✅ Blok 3 - Manajer Blok & Editor siap.');
-</script>
-<--=== AKHIR BLOK 3 === -->
-<--=== BLOK 4: PENGGABUNGAN BLOK, CHAT, BACKUP & RESTORE === -->
-
+<--=== AKHIR BLOK 6 === -->
+<--=== BLOK 7: PENGGABUNGAN BLOK (PREVIEW, COPY, DOWNLOAD) === -->
 <!-- ============================================ -->
 <!-- HALAMAN PENGGABUNGAN BLOK                   -->
 <!-- ============================================ -->
@@ -930,20 +734,22 @@
     <div class="card-header">
         <h2>🧩 Gabung Blok</h2>
         <div style="display:flex; gap:10px;">
-            <button class="btn btn-primary" onclick="copyGabungan()">
+            <!-- Tombol Copy HTML -->
+            <button class="btn btn-primary" onclick="copyGabungan()" title="Salin HTML gabungan ke clipboard">
                 <i class="fas fa-copy"></i> Copy HTML
             </button>
-            <button class="btn btn-outline" onclick="downloadGabungan()">
+            <!-- Tombol Download -->
+            <button class="btn btn-outline" onclick="downloadGabungan()" title="Unduh sebagai file .html">
                 <i class="fas fa-download"></i> Download .html
             </button>
         </div>
     </div>
 
-    <!-- Info -->
+    <!-- Info Fitur -->
     <div class="card" style="background:var(--accent-green-bg); border-color:var(--accent-green); margin-bottom:20px;">
         <p style="font-size:13px;">
             <i class="fas fa-info-circle"></i> 
-            <strong>Fitur Pro / SuperAdmin</strong> • Blok diurutkan otomatis berdasarkan nomor blok.
+            <strong>Fitur Pro / SuperAdmin</strong> • Blok diurutkan otomatis berdasarkan nomor blok (natural sort).
             Hasil gabungan dapat disalin atau diunduh sebagai file HTML.
         </p>
     </div>
@@ -954,7 +760,8 @@
         <pre id="previewGabungan" style="background:var(--bg-tertiary); padding:15px; border-radius:var(--radius-md); max-height:60vh; overflow:auto; font-family:'JetBrains Mono',monospace; white-space:pre-wrap; color:var(--accent-green); font-size:13px; line-height:1.6;">Blok akan tampil di sini...</pre>
     </div>
 </div>
-
+<--=== AKHIR BLOK 7 === -->
+<--=== BLOK 8: CHAT USER === -->
 <!-- ============================================ -->
 <!-- HALAMAN CHAT USER                           -->
 <!-- ============================================ -->
@@ -979,7 +786,8 @@
         </div>
     </div>
 </div>
-
+<--=== AKHIR BLOK 8 === -->
+<--=== BLOK 9: BACKUP & RESTORE DATA === -->
 <!-- ============================================ -->
 <!-- HALAMAN BACKUP & RESTORE                    -->
 <!-- ============================================ -->
@@ -1033,272 +841,15 @@
         </div>
     </div>
 </div>
-
-<!-- ============================================ -->
-<!-- MODAL KONFIRMASI (GENERAL)                  -->
-<!-- ============================================ -->
-<div id="modalKonfirmasi" class="modal-overlay hidden">
-    <div class="modal-box" style="max-width:400px;">
-        <div class="modal-header">
-            <h3 id="modalKonfirmasiTitle">Konfirmasi</h3>
-            <button class="btn btn-outline btn-sm" onclick="tutupModal('modalKonfirmasi')"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="modal-body">
-            <p id="modalKonfirmasiPesan">Apakah Anda yakin?</p>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" onclick="tutupModal('modalKonfirmasi')">Batal</button>
-            <button class="btn btn-primary" id="modalKonfirmasiBtn">Ya, Lanjutkan</button>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- JAVASCRIPT UNTUK BLOK 4                     -->
-<!-- ============================================ -->
-<script>
-    // ============================================
-    // FUNGSI PENGGABUNGAN BLOK
-    // ============================================
-    function renderGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (!preview) return;
-
-        // Hanya SuperAdmin atau Pro yang bisa akses
-        if (currentUser && currentUser.role !== 'superadmin' && !currentUser.pro) {
-            preview.textContent = '🔒 Fitur ini hanya untuk Akun Pro atau SuperAdmin. Silakan upgrade.';
-            return;
-        }
-
-        const sorted = [...dataBlok].sort((a, b) => {
-            const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-            const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-            return numA - numB || a.judul.localeCompare(b.judul);
-        });
-
-        if (sorted.length === 0) {
-            preview.textContent = 'Belum ada blok. Tambahkan blok terlebih dahulu.';
-            return;
-        }
-
-        const gabungan = sorted.map(b => b.isi).join('\n\n');
-        preview.textContent = gabungan;
-    }
-
-    function copyGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (preview && preview.textContent.trim()) {
-            navigator.clipboard.writeText(preview.textContent);
-            tampilkanToast('HTML Gabungan disalin ke clipboard!');
-        } else {
-            tampilkanToast('Tidak ada konten untuk disalin.', 'error');
-        }
-    }
-
-    function downloadGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (!preview || !preview.textContent.trim()) {
-            tampilkanToast('Tidak ada konten untuk diunduh.', 'error');
-            return;
-        }
-        const blob = new Blob([preview.textContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'index_gabungan.html';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('File index.html berhasil diunduh!');
-    }
-
-    // ============================================
-    // FUNGSI CHAT
-    // ============================================
-    function kirimChat() {
-        if (!currentUser) return;
-        const input = document.getElementById('chatInput');
-        const pesan = input.value.trim();
-        if (!pesan) return;
-
-        dataChat.push({
-            user: currentUser.username,
-            nama: currentUser.nama,
-            text: pesan,
-            waktu: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-        });
-
-        input.value = '';
-        simpanSemua();
-        renderChat();
-    }
-
-    function renderChat() {
-        const container = document.getElementById('chatMessages');
-        if (!container) return;
-
-        if (dataChat.length === 0) {
-            container.innerHTML = '<p class="text-muted" style="text-align:center;">Belum ada pesan. Mulai percakapan!</p>';
-            return;
-        }
-
-        container.innerHTML = dataChat.map(msg => {
-            const isMe = msg.user === currentUser.username;
-            return `
-                <div class="chat-bubble ${isMe ? 'chat-sent' : 'chat-received'}">
-                    <strong style="font-size:11px;">${isMe ? 'Anda' : (msg.nama || msg.user)}</strong>
-                    <p style="margin:5px 0;">${msg.text}</p>
-                    <span style="font-size:10px; opacity:0.6;">${msg.waktu}</span>
-                </div>
-            `;
-        }).join('');
-
-        // Scroll ke bawah
-        container.scrollTop = container.scrollHeight;
-    }
-
-    // ============================================
-    // FUNGSI BACKUP & RESTORE
-    // ============================================
-    function backupData() {
-        const data = {
-            users: dataUser,
-            blok: dataBlok,
-            kode: dataKodeAktivasi,
-            harga: dataHarga,
-            chat: dataChat,
-            exportDate: new Date().toISOString()
-        };
-        const json = JSON.stringify(data, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'backup_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('Backup berhasil diunduh!');
-    }
-
-    function downloadIndexHtml() {
-        // Gabungkan semua blok dan download sebagai HTML
-        const sorted = [...dataBlok].sort((a, b) => {
-            const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-            const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-            return numA - numB || a.judul.localeCompare(b.judul);
-        });
-        const gabungan = sorted.map(b => b.isi).join('\n\n');
-        const blob = new Blob([gabungan], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'index_gabungan.html';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('index.html berhasil diunduh!');
-    }
-
-    function restoreData() {
-        const fileInput = document.getElementById('restoreFile');
-        const file = fileInput.files[0];
-        if (!file) {
-            tampilkanToast('Pilih file backup terlebih dahulu.', 'error');
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.users) dataUser = data.users;
-                if (data.blok) dataBlok = data.blok;
-                if (data.kode) dataKodeAktivasi = data.kode;
-                if (data.harga) dataHarga = data.harga;
-                if (data.chat) dataChat = data.chat;
-                simpanSemua();
-                tampilkanToast('Data berhasil direstore! Silakan refresh jika perlu.');
-                // Refresh halaman setelah 1 detik
-                setTimeout(() => location.reload(), 1000);
-            } catch (err) {
-                tampilkanToast('File JSON tidak valid!', 'error');
-            }
-        };
-        reader.readAsText(file);
-    }
-
-    // Ekspor Blok (JSON)
-    function eksporBlok() {
-        const data = { blok: dataBlok, exportDate: new Date().toISOString() };
-        const json = JSON.stringify(data, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'blok_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('Blok diekspor!');
-    }
-
-    // Impor Blok (JSON)
-    function imporBlok() {
-        const fileInput = document.getElementById('imporBlokFile');
-        const file = fileInput.files[0];
-        if (!file) {
-            tampilkanToast('Pilih file blok terlebih dahulu.', 'error');
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.blok && Array.isArray(data.blok)) {
-                    // Konfirmasi penggantian?
-                    dataBlok = data.blok;
-                    simpanSemuaBlok();
-                    renderBlokManager();
-                    tampilkanToast('Blok berhasil diimpor!');
-                } else {
-                    tampilkanToast('Format file tidak sesuai.', 'error');
-                }
-            } catch (err) {
-                tampilkanToast('File JSON tidak valid!', 'error');
-            }
-        };
-        reader.readAsText(file);
-    }
-
-    // Inisialisasi data chat (jika belum ada di global)
-    if (typeof dataChat === 'undefined') {
-        var dataChat = JSON.parse(localStorage.getItem('np_chat')) || [];
-    }
-
-    // Update tampilan chat jika halaman chat aktif
-    if (document.getElementById('pageChat') && !document.getElementById('pageChat').classList.contains('hidden')) {
-        renderChat();
-    }
-
-    console.log('✅ Blok 4 - Gabung Blok, Chat, Backup/Restore siap.');
-</script>
-<--=== AKHIR BLOK 4 === -->
-<--=== BLOK 5: JAVASCRIPT UTAMA (LOGIKA APLIKASI) === -->
+<--=== AKHIR BLOK 9 === -->
+<--=== BLOK 10: JAVASCRIPT UTAMA - DATA DUMMY, LOGIN, NAVIGASI === -->
 <script>
 // ============================================
-// NOTEPADPRO++ - MAIN JAVASCRIPT
-// Fitur: Login, Navigasi, CRUD User, Aktivasi, Harga,
-//        Manajer Blok, Editor, Gabung, Chat, Backup, PWA
+// NOTEPADPRO++ - MAIN JAVASCRIPT (DATA, LOGIN, NAVIGASI)
 // ============================================
 
 // ============================================
-// DATA DEFAULT & VARIABEL GLOBAL
+// DATA DUMMY & VARIABEL GLOBAL
 // ============================================
 const SUPERADMIN = {
     username: 'NotePadePro',
@@ -1352,24 +903,70 @@ function simpanSemua() {
 // ============================================
 function tampilkanToast(pesan, tipe = 'success') {
     const toast = document.createElement('div');
-    toast.className = `toast ${tipe}`;
+    toast.className = 'toast ' + tipe;
     toast.textContent = pesan;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+    setTimeout(function() { if (toast.parentNode) toast.remove(); }, 3000);
 }
 
 // ============================================
-// MODAL
+// FUNGSI MODAL
 // ============================================
 function tutupModal(id) { document.getElementById(id).classList.add('hidden'); }
 function bukaModal(id) { document.getElementById(id).classList.remove('hidden'); }
 
 // ============================================
-// NAVIGASI HALAMAN
+// FUNGSI LOGIN
+// ============================================
+function prosesLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const user = dataUser.find(function(u) { return u.username === username && u.password === password; });
+
+    if (user) {
+        if (user.status !== 'aktif') {
+            document.getElementById('loginError').classList.remove('hidden');
+            document.getElementById('loginError').textContent = 'Akun dinonaktifkan. Hubungi Admin.';
+            return;
+        }
+        currentUser = user;
+        document.getElementById('pageLogin').style.display = 'none';
+        document.getElementById('appContainer').classList.remove('hidden');
+        document.getElementById('sidebarUserName').textContent = user.nama;
+        document.getElementById('sidebarUserRole').textContent = user.role === 'superadmin' ? 'SuperAdmin' : (user.pro ? 'Pro User' : 'Free User');
+
+        document.getElementById('menuAdmin').classList.toggle('hidden', user.role !== 'superadmin');
+        document.getElementById('menuUser').classList.toggle('hidden', user.role === 'superadmin');
+
+        if (user.role === 'user' && !user.pro) {
+            document.getElementById('menuGabungUser').classList.add('hidden');
+        }
+
+        navigasi(user.role === 'superadmin' ? 'dashboard' : 'dashboardUser');
+    } else {
+        document.getElementById('loginError').classList.remove('hidden');
+        document.getElementById('loginError').textContent = 'Username atau Password salah!';
+    }
+}
+
+// ============================================
+// FUNGSI LOGOUT
+// ============================================
+function logout() {
+    currentUser = null;
+    document.getElementById('appContainer').classList.add('hidden');
+    document.getElementById('pageLogin').style.display = 'flex';
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+}
+
+// ============================================
+// FUNGSI NAVIGASI HALAMAN
 // ============================================
 function navigasi(halaman) {
     const semuaPage = ['dashboard', 'dashboardUser', 'panelAdmin', 'aktivasi', 'harga', 'blokManager', 'gabungBlok', 'chat', 'backupRestore'];
-    semuaPage.forEach(p => {
+    semuaPage.forEach(function(p) {
         const el = document.getElementById('page' + p.charAt(0).toUpperCase() + p.slice(1));
         if (el) el.classList.add('hidden');
     });
@@ -1377,18 +974,19 @@ function navigasi(halaman) {
     const target = document.getElementById('page' + halaman.charAt(0).toUpperCase() + halaman.slice(1));
     if (target) target.classList.remove('hidden');
 
-    document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+    document.querySelectorAll('.sidebar-item').forEach(function(item) { item.classList.remove('active'); });
     const menuMap = {
         dashboard: 'menuDashboard', dashboardUser: 'menuDashboardUser', panelAdmin: 'menuPanelAdmin',
         aktivasi: 'menuAktivasi', harga: 'menuHarga',
-        blokManager: currentUser?.role === 'superadmin' ? 'menuBlok' : 'menuBlokUser',
-        gabungBlok: currentUser?.role === 'superadmin' ? 'menuGabung' : 'menuGabungUser',
-        chat: currentUser?.role === 'superadmin' ? 'menuChatAdmin' : 'menuChatUser',
+        blokManager: currentUser && currentUser.role === 'superadmin' ? 'menuBlok' : 'menuBlokUser',
+        gabungBlok: currentUser && currentUser.role === 'superadmin' ? 'menuGabung' : 'menuGabungUser',
+        chat: currentUser && currentUser.role === 'superadmin' ? 'menuChatAdmin' : 'menuChatUser',
         backupRestore: 'menuBackup'
     };
     const menuId = menuMap[halaman];
-    if (menuId) document.getElementById(menuId)?.classList.add('active');
+    if (menuId) document.getElementById(menuId).classList.add('active');
 
+    // Render konten
     if (halaman === 'dashboard') renderDashboard();
     else if (halaman === 'dashboardUser') renderDashboardUser();
     else if (halaman === 'panelAdmin') renderPanelAdmin();
@@ -1400,49 +998,18 @@ function navigasi(halaman) {
 }
 
 // ============================================
-// LOGIN & LOGOUT
-// ============================================
-function prosesLogin(e) {
-    e.preventDefault();
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const user = dataUser.find(u => u.username === username && u.password === password);
-    if (user && user.status === 'aktif') {
-        currentUser = user;
-        document.getElementById('pageLogin').style.display = 'none';
-        document.getElementById('appContainer').classList.remove('hidden');
-        document.getElementById('sidebarUserName').textContent = user.nama;
-        document.getElementById('sidebarUserRole').textContent = user.role === 'superadmin' ? 'SuperAdmin' : (user.pro ? 'Pro' : 'Free');
-        document.getElementById('menuAdmin').classList.toggle('hidden', user.role !== 'superadmin');
-        document.getElementById('menuUser').classList.toggle('hidden', user.role === 'superadmin');
-        if (user.role === 'user' && !user.pro) document.getElementById('menuGabungUser').classList.add('hidden');
-        else document.getElementById('menuGabungUser').classList.remove('hidden');
-        navigasi(user.role === 'superadmin' ? 'dashboard' : 'dashboardUser');
-    } else {
-        document.getElementById('loginError').classList.remove('hidden');
-        document.getElementById('loginError').textContent = user?.status === 'nonaktif' ? 'Akun dinonaktifkan.' : 'Username/Password salah!';
-    }
-}
-
-function logout() {
-    currentUser = null;
-    document.getElementById('appContainer').classList.add('hidden');
-    document.getElementById('pageLogin').style.display = 'flex';
-}
-
-// ============================================
-// DASHBOARD RENDER
+// RENDER DASHBOARD
 // ============================================
 function renderDashboard() {
     document.getElementById('statTotalUser').textContent = dataUser.length;
-    document.getElementById('statProUser').textContent = dataUser.filter(u => u.pro).length;
+    document.getElementById('statProUser').textContent = dataUser.filter(function(u) { return u.pro; }).length;
     document.getElementById('statTotalBlok').textContent = dataBlok.length;
     document.getElementById('statKodeAktif').textContent = dataKodeAktivasi.length;
 }
 
 function renderDashboardUser() {
-    document.getElementById('userNama').textContent = currentUser.nama;
-    document.getElementById('userUsername').textContent = currentUser.username;
+    document.getElementById('userNama').textContent = currentUser.nama || '-';
+    document.getElementById('userUsername').textContent = currentUser.username || '-';
     document.getElementById('userEmail').textContent = currentUser.email || '-';
     document.getElementById('userHp').textContent = currentUser.hp || '-';
     document.getElementById('userAlamat').textContent = currentUser.alamat || '-';
@@ -1457,1779 +1024,54 @@ function renderDashboardUser() {
 // ============================================
 function renderPanelAdmin() {
     const tbody = document.getElementById('tabelUserAdmin');
-    tbody.innerHTML = dataUser.filter(u => u.role !== 'superadmin').map(u => `
-        <tr>
-            <td>${u.username}</td><td>${u.nama}</td><td>${u.hp || '-'}</td><td>${u.email || '-'}</td>
-            <td><span class="badge ${u.status === 'aktif' ? 'badge-success' : 'badge-error'}">${u.status}</span></td>
-            <td><span class="badge ${u.pro ? 'badge-pro' : 'badge-free'}">${u.pro ? 'Pro' : 'Free'}</span></td>
-            <td>
-                <button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">${u.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan'}</button>
-                <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-function tambahUserModal() { bukaModal('modalTambahUser'); }
-function simpanUserBaru() {
-    const u = document.getElementById('newUsername').value.trim();
-    const p = document.getElementById('newPassword').value;
-    const n = document.getElementById('newNama').value.trim();
-    if (!u || !p || !n) return tampilkanToast('Username, Password, Nama wajib diisi', 'error');
-    if (dataUser.find(x => x.username === u)) return tampilkanToast('Username sudah ada', 'error');
-    dataUser.push({ username: u, password: p, nama: n, role: 'user', pro: false, status: 'aktif', hp: document.getElementById('newHp').value.trim(), email: document.getElementById('newEmail').value.trim(), alamat: document.getElementById('newAlamat').value.trim() });
-    simpanSemua(); tutupModal('modalTambahUser'); renderPanelAdmin(); tampilkanToast('User ditambahkan');
-}
-function toggleStatus(uname) { const u = dataUser.find(x => x.username === uname); u.status = u.status === 'aktif' ? 'nonaktif' : 'aktif'; simpanSemua(); renderPanelAdmin(); }
-function hapusUser(uname) { if (!confirm('Hapus ' + uname + '?')) return; dataUser = dataUser.filter(x => x.username !== uname); simpanSemua(); renderPanelAdmin(); }
-
-// ============================================
-// AKTIVASI & UPGRADE
-// ============================================
-function renderAktivasi() {
-    document.getElementById('selectPaketAktivasi').innerHTML = dataHarga.map(h => `<option>${h.durasi} - Rp ${h.harga.toLocaleString()}</option>`).join('');
-    const list = document.getElementById('listKodeAktivasi');
-    list.innerHTML = dataKodeAktivasi.length === 0 ? '<p class="text-muted">Belum ada kode.</p>' : dataKodeAktivasi.map((k, i) => `<div style="display:flex; justify-content:space-between; padding:10px; background:var(--bg-tertiary); border-radius:8px;"><span style="font-family:monospace;">${k}</span><button class="btn btn-danger btn-sm" onclick="hapusKode(${i})"><i class="fas fa-trash"></i></button></div>`).join('');
-}
-function generateKode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let kode = 'PRO-';
-    for (let i = 0; i < 8; i++) kode += chars[Math.floor(Math.random() * chars.length)];
-    dataKodeAktivasi.push(kode); simpanSemua(); renderAktivasi(); tampilkanToast('Kode: ' + kode);
-}
-function hapusKode(i) { dataKodeAktivasi.splice(i, 1); simpanSemua(); renderAktivasi(); }
-function upgradePro() {
-    const kode = document.getElementById('inputKodeUpgrade').value.trim();
-    if (dataKodeAktivasi.includes(kode)) {
-        currentUser.pro = true; const u = dataUser.find(x => x.username === currentUser.username); if (u) u.pro = true;
-        dataKodeAktivasi = dataKodeAktivasi.filter(k => k !== kode); simpanSemua(); renderDashboardUser();
-        document.getElementById('menuGabungUser').classList.remove('hidden'); tampilkanToast('Pro diaktifkan!');
-    } else tampilkanToast('Kode tidak valid', 'error');
-}
-
-// ============================================
-// MENU HARGA
-// ============================================
-function renderHarga() {
-    document.getElementById('tabelHarga').innerHTML = dataHarga.map((h, i) => `<tr><td><input type="text" value="${h.durasi}" onchange="editHarga(${i},'durasi',this.value)"></td><td><input type="number" value="${h.harga}" onchange="editHarga(${i},'harga',this.value)"></td><td><button class="btn btn-danger btn-sm" onclick="hapusHarga(${i})"><i class="fas fa-trash"></i></button></td></tr>`).join('');
-}
-function tambahHargaModal() { bukaModal('modalTambahHarga'); }
-function simpanHargaBaru() {
-    const d = document.getElementById('newDurasi').value.trim(); const h = parseInt(document.getElementById('newHarga').value);
-    if (!d || !h) return tampilkanToast('Isi semua field', 'error');
-    dataHarga.push({ id: Date.now(), durasi: d, harga: h }); simpanSemua(); tutupModal('modalTambahHarga'); renderHarga();
-}
-function editHarga(i, f, v) { dataHarga[i][f] = f === 'harga' ? parseInt(v) : v; simpanSemua(); }
-function hapusHarga(i) { dataHarga.splice(i, 1); simpanSemua(); renderHarga(); }
-
-// ============================================
-// MANAJER BLOK & EDITOR
-// ============================================
-function renderBlokManager() {
-    const container = document.getElementById('listBlok');
-    if (!container) return;
-    const sorted = [...dataBlok].sort((a, b) => (parseInt(a.judul.replace(/\D/g,''))||0) - (parseInt(b.judul.replace(/\D/g,''))||0) || a.judul.localeCompare(b.judul));
-    container.innerHTML = sorted.map(b => {
-        const preview = b.isi.substring(0, 100).replace(/</g,'&lt;');
-        return `<div class="card" style="display:flex; justify-content:space-between;"><div><strong style="color:var(--accent-green);">${b.judul}</strong><br><span class="text-muted">${preview}...</span></div><div style="display:flex; gap:5px;"><button class="btn btn-outline btn-sm" onclick="editBlok(${b.id})"><i class="fas fa-edit"></i></button><button class="btn btn-outline btn-sm" onclick="copyBlokById(${b.id})"><i class="fas fa-copy"></i></button><button class="btn btn-danger btn-sm" onclick="hapusBlok(${b.id})"><i class="fas fa-trash"></i></button></div></div>`;
-    }).join('');
-    const empty = document.getElementById('blokKosong');
-    if (empty) empty.classList.toggle('hidden', dataBlok.length > 0);
-}
-
-function tambahBlokModal() { const judul = prompt('Judul Blok:'); if (!judul) return; dataBlok.push({ id: Date.now(), judul, isi: '<!-- ' + judul + ' -->\n' }); simpanSemua(); renderBlokManager(); }
-function editBlok(id) { const b = dataBlok.find(x => x.id === id); if (!b) return; currentEditBlokId = id; document.getElementById('editorTitle').textContent = b.judul; document.getElementById('editorTextarea').value = b.isi; bukaModal('modalEditor'); }
-function simpanEditBlok() { const b = dataBlok.find(x => x.id === currentEditBlokId); if (b) { b.isi = document.getElementById('editorTextarea').value; simpanSemua(); tutupModal('modalEditor'); renderBlokManager(); tampilkanToast('Blok disimpan'); } }
-function tutupEditor() { tutupModal('modalEditor'); }
-function copyBlokAktif() { navigator.clipboard.writeText(document.getElementById('editorTextarea').value); tampilkanToast('Kode disalin!'); }
-function copyBlokById(id) { const b = dataBlok.find(x => x.id === id); if (b) navigator.clipboard.writeText(b.isi); tampilkanToast('Kode blok disalin!'); }
-function hapusBlok(id) { if (!confirm('Hapus?')) return; dataBlok = dataBlok.filter(x => x.id !== id); simpanSemua(); renderBlokManager(); }
-
-// ============================================
-// CHAT
-// ============================================
-function kirimChat() {
-    const input = document.getElementById('chatInput'); const pesan = input.value.trim();
-    if (!pesan || !currentUser) return;
-    dataChat.push({ user: currentUser.username, nama: currentUser.nama, text: pesan, waktu: new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) });
-    input.value = ''; simpanSemua(); renderChat();
-}
-function renderChat() {
-    const container = document.getElementById('chatMessages');
-    if (!container) return;
-    container.innerHTML = dataChat.length === 0 ? '<p class="text-muted" style="text-align:center;">Belum ada pesan.</p>' : dataChat.map(m => `<div class="chat-bubble ${m.user === currentUser.username ? 'chat-sent' : 'chat-received'}"><strong style="font-size:11px;">${m.user === currentUser.username ? 'Anda' : m.nama}</strong><p>${m.text}</p><span style="font-size:10px;opacity:0.6;">${m.waktu}</span></div>`).join('');
-    container.scrollTop = container.scrollHeight;
-}
-
-// ============================================
-// PWA & OFFLINE
-// ============================================
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; document.getElementById('pwaInstallPrompt').classList.remove('hidden'); });
-document.getElementById('installBtn').addEventListener('click', () => { if (deferredPrompt) deferredPrompt.prompt(); });
-window.addEventListener('online', () => document.getElementById('offlineIndicator').classList.add('hidden'));
-window.addEventListener('offline', () => document.getElementById('offlineIndicator').classList.remove('hidden'));
-if (!navigator.onLine) document.getElementById('offlineIndicator').classList.remove('hidden');
-
-document.addEventListener('DOMContentLoaded', () => { simpanSemua(); console.log('✅ NotepadPro++ Siap!'); });
-</script>
-<--=== AKHIR BLOK 5 === -->
-<--=== BLOK 6: PENGGABUNGAN BLOK, CHAT, BACKUP & RESTORE === -->
-
-<!-- ============================================ -->
-<!-- HALAMAN PENGGABUNGAN BLOK                   -->
-<!-- ============================================ -->
-<div id="pageGabungBlok" class="hidden">
-    <div class="card-header">
-        <h2>🧩 Gabung Blok</h2>
-        <div style="display:flex; gap:10px;">
-            <button class="btn btn-primary" onclick="copyGabungan()">
-                <i class="fas fa-copy"></i> Copy HTML
-            </button>
-            <button class="btn btn-outline" onclick="downloadGabungan()">
-                <i class="fas fa-download"></i> Download .html
-            </button>
-        </div>
-    </div>
-
-    <!-- Info Fitur -->
-    <div class="card" style="background:var(--accent-green-bg); border-color:var(--accent-green); margin-bottom:20px;">
-        <p style="font-size:13px;">
-            <i class="fas fa-info-circle"></i> 
-            <strong>Fitur Pro / SuperAdmin</strong> • Blok diurutkan otomatis berdasarkan nomor blok.
-            Hasil gabungan dapat disalin atau diunduh sebagai file HTML.
-        </p>
-    </div>
-
-    <!-- Preview Gabungan -->
-    <div class="card">
-        <h3 style="margin-bottom:15px;">📄 Preview HTML Gabungan</h3>
-        <pre id="previewGabungan" style="background:var(--bg-tertiary); padding:15px; border-radius:var(--radius-md); max-height:60vh; overflow:auto; font-family:'JetBrains Mono',monospace; white-space:pre-wrap; color:var(--accent-green); font-size:13px; line-height:1.6;">Blok akan tampil di sini...</pre>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- HALAMAN CHAT USER                           -->
-<!-- ============================================ -->
-<div id="pageChat" class="hidden">
-    <div class="card-header">
-        <h2>💬 Chat User</h2>
-        <span class="text-muted">Pesan antar user terdaftar</span>
-    </div>
-
-    <div class="card" style="display:flex; flex-direction:column; height:70vh;">
-        <!-- Area Pesan -->
-        <div id="chatMessages" class="chat-messages" style="flex:1; overflow-y:auto; padding:15px;">
-            <p class="text-muted" style="text-align:center;">Belum ada pesan. Mulai percakapan!</p>
-        </div>
-
-        <!-- Input Chat -->
-        <div style="display:flex; gap:10px; padding:15px; border-top:1px solid var(--border-color); flex-shrink:0;">
-            <input type="text" id="chatInput" placeholder="Ketik pesan..." style="flex:1;" onkeydown="if(event.key==='Enter')kirimChat()">
-            <button class="btn btn-primary" onclick="kirimChat()">
-                <i class="fas fa-paper-plane"></i> Kirim
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- HALAMAN BACKUP & RESTORE                    -->
-<!-- ============================================ -->
-<div id="pageBackupRestore" class="hidden">
-    <div class="card-header">
-        <h2>🗄️ Backup & Restore Data</h2>
-        <span class="badge badge-pro">SuperAdmin</span>
-    </div>
-
-    <div class="grid-2">
-        <!-- Backup -->
-        <div class="card">
-            <h3 style="margin-bottom:15px;">📥 Backup Data</h3>
-            <p class="text-muted" style="margin-bottom:15px;">Download semua data (User, Blok, Harga, Kode, Chat) dalam format JSON.</p>
-            <button class="btn btn-primary btn-block" onclick="backupData()">
-                <i class="fas fa-download"></i> Download Backup JSON
-            </button>
-            <button class="btn btn-outline btn-block" onclick="downloadIndexHtml()" style="margin-top:10px;">
-                <i class="fas fa-file-code"></i> Download index.html (Gabungan Blok)
-            </button>
-        </div>
-
-        <!-- Restore -->
-        <div class="card">
-            <h3 style="margin-bottom:15px;">📤 Restore Data</h3>
-            <p class="text-muted" style="margin-bottom:15px;">Upload file backup JSON untuk mengembalikan data. <strong style="color:var(--danger);">Data saat ini akan ditimpa!</strong></p>
-            <input type="file" id="restoreFile" accept=".json" style="margin-bottom:15px;">
-            <button class="btn btn-warning btn-block" onclick="restoreData()">
-                <i class="fas fa-upload"></i> Restore Data
-            </button>
-        </div>
-    </div>
-
-    <!-- Ekspor/Impor File Kode -->
-    <div class="card" style="margin-top:20px;">
-        <h3 style="margin-bottom:15px;">📁 Ekspor / Impor File Kode</h3>
-        <div class="grid-2">
-            <div>
-                <p class="text-muted" style="margin-bottom:10px;">Ekspor semua blok sebagai file JSON (termasuk isi kode).</p>
-                <button class="btn btn-outline btn-block" onclick="eksporBlok()">
-                    <i class="fas fa-file-export"></i> Ekspor Blok (JSON)
-                </button>
-            </div>
-            <div>
-                <p class="text-muted" style="margin-bottom:10px;">Impor file JSON blok (akan menambah/mengganti blok).</p>
-                <input type="file" id="imporBlokFile" accept=".json" style="margin-bottom:10px;">
-                <button class="btn btn-outline btn-block" onclick="imporBlok()">
-                    <i class="fas fa-file-import"></i> Impor Blok (JSON)
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- JAVASCRIPT UNTUK BLOK 6                     -->
-<!-- ============================================ -->
-<script>
-    // ============================================
-    // FUNGSI PENGGABUNGAN BLOK
-    // ============================================
-    function renderGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (!preview) return;
-
-        // Hanya SuperAdmin atau Pro yang bisa akses
-        if (currentUser && currentUser.role !== 'superadmin' && !currentUser.pro) {
-            preview.textContent = '🔒 Fitur ini hanya untuk Akun Pro atau SuperAdmin. Silakan upgrade.';
-            return;
-        }
-
-        const sorted = [...dataBlok].sort((a, b) => {
-            const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-            const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-            return numA - numB || a.judul.localeCompare(b.judul);
-        });
-
-        if (sorted.length === 0) {
-            preview.textContent = 'Belum ada blok. Tambahkan blok terlebih dahulu.';
-            return;
-        }
-
-        const gabungan = sorted.map(b => b.isi).join('\n\n');
-        preview.textContent = gabungan;
-    }
-
-    function copyGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (preview && preview.textContent.trim()) {
-            navigator.clipboard.writeText(preview.textContent);
-            tampilkanToast('HTML Gabungan disalin ke clipboard!');
-        } else {
-            tampilkanToast('Tidak ada konten untuk disalin.', 'error');
-        }
-    }
-
-    function downloadGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (!preview || !preview.textContent.trim()) {
-            tampilkanToast('Tidak ada konten untuk diunduh.', 'error');
-            return;
-        }
-        const blob = new Blob([preview.textContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'index_gabungan.html';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('File index.html berhasil diunduh!');
-    }
-
-    // ============================================
-    // FUNGSI CHAT
-    // ============================================
-    function kirimChat() {
-        if (!currentUser) return;
-        const input = document.getElementById('chatInput');
-        const pesan = input.value.trim();
-        if (!pesan) return;
-
-        dataChat.push({
-            user: currentUser.username,
-            nama: currentUser.nama,
-            text: pesan,
-            waktu: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-        });
-
-        input.value = '';
-        simpanSemua();
-        renderChat();
-    }
-
-    function renderChat() {
-        const container = document.getElementById('chatMessages');
-        if (!container) return;
-
-        if (dataChat.length === 0) {
-            container.innerHTML = '<p class="text-muted" style="text-align:center;">Belum ada pesan. Mulai percakapan!</p>';
-            return;
-        }
-
-        container.innerHTML = dataChat.map(msg => {
-            const isMe = msg.user === currentUser.username;
-            return `
-                <div class="chat-bubble ${isMe ? 'chat-sent' : 'chat-received'}">
-                    <strong style="font-size:11px;">${isMe ? 'Anda' : (msg.nama || msg.user)}</strong>
-                    <p style="margin:5px 0;">${msg.text}</p>
-                    <span style="font-size:10px; opacity:0.6;">${msg.waktu}</span>
-                </div>
-            `;
-        }).join('');
-
-        container.scrollTop = container.scrollHeight;
-    }
-
-    // ============================================
-    // FUNGSI BACKUP & RESTORE
-    // ============================================
-    function backupData() {
-        const data = {
-            users: dataUser,
-            blok: dataBlok,
-            kode: dataKodeAktivasi,
-            harga: dataHarga,
-            chat: dataChat,
-            exportDate: new Date().toISOString()
-        };
-        const json = JSON.stringify(data, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'backup_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('Backup berhasil diunduh!');
-    }
-
-    function downloadIndexHtml() {
-        const sorted = [...dataBlok].sort((a, b) => {
-            const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-            const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-            return numA - numB || a.judul.localeCompare(b.judul);
-        });
-        const gabungan = sorted.map(b => b.isi).join('\n\n');
-        const blob = new Blob([gabungan], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'index_gabungan.html';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('index.html berhasil diunduh!');
-    }
-
-    function restoreData() {
-        const fileInput = document.getElementById('restoreFile');
-        const file = fileInput.files[0];
-        if (!file) {
-            tampilkanToast('Pilih file backup terlebih dahulu.', 'error');
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.users) dataUser = data.users;
-                if (data.blok) dataBlok = data.blok;
-                if (data.kode) dataKodeAktivasi = data.kode;
-                if (data.harga) dataHarga = data.harga;
-                if (data.chat) dataChat = data.chat;
-                simpanSemua();
-                tampilkanToast('Data berhasil direstore! Silakan refresh jika perlu.');
-                setTimeout(() => location.reload(), 1000);
-            } catch (err) {
-                tampilkanToast('File JSON tidak valid!', 'error');
-            }
-        };
-        reader.readAsText(file);
-    }
-
-    function eksporBlok() {
-        const data = { blok: dataBlok, exportDate: new Date().toISOString() };
-        const json = JSON.stringify(data, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'blok_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('Blok diekspor!');
-    }
-
-    function imporBlok() {
-        const fileInput = document.getElementById('imporBlokFile');
-        const file = fileInput.files[0];
-        if (!file) {
-            tampilkanToast('Pilih file blok terlebih dahulu.', 'error');
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                if (data.blok && Array.isArray(data.blok)) {
-                    dataBlok = data.blok;
-                    simpanSemua();
-                    renderBlokManager();
-                    tampilkanToast('Blok berhasil diimpor!');
-                } else {
-                    tampilkanToast('Format file tidak sesuai.', 'error');
-                }
-            } catch (err) {
-                tampilkanToast('File JSON tidak valid!', 'error');
-            }
-        };
-        reader.readAsText(file);
-    }
-
-    console.log('✅ Blok 6 - Penggabungan Blok, Chat, Backup/Restore siap.');
-</script>
-<--=== AKHIR BLOK 6 === -->
-<--=== BLOK 7: PENGGABUNGAN BLOK (HTML + JAVASCRIPT) === -->
-
-<!-- ============================================ -->
-<!-- HALAMAN PENGGABUNGAN BLOK                   -->
-<!-- ============================================ -->
-<div id="pageGabungBlok" class="hidden">
-    <div class="card-header">
-        <h2>🧩 Penggabungan Blok</h2>
-        <div style="display:flex; gap:10px;">
-            <!-- TOMBOL COPY HTML -->
-            <button class="btn btn-primary" onclick="copyGabungan()" title="Salin HTML gabungan ke clipboard">
-                <i class="fas fa-copy"></i> Copy HTML
-            </button>
-            <button class="btn btn-outline" onclick="downloadGabungan()" title="Unduh sebagai file .html">
-                <i class="fas fa-download"></i> Download .html
-            </button>
-        </div>
-    </div>
-
-    <!-- Info Fitur -->
-    <div class="card" style="background:var(--accent-green-bg); border-color:var(--accent-green); margin-bottom:20px;">
-        <p style="font-size:13px;">
-            <i class="fas fa-info-circle"></i> 
-            <strong>Fitur Pro / SuperAdmin</strong> • Blok diurutkan otomatis berdasarkan nomor blok (natural sort).
-            Klik <strong>Copy HTML</strong> untuk menyalin semua kode ke clipboard.
-        </p>
-    </div>
-
-    <!-- Preview Gabungan -->
-    <div class="card">
-        <h3 style="margin-bottom:15px;">📄 Preview HTML Gabungan</h3>
-        <pre id="previewGabungan" style="background:var(--bg-tertiary); padding:15px; border-radius:var(--radius-md); max-height:60vh; overflow:auto; font-family:'JetBrains Mono',monospace; white-space:pre-wrap; color:var(--accent-green); font-size:13px; line-height:1.6;">Blok akan tampil di sini...</pre>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- JAVASCRIPT PENGGABUNGAN BLOK                -->
-<!-- ============================================ -->
-<script>
-    // ============================================
-    // FUNGSI RENDER GABUNGAN
-    // ============================================
-    function renderGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (!preview) return;
-
-        // Hanya SuperAdmin atau Pro User yang bisa akses
-        if (currentUser && currentUser.role !== 'superadmin' && !currentUser.pro) {
-            preview.textContent = '🔒 Fitur ini hanya untuk Akun Pro atau SuperAdmin. Silakan upgrade.';
-            return;
-        }
-
-        // Jika dataBlok belum ada (dari script lain), inisialisasi
-        if (typeof dataBlok === 'undefined') {
-            dataBlok = JSON.parse(localStorage.getItem('np_blok')) || [];
-        }
-
-        // Urutkan blok secara natural berdasarkan angka dalam judul
-        const sorted = [...dataBlok].sort((a, b) => {
-            const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-            const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-            return numA - numB || a.judul.localeCompare(b.judul);
-        });
-
-        if (sorted.length === 0) {
-            preview.textContent = 'Belum ada blok. Tambahkan blok terlebih dahulu di menu Catatan Kode.';
-            return;
-        }
-
-        // Gabungkan semua isi blok dengan pemisah baris kosong
-        const gabungan = sorted.map(b => b.isi).join('\n\n');
-        preview.textContent = gabungan;
-
-        // Tampilkan jumlah blok di konsol
-        console.log(`✅ ${sorted.length} blok berhasil digabungkan.`);
-    }
-
-    // ============================================
-    // FUNGSI COPY HTML
-    // ============================================
-    function copyGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (!preview || !preview.textContent.trim() || preview.textContent.includes('🔒') || preview.textContent.includes('Belum ada blok')) {
-            tampilkanToast('⚠️ Tidak ada konten HTML untuk disalin. Tambahkan blok terlebih dahulu.', 'error');
-            return;
-        }
-
-        navigator.clipboard.writeText(preview.textContent).then(() => {
-            tampilkanToast('✅ HTML Gabungan berhasil disalin ke clipboard!');
-        }).catch(() => {
-            tampilkanToast('❌ Gagal menyalin. Coba gunakan tombol Download.', 'error');
-        });
-    }
-
-    // ============================================
-    // FUNGSI DOWNLOAD HTML
-    // ============================================
-    function downloadGabungan() {
-        const preview = document.getElementById('previewGabungan');
-        if (!preview || !preview.textContent.trim() || preview.textContent.includes('🔒') || preview.textContent.includes('Belum ada blok')) {
-            tampilkanToast('⚠️ Tidak ada konten untuk diunduh.', 'error');
-            return;
-        }
-
-        const blob = new Blob([preview.textContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'index_gabungan.html';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        tampilkanToast('✅ File index.html berhasil diunduh!');
-    }
-
-    // ============================================
-    // AUTO-RENDER SAAT HALAMAN DITAMPILKAN
-    // ============================================
-    // Fungsi ini akan dipanggil oleh navigasi utama
-    // Pastikan renderGabungan() dipanggil saat menu dibuka
-
-    console.log('✅ Blok 7 - Penggabungan Blok dengan Copy HTML siap.');
-</script>
-<--=== AKHIR BLOK 7 === -->
-<--=== BLOK 8: JAVASCRIPT UNTUK GABUNG BLOK, CHAT, BACKUP/RESTORE === -->
-<script>
-// ============================================
-// NOTEPADPRO++ - GABUNG BLOK, CHAT, BACKUP/RESTORE
-// ============================================
-
-// ============================================
-// FUNGSI PENGGABUNGAN BLOK
-// ============================================
-function renderGabungan() {
-    const preview = document.getElementById('previewGabungan');
-    if (!preview) return;
-
-    // Hanya SuperAdmin atau Pro User yang bisa akses
-    if (currentUser && currentUser.role !== 'superadmin' && !currentUser.pro) {
-        preview.textContent = '🔒 Fitur ini hanya untuk Akun Pro atau SuperAdmin. Silakan upgrade.';
-        return;
-    }
-
-    // Urutkan blok berdasarkan nomor natural
-    const sorted = [...dataBlok].sort((a, b) => {
-        const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-        const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-        return numA - numB || a.judul.localeCompare(b.judul);
-    });
-
-    if (sorted.length === 0) {
-        preview.textContent = 'Belum ada blok. Tambahkan blok terlebih dahulu.';
-        return;
-    }
-
-    // Gabungkan semua isi blok
-    const gabungan = sorted.map(b => b.isi).join('\n\n');
-    preview.textContent = gabungan;
-}
-
-function copyGabungan() {
-    const preview = document.getElementById('previewGabungan');
-    if (preview && preview.textContent.trim()) {
-        navigator.clipboard.writeText(preview.textContent).then(() => {
-            tampilkanToast('✅ HTML Gabungan berhasil disalin ke clipboard!');
-        }).catch(() => {
-            tampilkanToast('❌ Gagal menyalin ke clipboard', 'error');
-        });
-    } else {
-        tampilkanToast('⚠️ Tidak ada konten untuk disalin.', 'error');
-    }
-}
-
-function downloadGabungan() {
-    const preview = document.getElementById('previewGabungan');
-    if (!preview || !preview.textContent.trim()) {
-        tampilkanToast('⚠️ Tidak ada konten untuk diunduh.', 'error');
-        return;
-    }
-
-    const blob = new Blob([preview.textContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'index_gabungan.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    tampilkanToast('✅ File index.html berhasil diunduh!');
-}
-
-// ============================================
-// FUNGSI CHAT USER
-// ============================================
-function kirimChat() {
-    if (!currentUser) {
-        tampilkanToast('⚠️ Anda harus login terlebih dahulu.', 'error');
-        return;
-    }
-
-    const input = document.getElementById('chatInput');
-    const pesan = input.value.trim();
-    
-    if (!pesan) return;
-
-    // Tambahkan pesan ke data chat
-    dataChat.push({
-        user: currentUser.username,
-        nama: currentUser.nama,
-        text: pesan,
-        waktu: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-    });
-
-    // Kosongkan input
-    input.value = '';
-    
-    // Simpan dan render ulang
-    simpanSemua();
-    renderChat();
-}
-
-function renderChat() {
-    const container = document.getElementById('chatMessages');
-    if (!container) return;
-
-    if (dataChat.length === 0) {
-        container.innerHTML = `
-            <div style="text-align:center; padding:40px; color:var(--text-secondary);">
-                <i class="fas fa-comments" style="font-size:40px; margin-bottom:15px; opacity:0.5;"></i>
-                <p>Belum ada pesan.</p>
-                <p style="font-size:12px;">Mulai percakapan dengan user lain!</p>
-            </div>`;
-        return;
-    }
-
-    container.innerHTML = dataChat.map(msg => {
-        const isMe = msg.user === currentUser.username;
-        return `
-            <div class="chat-bubble ${isMe ? 'chat-sent' : 'chat-received'}">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                    <strong style="font-size:11px; color:${isMe ? 'var(--accent-green)' : 'var(--info)'};">
-                        ${isMe ? 'Anda' : (msg.nama || msg.user)}
-                    </strong>
-                    <span style="font-size:10px; opacity:0.6;">${msg.waktu}</span>
-                </div>
-                <p style="margin:0; line-height:1.5;">${msg.text}</p>
-            </div>
-        `;
-    }).join('');
-
-    // Scroll ke bawah
-    container.scrollTop = container.scrollHeight;
-}
-
-// ============================================
-// FUNGSI BACKUP DATA
-// ============================================
-function backupData() {
-    const data = {
-        users: dataUser,
-        blok: dataBlok,
-        kode: dataKodeAktivasi,
-        harga: dataHarga,
-        chat: dataChat,
-        exportDate: new Date().toISOString()
-    };
-
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'backup_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    tampilkanToast('✅ Backup berhasil diunduh!');
-}
-
-function downloadIndexHtml() {
-    const sorted = [...dataBlok].sort((a, b) => {
-        const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-        const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-        return numA - numB || a.judul.localeCompare(b.judul);
-    });
-
-    const gabungan = sorted.map(b => b.isi).join('\n\n');
-    const blob = new Blob([gabungan], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'index_gabungan.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    tampilkanToast('✅ index.html berhasil diunduh!');
-}
-
-// ============================================
-// FUNGSI RESTORE DATA
-// ============================================
-function restoreData() {
-    const fileInput = document.getElementById('restoreFile');
-    const file = fileInput.files[0];
-    
-    if (!file) {
-        tampilkanToast('⚠️ Pilih file backup terlebih dahulu.', 'error');
-        return;
-    }
-
-    // Konfirmasi sebelum restore
-    if (!confirm('⚠️ Data saat ini akan DITIMPA dengan data dari file backup. Lanjutkan?')) {
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-            
-            if (data.users) dataUser = data.users;
-            if (data.blok) dataBlok = data.blok;
-            if (data.kode) dataKodeAktivasi = data.kode;
-            if (data.harga) dataHarga = data.harga;
-            if (data.chat) dataChat = data.chat;
-            
-            simpanSemua();
-            tampilkanToast('✅ Data berhasil direstore! Halaman akan direfresh...');
-            
-            // Refresh halaman setelah 1 detik
-            setTimeout(() => location.reload(), 1000);
-        } catch (err) {
-            tampilkanToast('❌ File JSON tidak valid! Pastikan format file benar.', 'error');
-        }
-    };
-    reader.readAsText(file);
-}
-
-// ============================================
-// FUNGSI EKSPOR / IMPOR BLOK
-// ============================================
-function eksporBlok() {
-    const data = { 
-        blok: dataBlok, 
-        exportDate: new Date().toISOString() 
-    };
-    
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'blok_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    tampilkanToast('✅ Blok berhasil diekspor!');
-}
-
-function imporBlok() {
-    const fileInput = document.getElementById('imporBlokFile');
-    const file = fileInput.files[0];
-    
-    if (!file) {
-        tampilkanToast('⚠️ Pilih file blok terlebih dahulu.', 'error');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-            
-            if (data.blok && Array.isArray(data.blok)) {
-                // Konfirmasi jika ingin mengganti atau menambah
-                if (dataBlok.length > 0) {
-                    if (confirm('Blok sudah ada. Pilih OK untuk MENGGANTI semua blok, atau Batal untuk MEMBATALKAN.')) {
-                        dataBlok = data.blok;
-                    } else {
-                        return;
-                    }
-                } else {
-                    dataBlok = data.blok;
-                }
-                
-                simpanSemua();
-                renderBlokManager();
-                tampilkanToast('✅ Blok berhasil diimpor!');
-            } else {
-                tampilkanToast('❌ Format file tidak sesuai.', 'error');
-            }
-        } catch (err) {
-            tampilkanToast('❌ File JSON tidak valid!', 'error');
-        }
-    };
-    reader.readAsText(file);
-}
-
-// ============================================
-// INISIALISASI CHAT SAAT HALAMAN DIBUKA
-// ============================================
-if (document.getElementById('pageChat') && !document.getElementById('pageChat').classList.contains('hidden')) {
-    renderChat();
-}
-
-console.log('✅ Blok 8 - Gabung Blok, Chat, Backup/Restore siap.');
-</script>
-<--=== AKHIR BLOK 8 === -->
-<--=== BLOK 9: CHAT USER & BACKUP/RESTORE DATA === -->
-<script>
-// ============================================
-// NOTEPADPRO++ - CHAT USER & BACKUP/RESTORE
-// ============================================
-
-// ============================================
-// FUNGSI CHAT USER
-// ============================================
-
-/**
- * Mengirim pesan chat
- */
-function kirimChat() {
-    if (!currentUser) {
-        tampilkanToast('⚠️ Anda harus login terlebih dahulu.', 'error');
-        return;
-    }
-
-    const input = document.getElementById('chatInput');
-    const pesan = input.value.trim();
-
-    if (!pesan) return;
-
-    // Tambahkan pesan ke array dataChat
-    dataChat.push({
-        user: currentUser.username,
-        nama: currentUser.nama,
-        text: pesan,
-        waktu: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-    });
-
-    // Kosongkan input
-    input.value = '';
-
-    // Simpan ke localStorage dan render ulang
-    simpanSemua();
-    renderChat();
-}
-
-/**
- * Merender tampilan chat
- */
-function renderChat() {
-    const container = document.getElementById('chatMessages');
-    if (!container) return;
-
-    if (dataChat.length === 0) {
-        container.innerHTML = `
-            <div style="text-align:center; padding:40px; color:var(--text-secondary);">
-                <i class="fas fa-comments" style="font-size:40px; margin-bottom:15px; opacity:0.5;"></i>
-                <p>Belum ada pesan.</p>
-                <p style="font-size:12px;">Mulai percakapan dengan user lain!</p>
-            </div>`;
-        return;
-    }
-
-    // Render setiap pesan
-    container.innerHTML = dataChat.map(msg => {
-        const isMe = msg.user === currentUser.username;
-        return `
-            <div class="chat-bubble ${isMe ? 'chat-sent' : 'chat-received'}">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                    <strong style="font-size:11px; color:${isMe ? 'var(--accent-green)' : 'var(--info)'};">
-                        ${isMe ? 'Anda' : (msg.nama || msg.user)}
-                    </strong>
-                    <span style="font-size:10px; opacity:0.6;">${msg.waktu}</span>
-                </div>
-                <p style="margin:0; line-height:1.5;">${msg.text}</p>
-            </div>
-        `;
-    }).join('');
-
-    // Auto-scroll ke pesan terbaru
-    container.scrollTop = container.scrollHeight;
-}
-
-// ============================================
-// FUNGSI BACKUP DATA
-// ============================================
-
-/**
- * Membackup semua data aplikasi ke file JSON
- */
-function backupData() {
-    const data = {
-        users: dataUser,
-        blok: dataBlok,
-        kode: dataKodeAktivasi,
-        harga: dataHarga,
-        chat: dataChat,
-        exportDate: new Date().toISOString()
-    };
-
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'backup_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    tampilkanToast('✅ Backup berhasil diunduh!');
-}
-
-/**
- * Mengunduh gabungan blok sebagai file HTML
- */
-function downloadIndexHtml() {
-    // Pastikan dataBlok ada
-    if (typeof dataBlok === 'undefined') {
-        dataBlok = JSON.parse(localStorage.getItem('np_blok')) || [];
-    }
-
-    const sorted = [...dataBlok].sort((a, b) => {
-        const numA = parseInt(a.judul.replace(/\D/g, '')) || 0;
-        const numB = parseInt(b.judul.replace(/\D/g, '')) || 0;
-        return numA - numB || a.judul.localeCompare(b.judul);
-    });
-
-    if (sorted.length === 0) {
-        tampilkanToast('⚠️ Tidak ada blok untuk diunduh.', 'error');
-        return;
-    }
-
-    const gabungan = sorted.map(b => b.isi).join('\n\n');
-    const blob = new Blob([gabungan], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'index_gabungan.html';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    tampilkanToast('✅ File index.html berhasil diunduh!');
-}
-
-// ============================================
-// FUNGSI RESTORE DATA
-// ============================================
-
-/**
- * Merestore data dari file JSON
- */
-function restoreData() {
-    const fileInput = document.getElementById('restoreFile');
-    const file = fileInput.files[0];
-
-    if (!file) {
-        tampilkanToast('⚠️ Pilih file backup terlebih dahulu.', 'error');
-        return;
-    }
-
-    // Konfirmasi sebelum restore
-    if (!confirm('⚠️ Data saat ini akan DITIMPA dengan data dari file backup. Lanjutkan?')) {
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-
-            // Validasi struktur data
-            if (data.users && Array.isArray(data.users)) dataUser = data.users;
-            if (data.blok && Array.isArray(data.blok)) dataBlok = data.blok;
-            if (data.kode && Array.isArray(data.kode)) dataKodeAktivasi = data.kode;
-            if (data.harga && Array.isArray(data.harga)) dataHarga = data.harga;
-            if (data.chat && Array.isArray(data.chat)) dataChat = data.chat;
-
-            simpanSemua();
-            tampilkanToast('✅ Data berhasil direstore! Halaman akan direfresh...');
-
-            // Refresh halaman setelah 1 detik
-            setTimeout(() => location.reload(), 1000);
-        } catch (err) {
-            tampilkanToast('❌ File JSON tidak valid! Pastikan format file benar.', 'error');
-        }
-    };
-    reader.readAsText(file);
-}
-
-// ============================================
-// FUNGSI EKSPOR / IMPOR BLOK
-// ============================================
-
-/**
- * Mengekspor data blok ke file JSON
- */
-function eksporBlok() {
-    const data = {
-        blok: dataBlok,
-        exportDate: new Date().toISOString()
-    };
-
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'blok_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    tampilkanToast('✅ Blok berhasil diekspor!');
-}
-
-/**
- * Mengimpor data blok dari file JSON
- */
-function imporBlok() {
-    const fileInput = document.getElementById('imporBlokFile');
-    const file = fileInput.files[0];
-
-    if (!file) {
-        tampilkanToast('⚠️ Pilih file blok terlebih dahulu.', 'error');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-
-            if (data.blok && Array.isArray(data.blok)) {
-                // Jika sudah ada blok, konfirmasi
-                if (dataBlok.length > 0) {
-                    if (!confirm('⚠️ Blok yang sudah ada akan ditimpa. Lanjutkan?')) {
-                        return;
-                    }
-                }
-                dataBlok = data.blok;
-                simpanSemua();
-                renderBlokManager();
-                tampilkanToast('✅ Blok berhasil diimpor!');
-            } else {
-                tampilkanToast('❌ Format file blok tidak sesuai.', 'error');
-            }
-        } catch (err) {
-            tampilkanToast('❌ File JSON tidak valid!', 'error');
-        }
-    };
-    reader.readAsText(file);
-}
-
-// ============================================
-// INISIALISASI CHAT SAAT HALAMAN DIBUKA
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    // Jika halaman chat aktif, render chat
-    const chatPage = document.getElementById('pageChat');
-    if (chatPage && !chatPage.classList.contains('hidden')) {
-        renderChat();
-    }
-});
-
-console.log('✅ Blok 9 - Chat User & Backup/Restore siap.');
-</script>
-<--=== AKHIR BLOK 9 === -->
-<--=== BLOK 10: DASHBOARD USER, PANEL ADMIN, AKTIVASI & HARGA === -->
-
-<!-- ============================================ -->
-<!-- HALAMAN DASHBOARD USER                      -->
-<!-- ============================================ -->
-<div id="pageDashboardUser" class="hidden">
-    <div class="card-header">
-        <h2>👤 Dashboard Saya</h2>
-    </div>
-
-    <!-- Info Profil -->
-    <div class="card">
-        <div class="grid-2">
-            <div>
-                <p class="text-muted">Nama</p>
-                <p style="font-weight:600;" id="userNama">-</p>
-            </div>
-            <div>
-                <p class="text-muted">Username</p>
-                <p style="font-weight:600;" id="userUsername">-</p>
-            </div>
-            <div>
-                <p class="text-muted">Email</p>
-                <p style="font-weight:600;" id="userEmail">-</p>
-            </div>
-            <div>
-                <p class="text-muted">No. HP</p>
-                <p style="font-weight:600;" id="userHp">-</p>
-            </div>
-            <div>
-                <p class="text-muted">Status</p>
-                <span id="userStatusPro" class="badge badge-free">Free</span>
-            </div>
-            <div>
-                <p class="text-muted">Alamat</p>
-                <p style="font-weight:600;" id="userAlamat">-</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Upgrade Panel -->
-    <div id="upgradePanel" class="card" style="border:1px solid var(--accent-green);">
-        <h3 style="color:var(--accent-green); margin-bottom:10px;">🚀 Upgrade ke Pro</h3>
-        <p class="text-muted" style="margin-bottom:15px;">Dapatkan akses Penggabungan Blok dan fitur Editor Advanced.</p>
-        <div style="display:flex; gap:10px;">
-            <input type="text" id="inputKodeUpgrade" placeholder="Masukkan Kode Aktivasi" style="flex:1;">
-            <button class="btn btn-primary" onclick="upgradePro()">Upgrade</button>
-        </div>
-        <p class="text-muted" style="margin-top:10px; font-size:12px;">Beli kode aktivasi ke Admin.</p>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- HALAMAN PANEL ADMIN USER                    -->
-<!-- ============================================ -->
-<div id="pagePanelAdmin" class="hidden">
-    <div class="card-header">
-        <h2>👥 Panel Admin User</h2>
-        <button class="btn btn-primary" onclick="tambahUserModal()">
-            <i class="fas fa-plus"></i> Tambah User
-        </button>
-    </div>
-    <div class="card">
-        <div class="table-responsive" style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Nama</th>
-                        <th>HP</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Pro</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelUserAdmin">
-                    <tr>
-                        <td colspan="7" class="text-muted" style="text-align:center; padding:30px;">Memuat data...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- HALAMAN AKTIVASI PRO                         -->
-<!-- ============================================ -->
-<div id="pageAktivasi" class="hidden">
-    <div class="card-header">
-        <h2>🔑 Generate Kode Aktivasi Pro</h2>
-    </div>
-    <div class="card">
-        <div class="grid-2" style="align-items:end;">
-            <div>
-                <label class="text-muted" style="display:block; margin-bottom:5px;">Pilih Paket</label>
-                <select id="selectPaketAktivasi"></select>
-            </div>
-            <button class="btn btn-primary btn-block" onclick="generateKode()" style="height:fit-content;">
-                <i class="fas fa-key"></i> Generate Kode Unik
-            </button>
-        </div>
-    </div>
-
-    <div class="card" style="margin-top:20px;">
-        <h3 style="margin-bottom:15px;">📋 Daftar Kode Aktif</h3>
-        <div id="listKodeAktivasi" style="display:flex; flex-direction:column; gap:10px;">
-            <p class="text-muted">Belum ada kode aktivasi.</p>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- HALAMAN MENU HARGA                          -->
-<!-- ============================================ -->
-<div id="pageHarga" class="hidden">
-    <div class="card-header">
-        <h2>🏷️ Menu Harga</h2>
-        <button class="btn btn-primary" onclick="tambahHargaModal()">
-            <i class="fas fa-plus"></i> Tambah Harga
-        </button>
-    </div>
-    <div class="card">
-        <div class="table-responsive" style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Durasi</th>
-                        <th>Harga (Rp)</th>
-                        <th style="width:100px;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelHarga">
-                    <tr>
-                        <td colspan="3" class="text-muted" style="text-align:center; padding:30px;">Memuat data...</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- MODAL TAMBAH USER                            -->
-<!-- ============================================ -->
-<div id="modalTambahUser" class="modal-overlay hidden">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h3>Tambah User Baru</h3>
-            <button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahUser')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div style="margin-bottom:12px;">
-                <label>Username *</label>
-                <input type="text" id="newUsername" required>
-            </div>
-            <div style="margin-bottom:12px;">
-                <label>Password *</label>
-                <input type="password" id="newPassword" required>
-            </div>
-            <div style="margin-bottom:12px;">
-                <label>Nama Lengkap *</label>
-                <input type="text" id="newNama" required>
-            </div>
-            <div style="margin-bottom:12px;">
-                <label>Alamat</label>
-                <input type="text" id="newAlamat">
-            </div>
-            <div style="margin-bottom:12px;">
-                <label>Nomor HP</label>
-                <input type="text" id="newHp">
-            </div>
-            <div style="margin-bottom:12px;">
-                <label>Email</label>
-                <input type="email" id="newEmail">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" onclick="tutupModal('modalTambahUser')">Batal</button>
-            <button class="btn btn-primary" onclick="simpanUserBaru()">Simpan User</button>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- MODAL TAMBAH HARGA                           -->
-<!-- ============================================ -->
-<div id="modalTambahHarga" class="modal-overlay hidden">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h3>Tambah Harga Baru</h3>
-            <button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahHarga')">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div style="margin-bottom:12px;">
-                <label>Durasi</label>
-                <input type="text" id="newDurasi" placeholder="Contoh: 1 Bulan">
-            </div>
-            <div style="margin-bottom:12px;">
-                <label>Harga (Rp)</label>
-                <input type="number" id="newHarga" placeholder="10000">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-outline" onclick="tutupModal('modalTambahHarga')">Batal</button>
-            <button class="btn btn-primary" onclick="simpanHargaBaru()">Simpan</button>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- JAVASCRIPT UNTUK BLOK 10                    -->
-<!-- ============================================ -->
-<script>
-// ============================================
-// RENDER DASHBOARD USER
-// ============================================
-function renderDashboardUser() {
-    if (!currentUser) return;
-    document.getElementById('userNama').textContent = currentUser.nama || '-';
-    document.getElementById('userUsername').textContent = currentUser.username || '-';
-    document.getElementById('userEmail').textContent = currentUser.email || '-';
-    document.getElementById('userHp').textContent = currentUser.hp || '-';
-    document.getElementById('userAlamat').textContent = currentUser.alamat || '-';
-
-    const statusPro = document.getElementById('userStatusPro');
-    if (statusPro) {
-        statusPro.textContent = currentUser.pro ? 'Pro' : 'Free';
-        statusPro.className = currentUser.pro ? 'badge badge-pro' : 'badge badge-free';
-    }
-
-    const upgradePanel = document.getElementById('upgradePanel');
-    if (upgradePanel) {
-        upgradePanel.style.display = currentUser.pro ? 'none' : 'block';
-    }
-}
-
-// ============================================
-// PANEL ADMIN (CRUD USER)
-// ============================================
-function renderPanelAdmin() {
-    const tbody = document.getElementById('tabelUserAdmin');
-    if (!tbody) return;
-
-    const users = dataUser.filter(u => u.role !== 'superadmin');
-
+    const users = dataUser.filter(function(u) { return u.role !== 'superadmin'; });
     if (users.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="text-muted" style="text-align:center; padding:30px;">Belum ada user terdaftar.</td></tr>`;
+        tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="text-align:center;padding:30px;">Tidak ada user terdaftar.</td></tr>';
         return;
     }
-
-    tbody.innerHTML = users.map(u => `
-        <tr>
-            <td>${u.username}</td>
-            <td>${u.nama}</td>
-            <td>${u.hp || '-'}</td>
-            <td>${u.email || '-'}</td>
-            <td><span class="badge ${u.status === 'aktif' ? 'badge-success' : 'badge-error'}">${u.status}</span></td>
-            <td><span class="badge ${u.pro ? 'badge-pro' : 'badge-free'}">${u.pro ? 'Pro' : 'Free'}</span></td>
-            <td>
-                <button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">
-                    ${u.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan'}
-                </button>
-                <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `).join('');
+    tbody.innerHTML = users.map(function(u) {
+        return '<tr>' +
+            '<td>' + u.username + '</td>' +
+            '<td>' + u.nama + '</td>' +
+            '<td>' + (u.hp || '-') + '</td>' +
+            '<td>' + (u.email || '-') + '</td>' +
+            '<td><span class="badge ' + (u.status === 'aktif' ? 'badge-success' : 'badge-error') + '">' + u.status + '</span></td>' +
+            '<td><span class="badge ' + (u.pro ? 'badge-pro' : 'badge-free') + '">' + (u.pro ? 'Pro' : 'Free') + '</span></td>' +
+            '<td>' +
+                '<button class="btn btn-outline btn-sm" onclick="toggleStatus(\'' + u.username + '\')">' + (u.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan') + '</button> ' +
+                '<button class="btn btn-danger btn-sm" onclick="hapusUser(\'' + u.username + '\')"><i class="fas fa-trash"></i></button>' +
+            '</td>' +
+        '</tr>';
+    }).join('');
 }
 
-function tambahUserModal() {
-    // Reset form
-    document.getElementById('newUsername').value = '';
-    document.getElementById('newPassword').value = '';
-    document.getElementById('newNama').value = '';
-    document.getElementById('newAlamat').value = '';
-    document.getElementById('newHp').value = '';
-    document.getElementById('newEmail').value = '';
-    bukaModal('modalTambahUser');
-}
-
+function tambahUserModal() { document.getElementById('newUsername').value = ''; document.getElementById('newPassword').value = ''; document.getElementById('newNama').value = ''; document.getElementById('newAlamat').value = ''; document.getElementById('newHp').value = ''; document.getElementById('newEmail').value = ''; bukaModal('modalTambahUser'); }
 function simpanUserBaru() {
     const username = document.getElementById('newUsername').value.trim();
     const password = document.getElementById('newPassword').value;
     const nama = document.getElementById('newNama').value.trim();
-    const alamat = document.getElementById('newAlamat').value.trim();
-    const hp = document.getElementById('newHp').value.trim();
-    const email = document.getElementById('newEmail').value.trim();
-
-    // Validasi
-    if (!username || !password || !nama) {
-        tampilkanToast('⚠️ Username, Password, dan Nama wajib diisi!', 'error');
-        return;
-    }
-    if (username.length < 3) {
-        tampilkanToast('⚠️ Username minimal 3 karakter.', 'error');
-        return;
-    }
-    if (password.length < 4) {
-        tampilkanToast('⚠️ Password minimal 4 karakter.', 'error');
-        return;
-    }
-    if (dataUser.find(u => u.username === username)) {
-        tampilkanToast('⚠️ Username sudah terdaftar.', 'error');
-        return;
-    }
-
-    // Tambah user baru
-    dataUser.push({
-        username,
-        password,
-        nama,
-        alamat,
-        hp,
-        email,
-        role: 'user',
-        pro: false,
-        status: 'aktif'
-    });
-
-    simpanSemua();
-    tutupModal('modalTambahUser');
-    renderPanelAdmin();
-    tampilkanToast('✅ User berhasil ditambahkan!');
+    if (!username || !password || !nama) { tampilkanToast('Username, Password, Nama wajib diisi', 'error'); return; }
+    if (dataUser.find(function(u) { return u.username === username; })) { tampilkanToast('Username sudah ada', 'error'); return; }
+    dataUser.push({ username, password, nama, role: 'user', pro: false, status: 'aktif', hp: document.getElementById('newHp').value.trim(), email: document.getElementById('newEmail').value.trim(), alamat: document.getElementById('newAlamat').value.trim() });
+    simpanSemua(); tutupModal('modalTambahUser'); renderPanelAdmin(); tampilkanToast('User ditambahkan');
 }
+function toggleStatus(username) { const u = dataUser.find(function(x) { return x.username === username; }); if (u) { u.status = u.status === 'aktif' ? 'nonaktif' : 'aktif'; simpanSemua(); renderPanelAdmin(); } }
+function hapusUser(username) { if (!confirm('Hapus ' + username + '?')) return; dataUser = dataUser.filter(function(x) { return x.username !== username; }); simpanSemua(); renderPanelAdmin(); }
 
-function toggleStatus(username) {
-    const user = dataUser.find(u => u.username === username);
-    if (!user) return;
-
-    user.status = user.status === 'aktif' ? 'nonaktif' : 'aktif';
-    simpanSemua();
-    renderPanelAdmin();
-    tampilkanToast(`User ${username} ${user.status === 'aktif' ? 'diaktifkan' : 'dinonaktifkan'}.`);
-}
-
-function hapusUser(username) {
-    if (!confirm(`Hapus user "${username}"? Tindakan ini tidak dapat dibatalkan.`)) return;
-
-    dataUser = dataUser.filter(u => u.username !== username);
-    simpanSemua();
-    renderPanelAdmin();
-    tampilkanToast('✅ User berhasil dihapus.');
-}
+console.log('✅ Blok 10 - JavaScript Utama siap.');
+</script>
+<--=== AKHIR BLOK 10 === -->
+<--=== BLOK 11: JAVASCRIPT - AKTIVASI, HARGA, BLOK, EDITOR, GABUNG, CHAT, BACKUP === -->
+<script>
+// ============================================
+// NOTEPADPRO++ - FITUR LANJUTAN
+// ============================================
 
 // ============================================
 // AKTIVASI PRO
 // ============================================
 function renderAktivasi() {
-    const select = document.getElementById('selectPaketAktivasi');
-    if (select) {
-        select.innerHTML = dataHarga.map(h => `<option value="${h.id}">${h.durasi} - Rp ${h.harga.toLocaleString()}</option>`).join('');
-    }
-
-    const list = document.getElementById('listKodeAktivasi');
-    if (list) {
-        if (dataKodeAktivasi.length === 0) {
-            list.innerHTML = '<p class="text-muted">Belum ada kode aktivasi.</p>';
-        } else {
-            list.innerHTML = dataKodeAktivasi.map((kode, index) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:var(--bg-tertiary); border-radius:8px;">
-                    <span style="font-family:'JetBrains Mono',monospace; font-size:14px;">${kode}</span>
-                    <button class="btn btn-danger btn-sm" onclick="hapusKode(${index})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-    }
-}
-
-function generateKode() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let kode = 'PRO-';
-    for (let i = 0; i < 8; i++) {
-        kode += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
-    dataKodeAktivasi.push(kode);
-    simpanSemua();
-    renderAktivasi();
-    tampilkanToast('✅ Kode aktivasi baru: ' + kode);
-}
-
-function hapusKode(index) {
-    dataKodeAktivasi.splice(index, 1);
-    simpanSemua();
-    renderAktivasi();
-}
-
-// ============================================
-// UPGRADE PRO (DARI DASHBOARD USER)
-// ============================================
-function upgradePro() {
-    const kode = document.getElementById('inputKodeUpgrade').value.trim();
-    if (!kode) {
-        tampilkanToast('⚠️ Masukkan kode aktivasi terlebih dahulu.', 'error');
-        return;
-    }
-
-    if (dataKodeAktivasi.includes(kode)) {
-        // Aktifkan Pro untuk user saat ini
-        currentUser.pro = true;
-        const userInData = dataUser.find(u => u.username === currentUser.username);
-        if (userInData) userInData.pro = true;
-
-        // Hapus kode yang sudah dipakai
-        dataKodeAktivasi = dataKodeAktivasi.filter(k => k !== kode);
-        simpanSemua();
-
-        // Update tampilan
-        renderDashboardUser();
-        document.getElementById('menuGabungUser')?.classList.remove('hidden');
-        tampilkanToast('🎉 Upgrade Pro berhasil! Fitur Penggabungan Blok telah dibuka.');
-    } else {
-        tampilkanToast('❌ Kode aktivasi tidak valid.', 'error');
-    }
-}
-
-// ============================================
-// MENU HARGA
-// ============================================
-function renderHarga() {
-    const tbody = document.getElementById('tabelHarga');
-    if (!tbody) return;
-
-    if (dataHarga.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="text-muted" style="text-align:center; padding:30px;">Belum ada data harga.</td></tr>`;
-        return;
-    }
-
-    tbody.innerHTML = dataHarga.map((h, index) => `
-        <tr>
-            <td>
-                <input type="text" value="${h.durasi}" 
-                       onchange="editHarga(${index}, 'durasi', this.value)" 
-                       style="width:100%;">
-            </td>
-            <td>
-                <input type="number" value="${h.harga}" 
-                       onchange="editHarga(${index}, 'harga', this.value)" 
-                       style="width:150px;">
-            </td>
-            <td>
-                <button class="btn btn-danger btn-sm" onclick="hapusHarga(${index})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-function tambahHargaModal() {
-    document.getElementById('newDurasi').value = '';
-    document.getElementById('newHarga').value = '';
-    bukaModal('modalTambahHarga');
-}
-
-function simpanHargaBaru() {
-    const durasi = document.getElementById('newDurasi').value.trim();
-    const harga = parseInt(document.getElementById('newHarga').value) || 0;
-
-    if (!durasi) {
-        tampilkanToast('⚠️ Durasi harus diisi.', 'error');
-        return;
-    }
-    if (harga <= 0) {
-        tampilkanToast('⚠️ Harga tidak valid.', 'error');
-        return;
-    }
-
-    dataHarga.push({ id: Date.now(), durasi, harga });
-    simpanSemua();
-    tutupModal('modalTambahHarga');
-    renderHarga();
-    renderAktivasi(); // Update dropdown di aktivasi
-    tampilkanToast('✅ Harga berhasil ditambahkan.');
-}
-
-function editHarga(index, field, value) {
-    if (field === 'harga') {
-        dataHarga[index].harga = parseInt(value) || 0;
-    } else {
-        dataHarga[index].durasi = value;
-    }
-    simpanSemua();
-}
-
-function hapusHarga(index) {
-    if (!confirm(`Hapus harga "${dataHarga[index].durasi}"?`)) return;
-    dataHarga.splice(index, 1);
-    simpanSemua();
-    renderHarga();
-    renderAktivasi(); // Update dropdown
-    tampilkanToast('✅ Harga dihapus.');
-}
-
-console.log('✅ Blok 10 - Dashboard User, Panel Admin, Aktivasi & Harga siap.');
-</script>
-<--=== AKHIR BLOK 10 === -->
-<--=== BLOK 11: MANAJER BLOK (CATATAN KODE) & EDITOR FULLSCREEN === -->
-
-<!-- ============================================ -->
-<!-- HALAMAN MANAJER BLOK (CATATAN KODE)         -->
-<!-- ============================================ -->
-<div id="pageBlokManager" class="hidden">
-    <div class="card-header">
-        <h2>📝 Catatan Kode (Blok)</h2>
-        <button class="btn btn-primary" onclick="tambahBlokModal()">
-            <i class="fas fa-plus"></i> Tambah Blok
-        </button>
-    </div>
-
-    <!-- Info Penyimpanan -->
-    <div class="card" style="background:var(--accent-green-bg); border-color:var(--accent-green); margin-bottom:20px;">
-        <p style="font-size:13px;">
-            <i class="fas fa-info-circle"></i> 
-            <strong>Penyimpanan UTF-8</strong> • Setiap blok disimpan dengan encoding UTF-8. 
-            Blok akan otomatis diurutkan berdasarkan nomor blok. 
-            Format penamaan: <code>Blok 1, Blok 2, Blok 5.4 R3, ...</code>
-        </p>
-    </div>
-
-    <!-- Daftar Blok -->
-    <div id="listBlok" style="display:flex; flex-direction:column; gap:15px;">
-        <!-- Blok akan dirender oleh JavaScript -->
-        <div class="card" style="text-align:center; padding:30px;">
-            <p class="text-muted">Memuat data blok...</p>
-        </div>
-    </div>
-
-    <!-- Empty State -->
-    <div id="blokKosong" class="hidden" style="text-align:center; padding:40px;">
-        <i class="fas fa-code" style="font-size:48px; color:var(--border-color); margin-bottom:15px;"></i>
-        <h3>Belum Ada Blok</h3>
-        <p class="text-muted">Klik "Tambah Blok" untuk membuat catatan kode pertama Anda.</p>
-    </div>
-</div>
-
-<!-- ============================================ -->
-<!-- MODAL EDITOR BLOK FULLSCREEN                 -->
-<!-- ============================================ -->
-<div id="modalEditor" class="modal-overlay hidden">
-    <div class="modal-box" style="width:95%; max-width:95%; height:90%; display:flex; flex-direction:column;">
-        <!-- Header Editor -->
-        <div class="modal-header" style="flex-shrink:0;">
-            <div style="display:flex; align-items:center; gap:15px;">
-                <span style="font-weight:600;">✏️ Edit Blok:</span>
-                <strong id="editorTitle" style="color:var(--accent-green);">-</strong>
-            </div>
-            <div style="display:flex; gap:10px;">
-                <!-- Tombol Copy HTML -->
-                <button class="btn btn-outline btn-sm" onclick="copyBlokAktif()" title="Salin kode blok ini ke clipboard">
-                    <i class="fas fa-copy"></i> Copy HTML
-                </button>
-                <button class="btn btn-primary btn-sm" onclick="simpanEditBlok()" title="Simpan perubahan (Ctrl+S)">
-                    <i class="fas fa-save"></i> Simpan
-                </button>
-                <button class="btn btn-outline btn-sm" onclick="tutupEditor()" title="Tutup editor (Esc)">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Area Editor -->
-        <textarea id="editorTextarea" class="code-editor" style="flex:1; height:100%; border-radius:0; border:none; resize:none; padding:20px; font-size:14px;" placeholder="Tulis kode HTML di sini..."></textarea>
-
-        <!-- Footer Editor -->
-        <div style="flex-shrink:0; padding:10px 20px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-secondary);">
-            <span>UTF-8 | Bahasa: HTML | Baris: <span id="editorLineCount">0</span></sp
-          <--=== BLOK 13: LOGIKA UPGRADE PRO, AKTIVASI, DAN MENU HARGA === -->
-<script>
-// ============================================
-// NOTEPADPRO++ - UPGRADE, AKTIVASI, & HARGA
-// ============================================
-
-// ============================================
-// FUNGSI UPGRADE PRO (DARI DASHBOARD USER)
-// ============================================
-function upgradePro() {
-    if (!currentUser) {
-        tampilkanToast('⚠️ Anda harus login terlebih dahulu.', 'error');
-        return;
-    }
-
-    const inputKode = document.getElementById('inputKodeUpgrade');
-    if (!inputKode) return;
-
-    const kode = inputKode.value.trim();
-    
-    if (!kode) {
-        tampilkanToast('⚠️ Masukkan kode aktivasi terlebih dahulu.', 'error');
-        return;
-    }
-
-    // Cek apakah kode valid
-    if (dataKodeAktivasi.includes(kode)) {
-        // Aktifkan Pro untuk user saat ini
-        currentUser.pro = true;
-        
-        // Update di dataUser
-        const userInData = dataUser.find(u => u.username === currentUser.username);
-        if (userInData) {
-            userInData.pro = true;
-        }
-
-        // Hapus kode yang sudah dipakai
-        dataKodeAktivasi = dataKodeAktivasi.filter(k => k !== kode);
-        
-        // Simpan perubahan
-        simpanSemua();
-
-        // Update tampilan dashboard user
-        renderDashboardUser();
-        
-        // Tampilkan menu Gabung Blok yang sebelumnya tersembunyi
-        const menuGabung = document.getElementById('menuGabungUser');
-        if (menuGabung) {
-            menuGabung.classList.remove('hidden');
-        }
-
-        // Update role di sidebar
-        const roleEl = document.getElementById('sidebarUserRole');
-        if (roleEl) {
-            roleEl.textContent = 'Pro User';
-        }
-
-        tampilkanToast('🎉 Upgrade Pro berhasil! Fitur Penggabungan Blok telah dibuka.');
-        
-        // Kosongkan input kode
-        inputKode.value = '';
-    } else {
-        tampilkanToast('❌ Kode aktivasi tidak valid. Hubungi Admin untuk membeli kode.', 'error');
-    }
-}
-
-// ============================================
-// FUNGSI RENDER AKTIVASI
-// ============================================
-function renderAktivasi() {
-    // Isi dropdown paket
-    const select = document.getElementById('selectPaketAktivasi');
+    var select = document.getElementById('selectPaketAktivasi');
     if (select) {
         if (dataHarga.length === 0) {
             select.innerHTML = '<option value="">-- Tidak ada paket --</option>';
@@ -3240,673 +1082,322 @@ function renderAktivasi() {
         }
     }
 
-    // Render daftar kode aktif
-    const list = document.getElementById('listKodeAktivasi');
+    var list = document.getElementById('listKodeAktivasi');
     if (!list) return;
-
     if (dataKodeAktivasi.length === 0) {
         list.innerHTML = '<p class="text-muted" style="text-align:center; padding:20px;">Belum ada kode aktivasi. Klik Generate untuk membuat.</p>';
         return;
     }
-
     list.innerHTML = dataKodeAktivasi.map(function(kode, index) {
-        return `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:15px; background:var(--bg-tertiary); border-radius:8px; border:1px solid var(--border-color);">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <i class="fas fa-key" style="color:var(--accent-green);"></i>
-                    <span style="font-family:'JetBrains Mono',monospace; font-size:14px; letter-spacing:1px;">${kode}</span>
-                </div>
-                <button class="btn btn-danger btn-sm" onclick="hapusKode(${index})" title="Hapus kode ini">
-                    <i class="fas fa-trash"></i> Hapus
-                </button>
-            </div>
-        `;
+        return '<div style="display:flex; justify-content:space-between; align-items:center; padding:15px; background:var(--bg-tertiary); border-radius:8px; border:1px solid var(--border-color);">' +
+            '<div style="display:flex; align-items:center; gap:10px;">' +
+                '<i class="fas fa-key" style="color:var(--accent-green);"></i>' +
+                '<span style="font-family:\'JetBrains Mono\',monospace; font-size:14px; letter-spacing:1px;">' + kode + '</span>' +
+            '</div>' +
+            '<button class="btn btn-danger btn-sm" onclick="hapusKode(' + index + ')" title="Hapus kode ini"><i class="fas fa-trash"></i> Hapus</button>' +
+        '</div>';
     }).join('');
 }
 
-// ============================================
-// FUNGSI GENERATE KODE AKTIVASI
-// ============================================
 function generateKode() {
-    // Karakter untuk kode
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let kode = 'PRO-';
-    
-    // Generate 8 karakter acak
-    for (let i = 0; i < 8; i++) {
-        const randomIndex = Math.floor(Math.random() * chars.length);
-        kode += chars.charAt(randomIndex);
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var kode = 'PRO-';
+    for (var i = 0; i < 8; i++) {
+        kode += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-
-    // Tambahkan ke array kode aktivasi
     dataKodeAktivasi.push(kode);
-    
-    // Simpan ke localStorage
     simpanSemua();
-    
-    // Render ulang daftar kode
     renderAktivasi();
-    
-    // Tampilkan notifikasi sukses
-    tampilkanToast('✅ Kode aktivasi baru berhasil dibuat: ' + kode);
-    
-    // Tawarkan untuk copy kode
-    if (confirm('Kode aktivasi: ' + kode + '\n\nSalin kode ini ke clipboard?')) {
+    tampilkanToast('✅ Kode aktivasi baru: ' + kode);
+    if (confirm('Kode: ' + kode + '\n\nSalin ke clipboard?')) {
         navigator.clipboard.writeText(kode).then(function() {
-            tampilkanToast('✅ Kode disalin ke clipboard!');
+            tampilkanToast('✅ Kode disalin!');
         }).catch(function() {
-            tampilkanToast('⚠️ Gagal menyalin ke clipboard.', 'error');
+            tampilkanToast('⚠️ Gagal menyalin.', 'error');
         });
     }
 }
 
-// ============================================
-// FUNGSI HAPUS KODE AKTIVASI
-// ============================================
 function hapusKode(index) {
-    if (!confirm('Hapus kode aktivasi ini? Kode tidak bisa digunakan lagi.')) return;
-    
+    if (!confirm('Hapus kode ini?')) return;
     dataKodeAktivasi.splice(index, 1);
     simpanSemua();
     renderAktivasi();
-    tampilkanToast('✅ Kode aktivasi dihapus.');
+}
+
+function upgradePro() {
+    var kode = document.getElementById('inputKodeUpgrade').value.trim();
+    if (!kode) { tampilkanToast('⚠️ Masukkan kode aktivasi.', 'error'); return; }
+    if (dataKodeAktivasi.includes(kode)) {
+        currentUser.pro = true;
+        var u = dataUser.find(function(x) { return x.username === currentUser.username; });
+        if (u) u.pro = true;
+        dataKodeAktivasi = dataKodeAktivasi.filter(function(k) { return k !== kode; });
+        simpanSemua();
+        renderDashboardUser();
+        document.getElementById('menuGabungUser').classList.remove('hidden');
+        document.getElementById('sidebarUserRole').textContent = 'Pro User';
+        tampilkanToast('🎉 Upgrade Pro berhasil!');
+    } else {
+        tampilkanToast('❌ Kode tidak valid.', 'error');
+    }
 }
 
 // ============================================
-// FUNGSI RENDER MENU HARGA
+// MENU HARGA
 // ============================================
 function renderHarga() {
-    const tbody = document.getElementById('tabelHarga');
+    var tbody = document.getElementById('tabelHarga');
     if (!tbody) return;
-
     if (dataHarga.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-muted" style="text-align:center; padding:30px;">Belum ada data harga. Klik Tambah Harga.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="text-muted" style="text-align:center;padding:30px;">Belum ada data harga.</td></tr>';
         return;
     }
-
-    tbody.innerHTML = dataHarga.map(function(h, index) {
-        return `
-            <tr>
-                <td>
-                    <input type="text" value="${h.durasi}" 
-                           onchange="editHarga(${index}, 'durasi', this.value)" 
-                           style="width:100%;">
-                </td>
-                <td>
-                    <input type="number" value="${h.harga}" 
-                           onchange="editHarga(${index}, 'harga', this.value)" 
-                           style="width:150px;">
-                </td>
-                <td>
-                    <button class="btn btn-danger btn-sm" onclick="hapusHarga(${index})" title="Hapus harga ini">
-                        <i class="fas fa-trash"></i> Hapus
-                    </button>
-                </td>
-            </tr>
-        `;
+    tbody.innerHTML = dataHarga.map(function(h, i) {
+        return '<tr>' +
+            '<td><input type="text" value="' + h.durasi + '" onchange="editHarga(' + i + ',\'durasi\',this.value)" style="width:100%;"></td>' +
+            '<td><input type="number" value="' + h.harga + '" onchange="editHarga(' + i + ',\'harga\',this.value)" style="width:150px;"></td>' +
+            '<td><button class="btn btn-danger btn-sm" onclick="hapusHarga(' + i + ')"><i class="fas fa-trash"></i> Hapus</button></td>' +
+        '</tr>';
     }).join('');
 }
 
-// ============================================
-// FUNGSI TAMBAH HARGA (MODAL)
-// ============================================
-function tambahHargaModal() {
-    // Reset form
-    document.getElementById('newDurasi').value = '';
-    document.getElementById('newHarga').value = '';
-    
-    // Tampilkan modal
-    bukaModal('modalTambahHarga');
-    
-    // Fokus ke input durasi
-    setTimeout(function() {
-        document.getElementById('newDurasi').focus();
-    }, 200);
-}
-
-// ============================================
-// FUNGSI SIMPAN HARGA BARU
-// ============================================
+function tambahHargaModal() { document.getElementById('newDurasi').value = ''; document.getElementById('newHarga').value = ''; bukaModal('modalTambahHarga'); }
 function simpanHargaBaru() {
-    const durasi = document.getElementById('newDurasi').value.trim();
-    const harga = parseInt(document.getElementById('newHarga').value);
+    var durasi = document.getElementById('newDurasi').value.trim();
+    var harga = parseInt(document.getElementById('newHarga').value);
+    if (!durasi || !harga || harga <= 0) { tampilkanToast('⚠️ Data tidak valid.', 'error'); return; }
+    dataHarga.push({ id: Date.now(), durasi: durasi, harga: harga });
+    simpanSemua(); tutupModal('modalTambahHarga'); renderHarga(); renderAktivasi(); tampilkanToast('✅ Harga ditambahkan.');
+}
+function editHarga(i, field, value) {
+    if (field === 'harga') { dataHarga[i].harga = parseInt(value) || 0; }
+    else { dataHarga[i].durasi = value; }
+    simpanSemua(); renderAktivasi();
+}
+function hapusHarga(i) { if (!confirm('Hapus?')) return; dataHarga.splice(i, 1); simpanSemua(); renderHarga(); renderAktivasi(); }
 
-    // Validasi
-    if (!durasi) {
-        tampilkanToast('⚠️ Nama durasi harus diisi.', 'error');
-        return;
-    }
-    if (isNaN(harga) || harga <= 0) {
-        tampilkanToast('⚠️ Harga tidak valid. Masukkan angka lebih dari 0.', 'error');
-        return;
-    }
-    if (harga > 10000000) {
-        tampilkanToast('⚠️ Harga maksimal Rp 10.000.000.', 'error');
-        return;
-    }
-
-    // Tambahkan data baru
-    dataHarga.push({
-        id: Date.now(),
-        durasi: durasi,
-        harga: harga
+// ============================================
+// MANAJER BLOK & EDITOR
+// ============================================
+function renderBlokManager() {
+    var container = document.getElementById('listBlok');
+    var empty = document.getElementById('blokKosong');
+    if (!container) return;
+    var sorted = dataBlok.slice().sort(function(a, b) {
+        var na = parseInt(a.judul.replace(/\D/g, '')) || 0;
+        var nb = parseInt(b.judul.replace(/\D/g, '')) || 0;
+        return na - nb || a.judul.localeCompare(b.judul);
     });
-
-    // Simpan
-    simpanSemua();
-    
-    // Tutup modal
-    tutupModal('modalTambahHarga');
-    
-    // Render ulang
-    renderHarga();
-    renderAktivasi(); // Update dropdown di aktivasi
-    
-    tampilkanToast('✅ Harga "' + durasi + '" berhasil ditambahkan.');
-}
-
-// ============================================
-// FUNGSI EDIT HARGA (INLINE)
-// ============================================
-function editHarga(index, field, value) {
-    if (index < 0 || index >= dataHarga.length) return;
-
-    if (field === 'harga') {
-        const newHarga = parseInt(value);
-        if (isNaN(newHarga) || newHarga <= 0) {
-            tampilkanToast('⚠️ Harga tidak valid. Data tidak disimpan.', 'error');
-            renderHarga(); // Render ulang untuk kembalikan nilai
-            return;
-        }
-        dataHarga[index].harga = newHarga;
-    } else if (field === 'durasi') {
-        const newDurasi = value.trim();
-        if (!newDurasi) {
-            tampilkanToast('⚠️ Durasi tidak boleh kosong.', 'error');
-            renderHarga();
-            return;
-        }
-        dataHarga[index].durasi = newDurasi;
-    }
-
-    simpanSemua();
-    renderAktivasi(); // Update dropdown aktivasi
-    tampilkanToast('✅ Harga berhasil diperbarui.');
-}
-
-// ============================================
-// FUNGSI HAPUS HARGA
-// ============================================
-function hapusHarga(index) {
-    if (index < 0 || index >= dataHarga.length) return;
-    
-    const namaHarga = dataHarga[index].durasi;
-    
-    if (!confirm('Hapus harga "' + namaHarga + '"? Tindakan ini tidak dapat dibatalkan.')) return;
-
-    dataHarga.splice(index, 1);
-    simpanSemua();
-    renderHarga();
-    renderAktivasi(); // Update dropdown
-    tampilkanToast('✅ Harga "' + namaHarga + '" dihapus.');
-}
-
-// ============================================
-// INISIALISASI DATA HARGA DAN KODE (FALLBACK)
-// ============================================
-// Pastikan data tersedia saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof dataHarga === 'undefined') {
-        window.dataHarga = JSON.parse(localStorage.getItem('np_harga')) || [
-            { id: 1, durasi: '1 Bulan', harga: 10000 },
-            { id: 2, durasi: '3 Bulan', harga: 20000 },
-            { id: 3, durasi: '6 Bulan', harga: 30000 }
-        ];
-    }
-    
-    if (typeof dataKodeAktivasi === 'undefined') {
-        window.dataKodeAktivasi = JSON.parse(localStorage.getItem('np_kode')) || ['PRO-ABCD-1234', 'PRO-EFGH-5678'];
-    }
-    
-    console.log('✅ Blok 13 - Data upgrade, aktivasi, dan harga siap.');
-});
-
-console.log('✅ Blok 13 - Logika Upgrade Pro, Aktivasi, & Menu Harga siap.');
-</script>
-<--=== AKHIR BLOK 13 === -->
-<--=== BLOK 14: DASHBOARD SUPERADMIN & USER - LOGIKA === -->
-<script>
-// ============================================
-// NOTEPADPRO++ - DASHBOARD LOGIC
-// ============================================
-
-// ============================================
-// RENDER DASHBOARD SUPERADMIN
-// ============================================
-function renderDashboard() {
-    const totalUserEl = document.getElementById('statTotalUser');
-    const proUserEl = document.getElementById('statProUser');
-    const totalBlokEl = document.getElementById('statTotalBlok');
-    const kodeAktifEl = document.getElementById('statKodeAktif');
-
-    if (totalUserEl) totalUserEl.textContent = dataUser.length;
-    if (proUserEl) proUserEl.textContent = dataUser.filter(function(u) { return u.pro; }).length;
-    if (totalBlokEl) totalBlokEl.textContent = dataBlok.length;
-    if (kodeAktifEl) kodeAktifEl.textContent = dataKodeAktivasi.length;
-
-    // Update waktu di header
-    const waktuEl = document.getElementById('dashboardWaktu');
-    if (waktuEl) {
-        const sekarang = new Date();
-        waktuEl.textContent = sekarang.toLocaleDateString('id-ID', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
-}
-
-// ============================================
-// RENDER DASHBOARD USER
-// ============================================
-function renderDashboardUser() {
-    if (!currentUser) return;
-
-    // Data pribadi
-    document.getElementById('userNama').textContent = currentUser.nama || '-';
-    document.getElementById('userUsername').textContent = currentUser.username || '-';
-    document.getElementById('userEmail').textContent = currentUser.email || '-';
-    document.getElementById('userHp').textContent = currentUser.hp || '-';
-    document.getElementById('userAlamat').textContent = currentUser.alamat || '-';
-
-    // Status Pro
-    const statusProEl = document.getElementById('userStatusPro');
-    if (statusProEl) {
-        statusProEl.textContent = currentUser.pro ? 'Pro' : 'Free';
-        statusProEl.className = currentUser.pro ? 'badge badge-pro' : 'badge badge-free';
-    }
-
-    // Panel upgrade (hanya tampil jika free)
-    const upgradePanel = document.getElementById('upgradePanel');
-    if (upgradePanel) {
-        upgradePanel.style.display = currentUser.pro ? 'none' : 'block';
-    }
-
-    // Update sidebar role
-    const roleEl = document.getElementById('sidebarUserRole');
-    if (roleEl) {
-        roleEl.textContent = currentUser.role === 'superadmin' ? 'SuperAdmin' : (currentUser.pro ? 'Pro User' : 'Free User');
-    }
-}
-
-// ============================================
-// PANEL ADMIN - LOGIKA
-// ============================================
-function renderPanelAdmin() {
-    const tbody = document.getElementById('tabelUserAdmin');
-    if (!tbody) return;
-
-    // Filter user (kecuali superadmin)
-    const users = dataUser.filter(function(u) { return u.role !== 'superadmin'; });
-
-    if (users.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="text-align:center; padding:30px;">Belum ada user terdaftar selain SuperAdmin.</td></tr>';
-        return;
-    }
-
-    // Render setiap user
-    tbody.innerHTML = users.map(function(u) {
-        const statusClass = u.status === 'aktif' ? 'badge-success' : 'badge-error';
-        const statusText = u.status === 'aktif' ? 'Aktif' : 'Nonaktif';
-        const proClass = u.pro ? 'badge-pro' : 'badge-free';
-        const proText = u.pro ? 'Pro' : 'Free';
-        const toggleText = u.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan';
-
-        return `
-            <tr>
-                <td style="font-weight:600;">${u.username}</td>
-                <td>${u.nama}</td>
-                <td>${u.hp || '-'}</td>
-                <td>${u.email || '-'}</td>
-                <td><span class="badge ${statusClass}">${statusText}</span></td>
-                <td><span class="badge ${proClass}">${proText}</span></td>
-                <td>
-                    <div style="display:flex; gap:5px;">
-                        <button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">
-                            <i class="fas fa-power-off"></i> ${toggleText}
-                        </button>
-                        <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
+    if (sorted.length === 0) { container.innerHTML = ''; if (empty) empty.classList.remove('hidden'); return; }
+    if (empty) empty.classList.add('hidden');
+    container.innerHTML = sorted.map(function(b) {
+        var preview = b.isi.substring(0, 80).replace(/</g, '&lt;');
+        return '<div class="card" style="display:flex; justify-content:space-between; align-items:center;">' +
+            '<div><strong style="color:var(--accent-green);">' + b.judul + '</strong><br><span class="text-muted">' + preview + '...</span></div>' +
+            '<div style="display:flex; gap:5px;">' +
+                '<button class="btn btn-outline btn-sm" onclick="editBlok(' + b.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn btn-outline btn-sm" onclick="copyBlokById(' + b.id + ')"><i class="fas fa-copy"></i></button>' +
+                '<button class="btn btn-danger btn-sm" onclick="hapusBlok(' + b.id + ')"><i class="fas fa-trash"></i></button>' +
+            '</div></div>';
     }).join('');
 }
 
-// ============================================
-// FUNGSI TAMBAH USER (MODAL)
-// ============================================
-function tambahUserModal() {
-    // Reset semua input di modal
-    document.getElementById('newUsername').value = '';
-    document.getElementById('newPassword').value = '';
-    document.getElementById('newNama').value = '';
-    document.getElementById('newAlamat').value = '';
-    document.getElementById('newHp').value = '';
-    document.getElementById('newEmail').value = '';
-    
-    // Tampilkan modal
-    bukaModal('modalTambahUser');
-    
-    // Fokus ke input username
-    setTimeout(function() {
-        document.getElementById('newUsername').focus();
-    }, 200);
+function tambahBlokModal() {
+    var judul = prompt('Judul Blok (contoh: Blok 1):');
+    if (!judul) return;
+    var id = Date.now();
+    dataBlok.push({ id: id, judul: judul, isi: '<!-- ' + judul + ' -->\n' });
+    simpanSemua(); renderBlokManager(); editBlok(id);
 }
 
-// ============================================
-// FUNGSI SIMPAN USER BARU
-// ============================================
-function simpanUserBaru() {
-    const username = document.getElementById('newUsername').value.trim();
-    const password = document.getElementById('newPassword').value;
-    const nama = document.getElementById('newNama').value.trim();
-    const alamat = document.getElementById('newAlamat').value.trim();
-    const hp = document.getElementById('newHp').value.trim();
-    const email = document.getElementById('newEmail').value.trim();
-
-    // Validasi
-    if (!username || !password || !nama) {
-        tampilkanToast('⚠️ Username, Password, dan Nama wajib diisi!', 'error');
-        return;
-    }
-    if (username.length < 3) {
-        tampilkanToast('⚠️ Username minimal 3 karakter.', 'error');
-        return;
-    }
-    if (password.length < 4) {
-        tampilkanToast('⚠️ Password minimal 4 karakter.', 'error');
-        return;
-    }
-    if (dataUser.find(function(u) { return u.username === username; })) {
-        tampilkanToast('⚠️ Username "' + username + '" sudah terdaftar.', 'error');
-        return;
-    }
-
-    // Tambahkan user baru
-    dataUser.push({
-        username: username,
-        password: password,
-        nama: nama,
-        alamat: alamat,
-        hp: hp,
-        email: email,
-        role: 'user',
-        pro: false,
-        status: 'aktif'
-    });
-
-    // Simpan ke localStorage
-    simpanSemua();
-    
-    // Tutup modal
-    tutupModal('modalTambahUser');
-    
-    // Render ulang tabel
-    renderPanelAdmin();
-    
-    // Update dashboard jika sedang aktif
-    if (document.getElementById('pageDashboard') && !document.getElementById('pageDashboard').classList.contains('hidden')) {
-        renderDashboard();
-    }
-
-    tampilkanToast('✅ User "' + username + '" berhasil ditambahkan!');
+function editBlok(id) {
+    var b = dataBlok.find(function(x) { return x.id === id; });
+    if (!b) return;
+    currentEditBlokId = id;
+    document.getElementById('editorTitle').textContent = b.judul;
+    document.getElementById('editorTextarea').value = b.isi;
+    bukaModal('modalEditor');
+    document.getElementById('editorTextarea').focus();
+    updateLineCount();
 }
 
-// ============================================
-// FUNGSI TOGGLE STATUS USER (AKTIF/NONAKTIF)
-// ============================================
-function toggleStatus(username) {
-    const user = dataUser.find(function(u) { return u.username === username; });
-    if (!user) return;
-
-    const statusBaru = user.status === 'aktif' ? 'nonaktif' : 'aktif';
-    user.status = statusBaru;
-    
-    simpanSemua();
-    renderPanelAdmin();
-
-    tampilkanToast('User "' + username + '" ' + (statusBaru === 'aktif' ? 'diaktifkan' : 'dinonaktifkan') + '.');
+function simpanEditBlok() {
+    if (!currentEditBlokId) return;
+    var b = dataBlok.find(function(x) { return x.id === currentEditBlokId; });
+    if (b) { b.isi = document.getElementById('editorTextarea').value; simpanSemua(); tutupModal('modalEditor'); renderBlokManager(); tampilkanToast('✅ Blok disimpan.'); }
 }
 
-// ============================================
-// FUNGSI HAPUS USER
-// ============================================
-function hapusUser(username) {
-    const user = dataUser.find(function(u) { return u.username === username; });
-    if (!user) return;
-
-    // Konfirmasi dengan dialog
-    if (!confirm('⚠️ Hapus user "' + username + '" (' + user.nama + ')?\n\nTindakan ini TIDAK DAPAT dibatalkan.')) return;
-
-    // Cegah menghapus diri sendiri
-    if (currentUser && currentUser.username === username) {
-        tampilkanToast('❌ Anda tidak bisa menghapus akun sendiri.', 'error');
-        return;
-    }
-
-    // Hapus user dari array
-    dataUser = dataUser.filter(function(u) { return u.username !== username; });
-    
-    simpanSemua();
-    renderPanelAdmin();
-
-    tampilkanToast('✅ User "' + username + '" berhasil dihapus.');
+function tutupEditor() { tutupModal('modalEditor'); currentEditBlokId = null; }
+function updateLineCount() {
+    var ta = document.getElementById('editorTextarea');
+    if (ta) { document.getElementById('editorLineCount').textContent = ta.value.split('\n').length; }
 }
-
-// ============================================
-// INISIALISASI DASHBOARD SAAT LOGIN
-// ============================================
-function initDashboardAfterLogin() {
-    if (!currentUser) return;
-
-    if (currentUser.role === 'superadmin') {
-        renderDashboard();
-    } else {
-        renderDashboardUser();
-    }
+function copyBlokAktif() {
+    var ta = document.getElementById('editorTextarea');
+    if (ta) { navigator.clipboard.writeText(ta.value); tampilkanToast('✅ Kode disalin!'); }
 }
+function copyBlokById(id) {
+    var b = dataBlok.find(function(x) { return x.id === id; });
+    if (b) { navigator.clipboard.writeText(b.isi); tampilkanToast('✅ Kode blok disalin!'); }
+}
+function hapusBlok(id) { if (!confirm('Hapus blok?')) return; dataBlok = dataBlok.filter(function(x) { return x.id !== id; }); simpanSemua(); renderBlokManager(); }
 
-// ============================================
-// AUTO REFRESH WAKTU DI DASHBOARD
-// ============================================
-setInterval(function() {
-    const waktuEl = document.getElementById('dashboardWaktu');
-    if (waktuEl && currentUser && currentUser.role === 'superadmin') {
-        const sekarang = new Date();
-        waktuEl.textContent = sekarang.toLocaleDateString('id-ID', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
-}, 60000); // Update setiap 1 menit
-
-console.log('✅ Blok 14 - Dashboard SuperAdmin & User siap.');
-</script>
-<--=== AKHIR BLOK 14 === -->
-<--=== BLOK 15: PENUTUP - INISIALISASI AKHIR & EVENT HANDLER === -->
-<script>
-// ============================================
-// NOTEPADPRO++ - FINAL INITIALIZATION
-// ============================================
-
-// ============================================
-// INISIALISASI DATA DEFAULT (JIKA BELUM ADA)
-// ============================================
-(function() {
-    // Data User
-    if (!localStorage.getItem('np_users')) {
-        const defaultUsers = [
-            { username: 'NotePadePro', password: 'MyHand0286', nama: 'Dede', role: 'superadmin', pro: true, status: 'aktif', hp: '', email: '', alamat: '' },
-            { username: 'demo', password: 'demo123', nama: 'User Demo', role: 'user', pro: false, status: 'aktif', hp: '08123456789', email: 'demo@email.com', alamat: 'Garut' },
-            { username: 'pro_user', password: 'pro123', nama: 'Pro User', role: 'user', pro: true, status: 'aktif', hp: '08987654321', email: 'pro@email.com', alamat: 'Garut' }
-        ];
-        localStorage.setItem('np_users', JSON.stringify(defaultUsers));
-    }
-
-    // Data Blok
-    if (!localStorage.getItem('np_blok')) {
-        const defaultBlok = [
-            { id: 1, judul: 'Blok 1: Pembukaan HTML', isi: '<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="UTF-8">\n<title>App</title>\n</head>\n<body>' },
-            { id: 2, judul: 'Blok 5.4 R3: Input Produk', isi: '<!-- Form Input Produk -->\n<div class="form-group">\n  <label>Nama Produk</label>\n  <input type="text">\n</div>' }
-        ];
-        localStorage.setItem('np_blok', JSON.stringify(defaultBlok));
-    }
-
-    // Data Kode Aktivasi
-    if (!localStorage.getItem('np_kode')) {
-        localStorage.setItem('np_kode', JSON.stringify(['PRO-ABCD-1234', 'PRO-EFGH-5678']));
-    }
-
-    // Data Harga
-    if (!localStorage.getItem('np_harga')) {
-        const defaultHarga = [
-            { id: 1, durasi: '1 Bulan', harga: 10000 },
-            { id: 2, durasi: '3 Bulan', harga: 20000 },
-            { id: 3, durasi: '6 Bulan', harga: 30000 }
-        ];
-        localStorage.setItem('np_harga', JSON.stringify(defaultHarga));
-    }
-
-    // Data Chat
-    if (!localStorage.getItem('np_chat')) {
-        localStorage.setItem('np_chat', JSON.stringify([]));
-    }
-
-    console.log('✅ Semua data default terinisialisasi.');
-})();
-
-// ============================================
-// GLOBAL EVENT LISTENER
-// ============================================
-
-// Keyboard Shortcut
+// Shortcut Keyboard
 document.addEventListener('keydown', function(e) {
-    // Ctrl+S: Simpan di editor
-    if (e.ctrlKey && e.key === 's') {
-        const modalEditor = document.getElementById('modalEditor');
-        if (modalEditor && !modalEditor.classList.contains('hidden')) {
-            e.preventDefault();
-            if (typeof simpanEditBlok === 'function') simpanEditBlok();
-        }
-    }
-
-    // Escape: Tutup modal
-    if (e.key === 'Escape') {
-        const modalEditor = document.getElementById('modalEditor');
-        if (modalEditor && !modalEditor.classList.contains('hidden')) {
-            e.preventDefault();
-            if (typeof tutupEditor === 'function') tutupEditor();
-        }
-
-        const modals = document.querySelectorAll('.modal-overlay:not(.hidden)');
-        modals.forEach(function(modal) {
-            if (modal.id !== 'modalEditor') {
-                modal.classList.add('hidden');
-            }
-        });
+    var editor = document.getElementById('modalEditor');
+    if (editor && !editor.classList.contains('hidden')) {
+        if (e.ctrlKey && e.key === 's') { e.preventDefault(); simpanEditBlok(); }
+        if (e.key === 'Escape') { e.preventDefault(); tutupEditor(); }
     }
 });
+document.addEventListener('input', function(e) { if (e.target.id === 'editorTextarea') updateLineCount(); });
 
-// Klik di luar modal untuk menutup
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal-overlay')) {
-        if (e.target.id !== 'modalEditor') {
-            e.target.classList.add('hidden');
-        }
-    }
+// ============================================
+// PENGGABUNGAN BLOK
+// ============================================
+function renderGabungan() {
+    var preview = document.getElementById('previewGabungan');
+    if (!preview) return;
+    if (currentUser && currentUser.role !== 'superadmin' && !currentUser.pro) { preview.textContent = '🔒 Fitur Pro. Upgrade dulu.'; return; }
+    var sorted = dataBlok.slice().sort(function(a, b) {
+        var na = parseInt(a.judul.replace(/\D/g, '')) || 0;
+        var nb = parseInt(b.judul.replace(/\D/g, '')) || 0;
+        return na - nb || a.judul.localeCompare(b.judul);
+    });
+    if (sorted.length === 0) { preview.textContent = 'Belum ada blok.'; return; }
+    preview.textContent = sorted.map(function(b) { return b.isi; }).join('\n\n');
+}
+function copyGabungan() {
+    var preview = document.getElementById('previewGabungan');
+    if (preview && preview.textContent.trim()) { navigator.clipboard.writeText(preview.textContent); tampilkanToast('✅ HTML Gabungan disalin!'); }
+    else { tampilkanToast('⚠️ Tidak ada konten.', 'error'); }
+}
+function downloadGabungan() {
+    var preview = document.getElementById('previewGabungan');
+    if (!preview || !preview.textContent.trim()) { tampilkanToast('⚠️ Tidak ada konten.', 'error'); return; }
+    var blob = new Blob([preview.textContent], { type: 'text/html' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'index_gabungan.html';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); tampilkanToast('✅ Terunduh!');
+}
+
+// ============================================
+// CHAT USER
+// ============================================
+function kirimChat() {
+    if (!currentUser) return;
+    var input = document.getElementById('chatInput');
+    var pesan = input.value.trim();
+    if (!pesan) return;
+    dataChat.push({ user: currentUser.username, nama: currentUser.nama, text: pesan, waktu: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) });
+    input.value = ''; simpanSemua(); renderChat();
+}
+function renderChat() {
+    var container = document.getElementById('chatMessages');
+    if (!container) return;
+    if (dataChat.length === 0) { container.innerHTML = '<p class="text-muted" style="text-align:center;">Belum ada pesan.</p>'; return; }
+    container.innerHTML = dataChat.map(function(m) {
+        var isMe = m.user === currentUser.username;
+        return '<div class="chat-bubble ' + (isMe ? 'chat-sent' : 'chat-received') + '">' +
+            '<strong style="font-size:11px;">' + (isMe ? 'Anda' : m.nama) + '</strong>' +
+            '<p style="margin:5px 0;">' + m.text + '</p>' +
+            '<span style="font-size:10px;opacity:0.6;">' + m.waktu + '</span></div>';
+    }).join('');
+    container.scrollTop = container.scrollHeight;
+}
+
+// ============================================
+// BACKUP, RESTORE, EKSPOR, IMPOR
+// ============================================
+function backupData() {
+    var data = { users: dataUser, blok: dataBlok, kode: dataKodeAktivasi, harga: dataHarga, chat: dataChat, exportDate: new Date().toISOString() };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'backup_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); tampilkanToast('✅ Backup terunduh!');
+}
+function downloadIndexHtml() {
+    var sorted = dataBlok.slice().sort(function(a, b) { return (parseInt(a.judul.replace(/\D/g,''))||0) - (parseInt(b.judul.replace(/\D/g,''))||0); });
+    var gabungan = sorted.map(function(b) { return b.isi; }).join('\n\n');
+    var blob = new Blob([gabungan], { type: 'text/html' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'index_gabungan.html';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+function restoreData() {
+    var file = document.getElementById('restoreFile').files[0];
+    if (!file) { tampilkanToast('⚠️ Pilih file.', 'error'); return; }
+    if (!confirm('⚠️ Data saat ini akan DITIMPA. Lanjutkan?')) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            var data = JSON.parse(e.target.result);
+            if (data.users) dataUser = data.users; if (data.blok) dataBlok = data.blok;
+            if (data.kode) dataKodeAktivasi = data.kode; if (data.harga) dataHarga = data.harga;
+            if (data.chat) dataChat = data.chat;
+            simpanSemua(); tampilkanToast('✅ Data direstore!'); setTimeout(function() { location.reload(); }, 1000);
+        } catch(err) { tampilkanToast('❌ File tidak valid.', 'error'); }
+    };
+    reader.readAsText(file);
+}
+function eksporBlok() {
+    var blob = new Blob([JSON.stringify({ blok: dataBlok, exportDate: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'blok_notepadpro_' + new Date().toISOString().split('T')[0] + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); tampilkanToast('✅ Blok diekspor!');
+}
+function imporBlok() {
+    var file = document.getElementById('imporBlokFile').files[0];
+    if (!file) { tampilkanToast('⚠️ Pilih file.', 'error'); return; }
+    if (dataBlok.length > 0 && !confirm('⚠️ Blok akan ditimpa. Lanjutkan?')) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            var data = JSON.parse(e.target.result);
+            if (data.blok && Array.isArray(data.blok)) { dataBlok = data.blok; simpanSemua(); renderBlokManager(); tampilkanToast('✅ Blok diimpor!'); }
+            else { tampilkanToast('❌ Format salah.', 'error'); }
+        } catch(err) { tampilkanToast('❌ File tidak valid.', 'error'); }
+    };
+    reader.readAsText(file);
+}
+
+// ============================================
+// PWA & OFFLINE
+// ============================================
+var deferredPrompt;
+window.addEventListener('beforeinstallprompt', function(e) { e.preventDefault(); deferredPrompt = e; document.getElementById('pwaInstallPrompt').classList.remove('hidden'); });
+document.getElementById('installBtn').addEventListener('click', function() { if (deferredPrompt) deferredPrompt.prompt(); });
+window.addEventListener('online', function() { document.getElementById('offlineIndicator').classList.add('hidden'); });
+window.addEventListener('offline', function() { document.getElementById('offlineIndicator').classList.remove('hidden'); });
+if (!navigator.onLine) document.getElementById('offlineIndicator').classList.remove('hidden');
+
+// ============================================
+// INISIALISASI AKHIR
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    simpanSemua();
+    console.log('✅ NotepadPro++ siap!');
+    console.log('👤 SuperAdmin: NotePadePro / MyHand0286');
 });
-
-// ============================================
-// FUNGSI TOAST NOTIFIKASI GLOBAL
-// ============================================
-window.tampilkanToast = function(pesan, tipe) {
-    tipe = tipe || 'success';
-    
-    // Hapus toast lama
-    var toastLama = document.querySelector('.toast');
-    if (toastLama) toastLama.remove();
-
-    var toast = document.createElement('div');
-    toast.className = 'toast ' + tipe;
-    toast.textContent = pesan;
-    document.body.appendChild(toast);
-
-    setTimeout(function() {
-        if (toast.parentNode) toast.remove();
-    }, 3000);
-};
-
-// ============================================
-// FUNGSI MODAL GLOBAL
-// ============================================
-window.bukaModal = function(id) {
-    var modal = document.getElementById(id);
-    if (modal) modal.classList.remove('hidden');
-};
-
-window.tutupModal = function(id) {
-    var modal = document.getElementById(id);
-    if (modal) modal.classList.add('hidden');
-};
-
-// ============================================
-// FUNGSI SIMPAN SEMUA DATA
-// ============================================
-window.simpanSemua = function() {
-    if (typeof dataUser !== 'undefined') localStorage.setItem('np_users', JSON.stringify(dataUser));
-    if (typeof dataBlok !== 'undefined') localStorage.setItem('np_blok', JSON.stringify(dataBlok));
-    if (typeof dataKodeAktivasi !== 'undefined') localStorage.setItem('np_kode', JSON.stringify(dataKodeAktivasi));
-    if (typeof dataHarga !== 'undefined') localStorage.setItem('np_harga', JSON.stringify(dataHarga));
-    if (typeof dataChat !== 'undefined') localStorage.setItem('np_chat', JSON.stringify(dataChat));
-};
-
-// ============================================
-// PEMERIKSAAN KONEKSI BERKALA
-// ============================================
-setInterval(function() {
-    var indikator = document.getElementById('offlineIndicator');
-    if (indikator) {
-        if (navigator.onLine) {
-            indikator.classList.add('hidden');
-        } else {
-            indikator.classList.remove('hidden');
-        }
-    }
-}, 5000);
-
-// ============================================
-// LOG APLIKASI SIAP
-// ============================================
-console.log('🚀 NotepadPro++ v1.0');
-console.log('👤 SuperAdmin: NotePadePro / MyHand0286');
-console.log('👤 Demo User: demo / demo123');
-console.log('👤 Pro User: pro_user / pro123');
-console.log('✅ Semua sistem siap digunakan.');
 </script>
 
 <!-- ============================================ -->
-<!-- PENUTUP HTML                                 -->
+<!-- MODAL TAMBAH USER                            -->
 <!-- ============================================ -->
+<div id="modalTambahUser" class="modal-overlay hidden">
+    <div class="modal-box">
+        <div class="modal-header"><h3>Tambah User</h3><button class="btn btn-outline btn-sm" onclick="tutupModal('modalTambahUser')"><i class="fas fa-times"></i></button></div>
+        <div class="modal-body">
+            <div style="margin-bottom:12px;"><label>Username *</label><input type="text" id="newUsername" required></div>
+            <div style="margin-bottom:12px;"><label>Password *</label><input type="password" id="newPassword" required></div>
+            <div style="margin-bottom:12px;"><label>Nama *</label><input type="text" id="newNama" required></div>
+            <div style="margin-bottom:12px;"><label>Alamat</label><input type="text" id="newAlamat"></div>
+            <div style="margin-bottom:12px;"><label>No. HP</label><input type="text" id="newHp"></div>
+            <div style="margin-bottom:12px;"><label>Email</label><input type="email" id="newEmail"></div>
+        </div>
+        <div class="modal-footer"><button class="btn btn-outline" onclick="tutupModal('modalTambahUser')">Batal</button><button class="btn btn-primary" onclick="simpanUserBaru()">Simpan</button></div>
+    </div>
+</div>
+
 </body>
 </html>
-<--=== AKHIR BLOK 15 === -->                                                                           
+<--=== AKHIR BLOK 11 === -->
