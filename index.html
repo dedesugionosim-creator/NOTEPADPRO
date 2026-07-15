@@ -3158,4 +3158,755 @@ console.log('✅ Blok 10 - Dashboard User, Panel Admin, Aktivasi & Harga siap.')
         <!-- Footer Editor -->
         <div style="flex-shrink:0; padding:10px 20px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--text-secondary);">
             <span>UTF-8 | Bahasa: HTML | Baris: <span id="editorLineCount">0</span></sp
-                                                                                     
+          <--=== BLOK 13: LOGIKA UPGRADE PRO, AKTIVASI, DAN MENU HARGA === -->
+<script>
+// ============================================
+// NOTEPADPRO++ - UPGRADE, AKTIVASI, & HARGA
+// ============================================
+
+// ============================================
+// FUNGSI UPGRADE PRO (DARI DASHBOARD USER)
+// ============================================
+function upgradePro() {
+    if (!currentUser) {
+        tampilkanToast('⚠️ Anda harus login terlebih dahulu.', 'error');
+        return;
+    }
+
+    const inputKode = document.getElementById('inputKodeUpgrade');
+    if (!inputKode) return;
+
+    const kode = inputKode.value.trim();
+    
+    if (!kode) {
+        tampilkanToast('⚠️ Masukkan kode aktivasi terlebih dahulu.', 'error');
+        return;
+    }
+
+    // Cek apakah kode valid
+    if (dataKodeAktivasi.includes(kode)) {
+        // Aktifkan Pro untuk user saat ini
+        currentUser.pro = true;
+        
+        // Update di dataUser
+        const userInData = dataUser.find(u => u.username === currentUser.username);
+        if (userInData) {
+            userInData.pro = true;
+        }
+
+        // Hapus kode yang sudah dipakai
+        dataKodeAktivasi = dataKodeAktivasi.filter(k => k !== kode);
+        
+        // Simpan perubahan
+        simpanSemua();
+
+        // Update tampilan dashboard user
+        renderDashboardUser();
+        
+        // Tampilkan menu Gabung Blok yang sebelumnya tersembunyi
+        const menuGabung = document.getElementById('menuGabungUser');
+        if (menuGabung) {
+            menuGabung.classList.remove('hidden');
+        }
+
+        // Update role di sidebar
+        const roleEl = document.getElementById('sidebarUserRole');
+        if (roleEl) {
+            roleEl.textContent = 'Pro User';
+        }
+
+        tampilkanToast('🎉 Upgrade Pro berhasil! Fitur Penggabungan Blok telah dibuka.');
+        
+        // Kosongkan input kode
+        inputKode.value = '';
+    } else {
+        tampilkanToast('❌ Kode aktivasi tidak valid. Hubungi Admin untuk membeli kode.', 'error');
+    }
+}
+
+// ============================================
+// FUNGSI RENDER AKTIVASI
+// ============================================
+function renderAktivasi() {
+    // Isi dropdown paket
+    const select = document.getElementById('selectPaketAktivasi');
+    if (select) {
+        if (dataHarga.length === 0) {
+            select.innerHTML = '<option value="">-- Tidak ada paket --</option>';
+        } else {
+            select.innerHTML = dataHarga.map(function(h) {
+                return '<option value="' + h.id + '">' + h.durasi + ' - Rp ' + h.harga.toLocaleString('id-ID') + '</option>';
+            }).join('');
+        }
+    }
+
+    // Render daftar kode aktif
+    const list = document.getElementById('listKodeAktivasi');
+    if (!list) return;
+
+    if (dataKodeAktivasi.length === 0) {
+        list.innerHTML = '<p class="text-muted" style="text-align:center; padding:20px;">Belum ada kode aktivasi. Klik Generate untuk membuat.</p>';
+        return;
+    }
+
+    list.innerHTML = dataKodeAktivasi.map(function(kode, index) {
+        return `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:15px; background:var(--bg-tertiary); border-radius:8px; border:1px solid var(--border-color);">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-key" style="color:var(--accent-green);"></i>
+                    <span style="font-family:'JetBrains Mono',monospace; font-size:14px; letter-spacing:1px;">${kode}</span>
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="hapusKode(${index})" title="Hapus kode ini">
+                    <i class="fas fa-trash"></i> Hapus
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
+// ============================================
+// FUNGSI GENERATE KODE AKTIVASI
+// ============================================
+function generateKode() {
+    // Karakter untuk kode
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let kode = 'PRO-';
+    
+    // Generate 8 karakter acak
+    for (let i = 0; i < 8; i++) {
+        const randomIndex = Math.floor(Math.random() * chars.length);
+        kode += chars.charAt(randomIndex);
+    }
+
+    // Tambahkan ke array kode aktivasi
+    dataKodeAktivasi.push(kode);
+    
+    // Simpan ke localStorage
+    simpanSemua();
+    
+    // Render ulang daftar kode
+    renderAktivasi();
+    
+    // Tampilkan notifikasi sukses
+    tampilkanToast('✅ Kode aktivasi baru berhasil dibuat: ' + kode);
+    
+    // Tawarkan untuk copy kode
+    if (confirm('Kode aktivasi: ' + kode + '\n\nSalin kode ini ke clipboard?')) {
+        navigator.clipboard.writeText(kode).then(function() {
+            tampilkanToast('✅ Kode disalin ke clipboard!');
+        }).catch(function() {
+            tampilkanToast('⚠️ Gagal menyalin ke clipboard.', 'error');
+        });
+    }
+}
+
+// ============================================
+// FUNGSI HAPUS KODE AKTIVASI
+// ============================================
+function hapusKode(index) {
+    if (!confirm('Hapus kode aktivasi ini? Kode tidak bisa digunakan lagi.')) return;
+    
+    dataKodeAktivasi.splice(index, 1);
+    simpanSemua();
+    renderAktivasi();
+    tampilkanToast('✅ Kode aktivasi dihapus.');
+}
+
+// ============================================
+// FUNGSI RENDER MENU HARGA
+// ============================================
+function renderHarga() {
+    const tbody = document.getElementById('tabelHarga');
+    if (!tbody) return;
+
+    if (dataHarga.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="text-muted" style="text-align:center; padding:30px;">Belum ada data harga. Klik Tambah Harga.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = dataHarga.map(function(h, index) {
+        return `
+            <tr>
+                <td>
+                    <input type="text" value="${h.durasi}" 
+                           onchange="editHarga(${index}, 'durasi', this.value)" 
+                           style="width:100%;">
+                </td>
+                <td>
+                    <input type="number" value="${h.harga}" 
+                           onchange="editHarga(${index}, 'harga', this.value)" 
+                           style="width:150px;">
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="hapusHarga(${index})" title="Hapus harga ini">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// ============================================
+// FUNGSI TAMBAH HARGA (MODAL)
+// ============================================
+function tambahHargaModal() {
+    // Reset form
+    document.getElementById('newDurasi').value = '';
+    document.getElementById('newHarga').value = '';
+    
+    // Tampilkan modal
+    bukaModal('modalTambahHarga');
+    
+    // Fokus ke input durasi
+    setTimeout(function() {
+        document.getElementById('newDurasi').focus();
+    }, 200);
+}
+
+// ============================================
+// FUNGSI SIMPAN HARGA BARU
+// ============================================
+function simpanHargaBaru() {
+    const durasi = document.getElementById('newDurasi').value.trim();
+    const harga = parseInt(document.getElementById('newHarga').value);
+
+    // Validasi
+    if (!durasi) {
+        tampilkanToast('⚠️ Nama durasi harus diisi.', 'error');
+        return;
+    }
+    if (isNaN(harga) || harga <= 0) {
+        tampilkanToast('⚠️ Harga tidak valid. Masukkan angka lebih dari 0.', 'error');
+        return;
+    }
+    if (harga > 10000000) {
+        tampilkanToast('⚠️ Harga maksimal Rp 10.000.000.', 'error');
+        return;
+    }
+
+    // Tambahkan data baru
+    dataHarga.push({
+        id: Date.now(),
+        durasi: durasi,
+        harga: harga
+    });
+
+    // Simpan
+    simpanSemua();
+    
+    // Tutup modal
+    tutupModal('modalTambahHarga');
+    
+    // Render ulang
+    renderHarga();
+    renderAktivasi(); // Update dropdown di aktivasi
+    
+    tampilkanToast('✅ Harga "' + durasi + '" berhasil ditambahkan.');
+}
+
+// ============================================
+// FUNGSI EDIT HARGA (INLINE)
+// ============================================
+function editHarga(index, field, value) {
+    if (index < 0 || index >= dataHarga.length) return;
+
+    if (field === 'harga') {
+        const newHarga = parseInt(value);
+        if (isNaN(newHarga) || newHarga <= 0) {
+            tampilkanToast('⚠️ Harga tidak valid. Data tidak disimpan.', 'error');
+            renderHarga(); // Render ulang untuk kembalikan nilai
+            return;
+        }
+        dataHarga[index].harga = newHarga;
+    } else if (field === 'durasi') {
+        const newDurasi = value.trim();
+        if (!newDurasi) {
+            tampilkanToast('⚠️ Durasi tidak boleh kosong.', 'error');
+            renderHarga();
+            return;
+        }
+        dataHarga[index].durasi = newDurasi;
+    }
+
+    simpanSemua();
+    renderAktivasi(); // Update dropdown aktivasi
+    tampilkanToast('✅ Harga berhasil diperbarui.');
+}
+
+// ============================================
+// FUNGSI HAPUS HARGA
+// ============================================
+function hapusHarga(index) {
+    if (index < 0 || index >= dataHarga.length) return;
+    
+    const namaHarga = dataHarga[index].durasi;
+    
+    if (!confirm('Hapus harga "' + namaHarga + '"? Tindakan ini tidak dapat dibatalkan.')) return;
+
+    dataHarga.splice(index, 1);
+    simpanSemua();
+    renderHarga();
+    renderAktivasi(); // Update dropdown
+    tampilkanToast('✅ Harga "' + namaHarga + '" dihapus.');
+}
+
+// ============================================
+// INISIALISASI DATA HARGA DAN KODE (FALLBACK)
+// ============================================
+// Pastikan data tersedia saat halaman dimuat
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof dataHarga === 'undefined') {
+        window.dataHarga = JSON.parse(localStorage.getItem('np_harga')) || [
+            { id: 1, durasi: '1 Bulan', harga: 10000 },
+            { id: 2, durasi: '3 Bulan', harga: 20000 },
+            { id: 3, durasi: '6 Bulan', harga: 30000 }
+        ];
+    }
+    
+    if (typeof dataKodeAktivasi === 'undefined') {
+        window.dataKodeAktivasi = JSON.parse(localStorage.getItem('np_kode')) || ['PRO-ABCD-1234', 'PRO-EFGH-5678'];
+    }
+    
+    console.log('✅ Blok 13 - Data upgrade, aktivasi, dan harga siap.');
+});
+
+console.log('✅ Blok 13 - Logika Upgrade Pro, Aktivasi, & Menu Harga siap.');
+</script>
+<--=== AKHIR BLOK 13 === -->
+<--=== BLOK 14: DASHBOARD SUPERADMIN & USER - LOGIKA === -->
+<script>
+// ============================================
+// NOTEPADPRO++ - DASHBOARD LOGIC
+// ============================================
+
+// ============================================
+// RENDER DASHBOARD SUPERADMIN
+// ============================================
+function renderDashboard() {
+    const totalUserEl = document.getElementById('statTotalUser');
+    const proUserEl = document.getElementById('statProUser');
+    const totalBlokEl = document.getElementById('statTotalBlok');
+    const kodeAktifEl = document.getElementById('statKodeAktif');
+
+    if (totalUserEl) totalUserEl.textContent = dataUser.length;
+    if (proUserEl) proUserEl.textContent = dataUser.filter(function(u) { return u.pro; }).length;
+    if (totalBlokEl) totalBlokEl.textContent = dataBlok.length;
+    if (kodeAktifEl) kodeAktifEl.textContent = dataKodeAktivasi.length;
+
+    // Update waktu di header
+    const waktuEl = document.getElementById('dashboardWaktu');
+    if (waktuEl) {
+        const sekarang = new Date();
+        waktuEl.textContent = sekarang.toLocaleDateString('id-ID', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+}
+
+// ============================================
+// RENDER DASHBOARD USER
+// ============================================
+function renderDashboardUser() {
+    if (!currentUser) return;
+
+    // Data pribadi
+    document.getElementById('userNama').textContent = currentUser.nama || '-';
+    document.getElementById('userUsername').textContent = currentUser.username || '-';
+    document.getElementById('userEmail').textContent = currentUser.email || '-';
+    document.getElementById('userHp').textContent = currentUser.hp || '-';
+    document.getElementById('userAlamat').textContent = currentUser.alamat || '-';
+
+    // Status Pro
+    const statusProEl = document.getElementById('userStatusPro');
+    if (statusProEl) {
+        statusProEl.textContent = currentUser.pro ? 'Pro' : 'Free';
+        statusProEl.className = currentUser.pro ? 'badge badge-pro' : 'badge badge-free';
+    }
+
+    // Panel upgrade (hanya tampil jika free)
+    const upgradePanel = document.getElementById('upgradePanel');
+    if (upgradePanel) {
+        upgradePanel.style.display = currentUser.pro ? 'none' : 'block';
+    }
+
+    // Update sidebar role
+    const roleEl = document.getElementById('sidebarUserRole');
+    if (roleEl) {
+        roleEl.textContent = currentUser.role === 'superadmin' ? 'SuperAdmin' : (currentUser.pro ? 'Pro User' : 'Free User');
+    }
+}
+
+// ============================================
+// PANEL ADMIN - LOGIKA
+// ============================================
+function renderPanelAdmin() {
+    const tbody = document.getElementById('tabelUserAdmin');
+    if (!tbody) return;
+
+    // Filter user (kecuali superadmin)
+    const users = dataUser.filter(function(u) { return u.role !== 'superadmin'; });
+
+    if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-muted" style="text-align:center; padding:30px;">Belum ada user terdaftar selain SuperAdmin.</td></tr>';
+        return;
+    }
+
+    // Render setiap user
+    tbody.innerHTML = users.map(function(u) {
+        const statusClass = u.status === 'aktif' ? 'badge-success' : 'badge-error';
+        const statusText = u.status === 'aktif' ? 'Aktif' : 'Nonaktif';
+        const proClass = u.pro ? 'badge-pro' : 'badge-free';
+        const proText = u.pro ? 'Pro' : 'Free';
+        const toggleText = u.status === 'aktif' ? 'Nonaktifkan' : 'Aktifkan';
+
+        return `
+            <tr>
+                <td style="font-weight:600;">${u.username}</td>
+                <td>${u.nama}</td>
+                <td>${u.hp || '-'}</td>
+                <td>${u.email || '-'}</td>
+                <td><span class="badge ${statusClass}">${statusText}</span></td>
+                <td><span class="badge ${proClass}">${proText}</span></td>
+                <td>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn btn-outline btn-sm" onclick="toggleStatus('${u.username}')">
+                            <i class="fas fa-power-off"></i> ${toggleText}
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="hapusUser('${u.username}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// ============================================
+// FUNGSI TAMBAH USER (MODAL)
+// ============================================
+function tambahUserModal() {
+    // Reset semua input di modal
+    document.getElementById('newUsername').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('newNama').value = '';
+    document.getElementById('newAlamat').value = '';
+    document.getElementById('newHp').value = '';
+    document.getElementById('newEmail').value = '';
+    
+    // Tampilkan modal
+    bukaModal('modalTambahUser');
+    
+    // Fokus ke input username
+    setTimeout(function() {
+        document.getElementById('newUsername').focus();
+    }, 200);
+}
+
+// ============================================
+// FUNGSI SIMPAN USER BARU
+// ============================================
+function simpanUserBaru() {
+    const username = document.getElementById('newUsername').value.trim();
+    const password = document.getElementById('newPassword').value;
+    const nama = document.getElementById('newNama').value.trim();
+    const alamat = document.getElementById('newAlamat').value.trim();
+    const hp = document.getElementById('newHp').value.trim();
+    const email = document.getElementById('newEmail').value.trim();
+
+    // Validasi
+    if (!username || !password || !nama) {
+        tampilkanToast('⚠️ Username, Password, dan Nama wajib diisi!', 'error');
+        return;
+    }
+    if (username.length < 3) {
+        tampilkanToast('⚠️ Username minimal 3 karakter.', 'error');
+        return;
+    }
+    if (password.length < 4) {
+        tampilkanToast('⚠️ Password minimal 4 karakter.', 'error');
+        return;
+    }
+    if (dataUser.find(function(u) { return u.username === username; })) {
+        tampilkanToast('⚠️ Username "' + username + '" sudah terdaftar.', 'error');
+        return;
+    }
+
+    // Tambahkan user baru
+    dataUser.push({
+        username: username,
+        password: password,
+        nama: nama,
+        alamat: alamat,
+        hp: hp,
+        email: email,
+        role: 'user',
+        pro: false,
+        status: 'aktif'
+    });
+
+    // Simpan ke localStorage
+    simpanSemua();
+    
+    // Tutup modal
+    tutupModal('modalTambahUser');
+    
+    // Render ulang tabel
+    renderPanelAdmin();
+    
+    // Update dashboard jika sedang aktif
+    if (document.getElementById('pageDashboard') && !document.getElementById('pageDashboard').classList.contains('hidden')) {
+        renderDashboard();
+    }
+
+    tampilkanToast('✅ User "' + username + '" berhasil ditambahkan!');
+}
+
+// ============================================
+// FUNGSI TOGGLE STATUS USER (AKTIF/NONAKTIF)
+// ============================================
+function toggleStatus(username) {
+    const user = dataUser.find(function(u) { return u.username === username; });
+    if (!user) return;
+
+    const statusBaru = user.status === 'aktif' ? 'nonaktif' : 'aktif';
+    user.status = statusBaru;
+    
+    simpanSemua();
+    renderPanelAdmin();
+
+    tampilkanToast('User "' + username + '" ' + (statusBaru === 'aktif' ? 'diaktifkan' : 'dinonaktifkan') + '.');
+}
+
+// ============================================
+// FUNGSI HAPUS USER
+// ============================================
+function hapusUser(username) {
+    const user = dataUser.find(function(u) { return u.username === username; });
+    if (!user) return;
+
+    // Konfirmasi dengan dialog
+    if (!confirm('⚠️ Hapus user "' + username + '" (' + user.nama + ')?\n\nTindakan ini TIDAK DAPAT dibatalkan.')) return;
+
+    // Cegah menghapus diri sendiri
+    if (currentUser && currentUser.username === username) {
+        tampilkanToast('❌ Anda tidak bisa menghapus akun sendiri.', 'error');
+        return;
+    }
+
+    // Hapus user dari array
+    dataUser = dataUser.filter(function(u) { return u.username !== username; });
+    
+    simpanSemua();
+    renderPanelAdmin();
+
+    tampilkanToast('✅ User "' + username + '" berhasil dihapus.');
+}
+
+// ============================================
+// INISIALISASI DASHBOARD SAAT LOGIN
+// ============================================
+function initDashboardAfterLogin() {
+    if (!currentUser) return;
+
+    if (currentUser.role === 'superadmin') {
+        renderDashboard();
+    } else {
+        renderDashboardUser();
+    }
+}
+
+// ============================================
+// AUTO REFRESH WAKTU DI DASHBOARD
+// ============================================
+setInterval(function() {
+    const waktuEl = document.getElementById('dashboardWaktu');
+    if (waktuEl && currentUser && currentUser.role === 'superadmin') {
+        const sekarang = new Date();
+        waktuEl.textContent = sekarang.toLocaleDateString('id-ID', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+}, 60000); // Update setiap 1 menit
+
+console.log('✅ Blok 14 - Dashboard SuperAdmin & User siap.');
+</script>
+<--=== AKHIR BLOK 14 === -->
+<--=== BLOK 15: PENUTUP - INISIALISASI AKHIR & EVENT HANDLER === -->
+<script>
+// ============================================
+// NOTEPADPRO++ - FINAL INITIALIZATION
+// ============================================
+
+// ============================================
+// INISIALISASI DATA DEFAULT (JIKA BELUM ADA)
+// ============================================
+(function() {
+    // Data User
+    if (!localStorage.getItem('np_users')) {
+        const defaultUsers = [
+            { username: 'NotePadePro', password: 'MyHand0286', nama: 'Dede', role: 'superadmin', pro: true, status: 'aktif', hp: '', email: '', alamat: '' },
+            { username: 'demo', password: 'demo123', nama: 'User Demo', role: 'user', pro: false, status: 'aktif', hp: '08123456789', email: 'demo@email.com', alamat: 'Garut' },
+            { username: 'pro_user', password: 'pro123', nama: 'Pro User', role: 'user', pro: true, status: 'aktif', hp: '08987654321', email: 'pro@email.com', alamat: 'Garut' }
+        ];
+        localStorage.setItem('np_users', JSON.stringify(defaultUsers));
+    }
+
+    // Data Blok
+    if (!localStorage.getItem('np_blok')) {
+        const defaultBlok = [
+            { id: 1, judul: 'Blok 1: Pembukaan HTML', isi: '<!DOCTYPE html>\n<html lang="id">\n<head>\n<meta charset="UTF-8">\n<title>App</title>\n</head>\n<body>' },
+            { id: 2, judul: 'Blok 5.4 R3: Input Produk', isi: '<!-- Form Input Produk -->\n<div class="form-group">\n  <label>Nama Produk</label>\n  <input type="text">\n</div>' }
+        ];
+        localStorage.setItem('np_blok', JSON.stringify(defaultBlok));
+    }
+
+    // Data Kode Aktivasi
+    if (!localStorage.getItem('np_kode')) {
+        localStorage.setItem('np_kode', JSON.stringify(['PRO-ABCD-1234', 'PRO-EFGH-5678']));
+    }
+
+    // Data Harga
+    if (!localStorage.getItem('np_harga')) {
+        const defaultHarga = [
+            { id: 1, durasi: '1 Bulan', harga: 10000 },
+            { id: 2, durasi: '3 Bulan', harga: 20000 },
+            { id: 3, durasi: '6 Bulan', harga: 30000 }
+        ];
+        localStorage.setItem('np_harga', JSON.stringify(defaultHarga));
+    }
+
+    // Data Chat
+    if (!localStorage.getItem('np_chat')) {
+        localStorage.setItem('np_chat', JSON.stringify([]));
+    }
+
+    console.log('✅ Semua data default terinisialisasi.');
+})();
+
+// ============================================
+// GLOBAL EVENT LISTENER
+// ============================================
+
+// Keyboard Shortcut
+document.addEventListener('keydown', function(e) {
+    // Ctrl+S: Simpan di editor
+    if (e.ctrlKey && e.key === 's') {
+        const modalEditor = document.getElementById('modalEditor');
+        if (modalEditor && !modalEditor.classList.contains('hidden')) {
+            e.preventDefault();
+            if (typeof simpanEditBlok === 'function') simpanEditBlok();
+        }
+    }
+
+    // Escape: Tutup modal
+    if (e.key === 'Escape') {
+        const modalEditor = document.getElementById('modalEditor');
+        if (modalEditor && !modalEditor.classList.contains('hidden')) {
+            e.preventDefault();
+            if (typeof tutupEditor === 'function') tutupEditor();
+        }
+
+        const modals = document.querySelectorAll('.modal-overlay:not(.hidden)');
+        modals.forEach(function(modal) {
+            if (modal.id !== 'modalEditor') {
+                modal.classList.add('hidden');
+            }
+        });
+    }
+});
+
+// Klik di luar modal untuk menutup
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+        if (e.target.id !== 'modalEditor') {
+            e.target.classList.add('hidden');
+        }
+    }
+});
+
+// ============================================
+// FUNGSI TOAST NOTIFIKASI GLOBAL
+// ============================================
+window.tampilkanToast = function(pesan, tipe) {
+    tipe = tipe || 'success';
+    
+    // Hapus toast lama
+    var toastLama = document.querySelector('.toast');
+    if (toastLama) toastLama.remove();
+
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + tipe;
+    toast.textContent = pesan;
+    document.body.appendChild(toast);
+
+    setTimeout(function() {
+        if (toast.parentNode) toast.remove();
+    }, 3000);
+};
+
+// ============================================
+// FUNGSI MODAL GLOBAL
+// ============================================
+window.bukaModal = function(id) {
+    var modal = document.getElementById(id);
+    if (modal) modal.classList.remove('hidden');
+};
+
+window.tutupModal = function(id) {
+    var modal = document.getElementById(id);
+    if (modal) modal.classList.add('hidden');
+};
+
+// ============================================
+// FUNGSI SIMPAN SEMUA DATA
+// ============================================
+window.simpanSemua = function() {
+    if (typeof dataUser !== 'undefined') localStorage.setItem('np_users', JSON.stringify(dataUser));
+    if (typeof dataBlok !== 'undefined') localStorage.setItem('np_blok', JSON.stringify(dataBlok));
+    if (typeof dataKodeAktivasi !== 'undefined') localStorage.setItem('np_kode', JSON.stringify(dataKodeAktivasi));
+    if (typeof dataHarga !== 'undefined') localStorage.setItem('np_harga', JSON.stringify(dataHarga));
+    if (typeof dataChat !== 'undefined') localStorage.setItem('np_chat', JSON.stringify(dataChat));
+};
+
+// ============================================
+// PEMERIKSAAN KONEKSI BERKALA
+// ============================================
+setInterval(function() {
+    var indikator = document.getElementById('offlineIndicator');
+    if (indikator) {
+        if (navigator.onLine) {
+            indikator.classList.add('hidden');
+        } else {
+            indikator.classList.remove('hidden');
+        }
+    }
+}, 5000);
+
+// ============================================
+// LOG APLIKASI SIAP
+// ============================================
+console.log('🚀 NotepadPro++ v1.0');
+console.log('👤 SuperAdmin: NotePadePro / MyHand0286');
+console.log('👤 Demo User: demo / demo123');
+console.log('👤 Pro User: pro_user / pro123');
+console.log('✅ Semua sistem siap digunakan.');
+</script>
+
+<!-- ============================================ -->
+<!-- PENUTUP HTML                                 -->
+<!-- ============================================ -->
+</body>
+</html>
+<--=== AKHIR BLOK 15 === -->                                                                           
