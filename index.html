@@ -5,7 +5,7 @@
 ╔══════════════════════════════════════════════════════════════════╗
 ║  SA_HARD SYSTEM — INDEX BLOK KODE                                ║
 ║  File  : index.html                                              ║
-║  Versi : 2.0 (seed 100 data + offline + installable)             ║
+║  Versi : 2.1 (edit inline master + 100 data bawaan)              ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║  CARA REVISI CEPAT (Ctrl+F):                                     ║
 ║                                                                  ║
@@ -22,7 +22,7 @@
 ║  BLOK 11  BODY — LOGIN SCREEN .... div#loginScreen               ║
 ║  BLOK 12  BODY — APP HEADER ...... header + logoutBtn            ║
 ║  BLOK 13  BODY — APP NAV ......... nav (7 tombol menu)           ║
-║  BLOK 14  BODY — SECTION MASTER .. #inputMaster                  ║
+║  BLOK 14  BODY — SECTION MASTER .. #inputMaster (tanpa form add) ║
 ║  BLOK 15  BODY — SECTION 4 ANGKA . #input4Angka                  ║
 ║  BLOK 16  BODY — SECTION GRUP .... #dataGrup                     ║
 ║  BLOK 17  BODY — SECTION K.MANUAL  #konversiManual               ║
@@ -37,10 +37,10 @@
 ║  BLOK 26  JS   — STORAGE & SEED ... loadMaster, seedIfEmpty      ║
 ║  BLOK 27  JS   — LOGIN & AUTH ..... form submit, session         ║
 ║  BLOK 28  JS   — NAVIGATION ....... tab switching                ║
-║  BLOK 29  JS   — RENDER MASTER .... list 100 nomor               ║
+║  BLOK 29  JS   — RENDER MASTER .... list + edit inline state     ║
 ║  BLOK 30  JS   — RENDER ANGKA ..... list data input 4 angka      ║
 ║  BLOK 31  JS   — RENDER GRUP ...... grup dari master             ║
-║  BLOK 32  JS   — CRUD MASTER ...... add / delete / reset / clear ║
+║  BLOK 32  JS   — CRUD MASTER ...... edit/save/delete/reset/clear ║
 ║  BLOK 33  JS   — CRUD 4 ANGKA ..... add / save                   ║
 ║  BLOK 34  JS   — KONVERSI MANUAL .. digit, balik, jumlah         ║
 ║  BLOK 35  JS   — KONVERSI GRUP .... cari nomor di master         ║
@@ -56,7 +56,6 @@
 
 <!-- ═══════════════════════════════════════════════════════════
      BLOK 01: HEAD & META
-     Edit: title, theme-color, manifest path
      ═══════════════════════════════════════════════════════════ -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -72,7 +71,6 @@
 <style>
 /* ═══════════════════════════════════════════════════════════
    BLOK 02: CSS — VARIABEL & RESET
-   Edit: warna tema di :root
    ═══════════════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -125,7 +123,7 @@ body {
 .error { color: #ff6b6b; font-size: 13px; text-align: center; margin-top: 12px; min-height: 18px; }
 
 /* ═══════════════════════════════════════════════════════════
-   BLOK 04: CSS — APP LAYOUT (header, nav, main, section)
+   BLOK 04: CSS — APP LAYOUT
    ═══════════════════════════════════════════════════════════ */
 #app { display: flex; flex-direction: column; min-height: 100vh; }
 header {
@@ -190,8 +188,22 @@ h3 { font-size: 15px; }
 .list-item .info { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
 .list-item .num { font-weight: 700; color: var(--accent); font-size: 16px; letter-spacing: 1px; }
 .list-item .meta { color: var(--muted); font-size: 12px; word-break: break-word; }
-.list-item .actions { display: flex; gap: 6px; flex-shrink: 0; }
+.list-item .actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
 .list-item .actions button { padding: 6px 10px; font-size: 12px; }
+.list-item .edit-fields { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.list-item .edit-fields input {
+  padding: 8px 10px; font-size: 13px; width: 100%;
+}
+.btn-edit {
+  padding: 6px 10px; font-size: 12px;
+  background: var(--card); color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-save {
+  padding: 6px 10px; font-size: 12px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #04101c; border: none; width: auto;
+}
 .empty { text-align: center; color: var(--muted); padding: 30px 10px; font-size: 14px; }
 
 /* ═══════════════════════════════════════════════════════════
@@ -326,7 +338,7 @@ body.offline .offline-badge { display: block; }
   </header>
 
   <!-- ═══════════════════════════════════════════════════════════
-       BLOK 13: BODY — APP NAV (7 menu)
+       BLOK 13: BODY — APP NAV
        ═══════════════════════════════════════════════════════════ -->
   <nav>
     <button data-section="inputMaster" class="active">📋 Master Nomor</button>
@@ -342,27 +354,15 @@ body.offline .offline-badge { display: block; }
 
     <!-- ═══════════════════════════════════════════════════════════
          BLOK 14: BODY — SECTION MASTER NOMOR
+         Catatan: Form "Tambah ke Master" DIHAPUS.
+         Data diisi dari seed 100 bawaan, bisa Edit/Hapus per baris.
          ═══════════════════════════════════════════════════════════ -->
     <section id="inputMaster" class="active">
-      <h2>📋 Input Master Nomor</h2>
-
-      <div class="card">
-        <div class="grid-2">
-          <div class="field">
-            <label>Nomor</label>
-            <input type="text" id="masterNomor" placeholder="00 — 99" maxlength="10" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label>Grup</label>
-            <input type="text" id="masterGrup" placeholder="Contoh: Kematian">
-          </div>
-        </div>
-        <div class="field">
-          <label>Syair</label>
-          <textarea id="masterSyair" rows="2" placeholder="Syair..."></textarea>
-        </div>
-        <button class="btn-primary" id="addMasterBtn">+ Tambah ke Master</button>
-      </div>
+      <h2>📋 Master Nomor</h2>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:14px;">
+        Data master bawaan 100 nomor (00–99). Bisa <b>Edit</b> langsung per baris.
+        Tambah nomor 4 digit baru lewat menu <b>Input 4 Angka</b>.
+      </p>
 
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
@@ -501,21 +501,15 @@ body.offline .offline-badge { display: block; }
 <script>
 /* ═══════════════════════════════════════════════════════════════
    BLOK 23: JS — CREDENTIALS
-   Edit login di sini (username & password hardcoded)
-   Spasi pada password otomatis diabaikan saat verifikasi
    ═══════════════════════════════════════════════════════════════ */
 const CREDENTIALS = {
   username: 'SA_HARD',
-  password: 'MyHand0286'   // password tanpa spasi; user boleh ketik pakai spasi
+  password: 'MyHand0286'
 };
 
 
 /* ═══════════════════════════════════════════════════════════════
    BLOK 24: JS — SEED_MASTER (100 data bawaan)
-   ─────────────────────────────────────────────────────────────
-   Format: [nomor, syair, grup]
-   Edit data di sini kalau ada perubahan syair / grup.
-   Urutan sudah 00–99 agar mudah dicek.
    ═══════════════════════════════════════════════════════════════ */
 const SEED_MASTER = [
   /* ── 00–09 ── */
@@ -648,6 +642,7 @@ const LS_SEED_VER   = 'sa_seed_version';
 const SEED_VERSION  = 1;
 
 let master = [];
+let editingIndex = -1;   // index master yang sedang diedit (-1 = tidak ada)
 
 const $ = (id) => document.getElementById(id);
 
@@ -668,11 +663,6 @@ function toast(msg, type = '') {
 
 /* ═══════════════════════════════════════════════════════════════
    BLOK 26: JS — STORAGE & SEED LOGIC
-   ─────────────────────────────────────────────────────────────
-   Aturan:
-   • Jika sa_seed_version BELUM ADA → tanam 100 data, set versi.
-   • Jika sa_seed_version SUDAH ADA  → pakai localStorage apa adanya.
-   • Item yang dihapus user TIDAK dimunculkan lagi.
    ═══════════════════════════════════════════════════════════════ */
 function seedToObjects() {
   const ts = Date.now();
@@ -688,7 +678,6 @@ function loadMaster() {
   const seeded = localStorage.getItem(LS_SEED_VER);
 
   if (!seeded) {
-    // Pertama kali — tanam 100 data bawaan
     master = seedToObjects();
     localStorage.setItem(LS_SEED_VER, String(SEED_VERSION));
     saveMaster();
@@ -703,6 +692,7 @@ function saveMaster() {
 
 function resetToSeed() {
   master = seedToObjects();
+  editingIndex = -1;
   saveMaster();
   localStorage.setItem(LS_SEED_VER, String(SEED_VERSION));
 }
@@ -744,7 +734,6 @@ document.querySelectorAll('nav button').forEach(btn => {
     btn.classList.add('active');
     $(btn.dataset.section).classList.add('active');
 
-    // refresh data saat pindah tab
     if (btn.dataset.section === 'inputMaster') renderMaster();
     if (btn.dataset.section === 'input4Angka') renderAngka();
     if (btn.dataset.section === 'dataGrup')    renderGrup();
@@ -753,7 +742,12 @@ document.querySelectorAll('nav button').forEach(btn => {
 
 
 /* ═══════════════════════════════════════════════════════════════
-   BLOK 29: JS — RENDER MASTER (daftar 100 nomor)
+   BLOK 29: JS — RENDER MASTER (list + edit inline)
+   ─────────────────────────────────────────────────────────────
+   • Setiap baris: tombol Edit + Hapus
+   • Klik Edit → baris berubah jadi input (nomor, syair, grup)
+     dengan tombol Simpan + Batal
+   • editingIndex menyimpan index master yang sedang diedit
    ═══════════════════════════════════════════════════════════════ */
 function renderMaster() {
   const list = $('masterList');
@@ -765,30 +759,124 @@ function renderMaster() {
   }
 
   const sorted = [...master].sort((a, b) => a.nomor.localeCompare(b.nomor));
+
   list.innerHTML = sorted.map((m) => {
     const idx = master.indexOf(m);
+    const isEditing = idx === editingIndex;
+
+    if (isEditing) {
+      return `
+        <div class="list-item" data-idx="${idx}">
+          <div class="info edit-fields">
+            <input type="text" class="edit-nomor" value="${esc(m.nomor)}" placeholder="Nomor" inputmode="numeric">
+            <input type="text" class="edit-syair" value="${esc(m.syair || '')}" placeholder="Syair">
+            <input type="text" class="edit-grup"  value="${esc(m.grup  || '')}" placeholder="Grup">
+          </div>
+          <div class="actions">
+            <button class="btn-save"   data-act="save"   data-idx="${idx}">Simpan</button>
+            <button class="btn-danger" data-act="cancel" data-idx="${idx}">Batal</button>
+          </div>
+        </div>`;
+    }
+
     return `
-      <div class="list-item">
+      <div class="list-item" data-idx="${idx}">
         <div class="info">
           <span class="num">${esc(m.nomor)}</span>
           <span class="meta">Syair: ${esc(m.syair || '-')} • Grup: ${esc(m.grup || '-')}</span>
         </div>
         <div class="actions">
-          <button class="btn-danger" data-del="${idx}">Hapus</button>
+          <button class="btn-edit"   data-act="edit" data-idx="${idx}">✏️ Edit</button>
+          <button class="btn-danger" data-act="del"  data-idx="${idx}">Hapus</button>
         </div>
       </div>`;
   }).join('');
 
-  list.querySelectorAll('[data-del]').forEach(b => {
-    b.addEventListener('click', () => {
-      const i = parseInt(b.dataset.del, 10);
-      master.splice(i, 1);
+  list.querySelectorAll('[data-act]').forEach(b => {
+    b.addEventListener('click', handleMasterAction);
+  });
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   BLOK 32: JS — CRUD MASTER (edit / save / cancel / delete / reset / clear)
+   ═══════════════════════════════════════════════════════════════ */
+function handleMasterAction(e) {
+  const btn = e.currentTarget;
+  const act = btn.dataset.act;
+  const idx = parseInt(btn.dataset.idx, 10);
+
+  /* ── EDIT: aktifkan mode edit baris ini ── */
+  if (act === 'edit') {
+    editingIndex = idx;
+    renderMaster();
+    return;
+  }
+
+  /* ── BATAL: keluar dari mode edit ── */
+  if (act === 'cancel') {
+    editingIndex = -1;
+    renderMaster();
+    return;
+  }
+
+  /* ── HAPUS: hapus baris ── */
+  if (act === 'del') {
+    const nmr = master[idx].nomor;
+    if (confirm(`Hapus nomor ${nmr}?`)) {
+      master.splice(idx, 1);
+      editingIndex = -1;
       saveMaster();
       renderAll();
       toast('Data dihapus', 'success');
-    });
-  });
+    }
+    return;
+  }
+
+  /* ── SIMPAN: ambil nilai input, validasi, update ── */
+  if (act === 'save') {
+    const row   = btn.closest('.list-item');
+    const nomor = row.querySelector('.edit-nomor').value.trim();
+    const syair = row.querySelector('.edit-syair').value.trim();
+    const grup  = row.querySelector('.edit-grup').value.trim();
+
+    if (!nomor)               { toast('Nomor wajib diisi', 'error'); return; }
+    if (!/^\d+$/.test(nomor)) { toast('Nomor harus angka', 'error'); return; }
+    if (master.some((m, i) => m.nomor === nomor && i !== idx)) {
+      toast('Nomor sudah ada di data lain', 'error');
+      return;
+    }
+
+    master[idx].nomor = nomor;
+    master[idx].syair = syair;
+    master[idx].grup  = grup;
+    editingIndex = -1;
+    saveMaster();
+    renderAll();
+    toast('Data diperbarui', 'success');
+  }
 }
+
+/* Tombol Hapus Semua */
+$('clearMasterBtn').addEventListener('click', () => {
+  if (!master.length) return;
+  if (confirm('Yakin hapus SEMUA data master? (Tidak akan terisi ulang otomatis)')) {
+    master = [];
+    editingIndex = -1;
+    saveMaster();
+    renderAll();
+    toast('Semua data dihapus', 'success');
+  }
+});
+
+/* Tombol Reset ke Data Bawaan */
+$('resetMasterBtn').addEventListener('click', () => {
+  if (confirm('Reset ke 100 data bawaan? Data yang Anda ubah akan hilang.')) {
+    resetToSeed();
+    renderAll();
+    toast('Berhasil reset ke 100 data bawaan', 'success');
+  }
+});
 
 
 /* ═══════════════════════════════════════════════════════════════
@@ -854,48 +942,6 @@ function renderGrup() {
 
 
 /* ═══════════════════════════════════════════════════════════════
-   BLOK 32: JS — CRUD MASTER (add / delete / reset / clear)
-   ═══════════════════════════════════════════════════════════════ */
-$('addMasterBtn').addEventListener('click', () => {
-  const nomor = $('masterNomor').value.trim();
-  const grup   = $('masterGrup').value.trim();
-  const syair  = $('masterSyair').value.trim();
-
-  if (!nomor) { toast('Nomor wajib diisi', 'error'); return; }
-  if (!/^\d+$/.test(nomor)) { toast('Nomor harus angka', 'error'); return; }
-  if (master.some(m => m.nomor === nomor)) { toast('Nomor sudah ada', 'error'); return; }
-
-  master.push({ nomor, grup, syair, createdAt: Date.now() });
-  saveMaster();
-
-  $('masterNomor').value = '';
-  $('masterGrup').value = '';
-  $('masterSyair').value = '';
-
-  renderAll();
-  toast('Data ditambahkan', 'success');
-});
-
-$('clearMasterBtn').addEventListener('click', () => {
-  if (!master.length) return;
-  if (confirm('Yakin hapus SEMUA data master? (Tidak akan terisi ulang otomatis)')) {
-    master = [];
-    saveMaster();
-    renderAll();
-    toast('Semua data dihapus', 'success');
-  }
-});
-
-$('resetMasterBtn').addEventListener('click', () => {
-  if (confirm('Reset ke 100 data bawaan? Data yang Anda tambahkan akan hilang.')) {
-    resetToSeed();
-    renderAll();
-    toast('Berhasil reset ke 100 data bawaan', 'success');
-  }
-});
-
-
-/* ═══════════════════════════════════════════════════════════════
    BLOK 33: JS — CRUD INPUT 4 ANGKA
    ═══════════════════════════════════════════════════════════════ */
 $('addAngkaBtn').addEventListener('click', () => {
@@ -911,7 +957,7 @@ $('addAngkaBtn').addEventListener('click', () => {
 
   $('angkaNomor').value = '';
   $('angkaSyair').value = '';
-  $('angkaGrup').value = '';
+  $('angkaGrup').value  = '';
 
   renderAll();
   toast('Data tersimpan', 'success');
@@ -925,12 +971,12 @@ $('convertManualBtn').addEventListener('click', () => {
   const n = $('manualInput').value.trim();
   if (!/^\d+$/.test(n)) { toast('Masukkan angka valid', 'error'); return; }
 
-  const digits     = n.split('').map(Number);
-  const sum        = digits.reduce((a, b) => a + b, 0);
-  const sumRepeat  = String(sum).split('').reduce((a, b) => a + Number(b), 0);
-  const reversed   = n.split('').reverse().join('');
-  const mod10      = sum % 10;
-  const bbfs       = [...new Set(n.split(''))].sort().join('');
+  const digits    = n.split('').map(Number);
+  const sum       = digits.reduce((a, b) => a + b, 0);
+  const sumRepeat = String(sum).split('').reduce((a, b) => a + Number(b), 0);
+  const reversed  = n.split('').reverse().join('');
+  const mod10     = sum % 10;
+  const bbfs      = [...new Set(n.split(''))].sort().join('');
 
   $('manualResult').textContent =
     `📌 Nomor        : ${n}\n` +
@@ -944,7 +990,7 @@ $('convertManualBtn').addEventListener('click', () => {
 
 
 /* ═══════════════════════════════════════════════════════════════
-   BLOK 35: JS — KONVERSI GRUP (cari nomor di master)
+   BLOK 35: JS — KONVERSI GRUP
    ═══════════════════════════════════════════════════════════════ */
 $('convertGrupBtn').addEventListener('click', () => {
   const n = $('grupInput').value.trim();
@@ -973,7 +1019,7 @@ $('convertGrupBtn').addEventListener('click', () => {
 
 
 /* ═══════════════════════════════════════════════════════════════
-   BLOK 36: JS — KONVERSI CB (Colok Bebas)
+   BLOK 36: JS — KONVERSI CB
    ═══════════════════════════════════════════════════════════════ */
 $('convertCBBtn').addEventListener('click', () => {
   const n = $('cbInput').value.trim();
@@ -998,7 +1044,7 @@ $('convertCBBtn').addEventListener('click', () => {
 
 
 /* ═══════════════════════════════════════════════════════════════
-   BLOK 37: JS — KONVERSI AK (Angka Kembar)
+   BLOK 37: JS — KONVERSI AK
    ═══════════════════════════════════════════════════════════════ */
 $('convertAKBtn').addEventListener('click', () => {
   const n = $('akInput').value.trim();
@@ -1082,7 +1128,7 @@ updateOnline();
 
 
 /* ═══════════════════════════════════════════════════════════════
-   BLOK 40: JS — AUTO INIT (render awal & session restore)
+   BLOK 40: JS — AUTO INIT
    ═══════════════════════════════════════════════════════════════ */
 function renderAll() {
   renderMaster();
@@ -1090,7 +1136,6 @@ function renderAll() {
   renderGrup();
 }
 
-// Enter shortcut untuk menu konversi
 ['manualInput', 'grupInput', 'cbInput', 'akInput'].forEach(id => {
   $(id).addEventListener('keypress', e => {
     if (e.key === 'Enter') {
@@ -1105,7 +1150,6 @@ function renderAll() {
   });
 });
 
-// Buka aplikasi langsung kalau session masih aktif
 if (sessionStorage.getItem('sa_logged_in') === '1') {
   $('loginScreen').style.display = 'none';
   $('app').hidden = false;
@@ -1115,9 +1159,6 @@ if (sessionStorage.getItem('sa_logged_in') === '1') {
 
 /* ═══════════════════════════════════════════════════════════════
    BLOK 40: END OF FILE
-   ─────────────────────────────────────────────────────────────
-   Jika menambah blok baru, beri nama "BLOK 41", "BLOK 42", dst.
-   Jangan lupa update INDEX di atas (BLOK 01).
    ═══════════════════════════════════════════════════════════════ */
 </script>
 </body>
